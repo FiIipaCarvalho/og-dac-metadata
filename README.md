@@ -77,4 +77,4 @@ Needs Python 3.10+ with `netCDF4`, `h5py`, `numpy` and `cftime`. Harvesters are 
 - "Delayed" in IOOS, VOTO and OTN dataset names means recovered data, not delayed-mode QC; IOOS `processing_level` often says "Delayed mode dataset" next to "No quality control provided".
 - Processing software is not recorded in any standard attribute.
 
-Built with Claude (Anthropic) for Filipa Carvalho (National Oceanography Centre, OceanGliders co-chair); spot-checked, not independently reviewed.
+Built with Claude; spot-checked, not independently reviewed.
