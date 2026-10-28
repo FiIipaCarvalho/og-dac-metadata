@@ -426,7 +426,7 @@
       <li><b>BODC file collections were not opened.</b> BODC's recovery and older real-time OG1 files can't be read by byte range, so their tags and QC are unknown ("Not read") unless an ERDDAP dataset exists for the same deployment; they are assumed to be OG1 from the collection name.</li>
       <li><b>Platform and institution are text matching.</b> Glider type is matched in attributes and titles (IOOS has no glider-model attribute, so many IOOS records are "Unknown"); wave gliders were dropped the same way. Institution names were merged by a hand-made alias list (raw names kept in the data); groupings such as "Multi-institution partnership" and separate OOI arrays are judgment calls.</li>
       <li><b>"Active since Oct 2024"</b> uses the end date, or the start date where no end date is known.</li>
-      <li><b>Built with an AI assistant.</b> Harvest, classification and page were produced by Claude for Filipa Carvalho and spot-checked against raw metadata and files (table below); not independently reviewed. The scripts are kept in <code>lab_docs/scripts/oceangliders_tags</code> so the analysis can be re-run and checked.</li>
+      <li><b>Built with an AI assistant.</b> Harvest, classification and page were produced by Claude for Filipa Carvalho and spot-checked against raw metadata and files (table below); not independently reviewed. The code is public at github.com/FiIipaCarvalho/og-dac-metadata so the analysis can be re-run and checked.</li>
     </ul>
 
     <h3>Spot checks behind these findings</h3>
@@ -438,7 +438,7 @@
     </div>
 
     <h3 id="how-made">How this dashboard was made</h3>
-    <p>The prompt below, synthesised from the requests made while building this dashboard, reproduces the harvest, the analyses and this page. The scripts that implement it are in <code>lab_docs/scripts/oceangliders_tags</code> (README and PROMPT.md).</p>
+    <p>The prompt below, synthesised from the requests made while building this dashboard, reproduces the harvest, the analyses and this page. The code, the data snapshot and this page are public at <a href="https://github.com/FiIipaCarvalho/og-dac-metadata">github.com/FiIipaCarvalho/og-dac-metadata</a> (README, PROMPT.md, harvest scripts).</p>
     <details class="og-prompt" id="prompt-box"><summary>Show the prompt</summary><pre>Build an interactive dashboard, for the OceanGliders steering team and glider data-centre managers, showing how far glider data across data centres meet OceanGliders&#x27; requirements (OG1.0 format, `network` and `site` tags from the BOON metadata guidelines, an approved data centre), and use it as a launchpad for organising data management across data assembly centres (DACs), with a federated OceanGliders ERDDAP in mind. Frame everything as readiness, not compliance: the `network`/`site` requirement was only agreed in October 2026.
 
 ## Data: harvest every glider deployment from six data centres, from the root of each

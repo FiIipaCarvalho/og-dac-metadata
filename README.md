@@ -65,7 +65,7 @@ Needs Python 3.10+ with `netCDF4`, `h5py`, `numpy` and `cftime`. Harvesters are 
 - **BODC file collections were not opened.** BODC's recovery and older real-time OG1 files can't be read by byte range, so their tags and QC are unknown ("Not read") unless an ERDDAP dataset exists for the same deployment; they are assumed to be OG1 from the collection name.
 - **Platform and institution are text matching.** Glider type is matched in attributes and titles (IOOS has no glider-model attribute, so many IOOS records are "Unknown"); wave gliders were dropped the same way. Institution names were merged by a hand-made alias list (raw names kept in the data); groupings such as "Multi-institution partnership" and separate OOI arrays are judgment calls.
 - **"Active since Oct 2024"** uses the end date, or the start date where no end date is known.
-- **Built with an AI assistant.** Harvest, classification and page were produced by Claude for Filipa Carvalho and spot-checked against raw metadata and files (table below); not independently reviewed. The scripts are kept in `lab_docs/scripts/oceangliders_tags` so the analysis can be re-run and checked.
+- **Built with an AI assistant.** Harvest, classification and page were produced by Claude for Filipa Carvalho and spot-checked against raw metadata and files (table below); not independently reviewed. The code is public at github.com/FiIipaCarvalho/og-dac-metadata so the analysis can be re-run and checked.
 
 ## Gotchas found while building it
 
