@@ -3025,10 +3025,10 @@ Coriolis,eudoxus/eudoxus_20140108,CNRS / Division Technique Insu,CNRS / Division
 Coriolis,growler/growler_20161001,National Oceanography Centre,NOCS,2016-10-01,2016,2016-12-01,61.45,0,,,,0,1,6801545,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3023,
 Coriolis,eudoxus/eudoxus_20140214,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2014-02-14,2014,2014-05-23,97.79,0,,,,0,1,6800950,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3024,
 Coriolis,fundy/fundy_20240623,CEOTR,CEOTR,2024-06-23,2024,2024-11-05,135.39,0,,,,0,1,4400999,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,1,1,g3025,OTN
-Coriolis,hal_1002/hal_1002_20220914,DFO,DFO,2022-08-04,2022,2022-10-12,68.90,0,,,,0,1,8900996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3029,IOOS
+Coriolis,hal_1002/hal_1002_20220914,Fisheries and Oceans Canada,DFO,2022-08-04,2022,2022-10-12,68.90,0,,,,0,1,8900996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3029,IOOS
 Coriolis,eudoxus/eudoxus_20140815,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2014-08-14,2014,2014-09-23,40.01,0,,,,0,1,6800950,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3027,
 Coriolis,hal_1002/hal_1002_20240702,University of Victoria,University of Victoria,2024-07-02,2024,2024-08-02,31.69,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF; IOOS,0,1,8900996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3028,IOOS
-Coriolis,hal_1002/hal_1002_20220804,DFO,DFO,2022-08-04,2022,2022-08-31,27.10,0,,,,0,1,8900996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3029,IOOS
+Coriolis,hal_1002/hal_1002_20220804,Fisheries and Oceans Canada,DFO,2022-08-04,2022,2022-08-31,27.10,0,,,,0,1,8900996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3029,IOOS
 Coriolis,hal_1002/hal_1002_20250506,University of Victoria,University of Victoria,2025-03-11,2025,2025-06-26,107.68,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF; IOOS,0,1,8900996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,1,1,g3030,
 Coriolis,hal_1002/hal_1002_20251201,Unknown,,2025-12-01,2025,,,0,,,,0,0,,Other,0,,0,0,0,None,1,0,Not stated,,0,Unknown,1,1,g3031,
 Coriolis,eudoxus/eudoxus_20141020,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2014-10-20,2014,2014-10-30,10.40,0,,,,0,1,6800950,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3032,
@@ -3210,11 +3210,11 @@ Coriolis,india_unit_553/india_unit_553_20211108,NCHQ,NCHQ,2021-11-08,2021,2022-0
 Coriolis,ifm14/ifm14_20240906,GEOMAR,GEOMAR,2024-09-06,2024,2024-09-11,5.08,0,,,,0,1,1801554,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3208,
 Coriolis,jura/jura_20171114,SAMS,SAMS,2017-11-14,2017,2018-04-30,167.41,0,,,,0,1,68943,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Seaglider,0,1,g3209,
 Coriolis,ifm14/ifm14_20250217,GEOMAR,GEOMAR,2025-02-17,2025,2025-03-05,15.86,0,,,,0,1,1801554,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,1,1,g3210,
-Coriolis,k_999/k_999_20230320,DFO,DFO,2023-03-20,2023,2023-04-21,31.98,0,,,,0,1,8900995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3215,IOOS
-Coriolis,k_999/k_999_20220803,DFO,DFO,2022-08-03,2022,2022-10-29,86.57,0,,,,0,1,8900995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3212,IOOS
-Coriolis,k_999/k_999_20230516,DFO,DFO,2023-03-20,2023,2023-06-17,89.22,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,8900995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3215,IOOS
-Coriolis,k_999/k_999_20230811,DFO,DFO,2023-08-11,2023,2023-08-31,20.95,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,8900995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3214,
-Coriolis,k_999/k_999_20230418,DFO,DFO,2023-03-20,2023,2023-05-12,53.87,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,8900995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3215,IOOS
+Coriolis,k_999/k_999_20230320,Fisheries and Oceans Canada,DFO,2023-03-20,2023,2023-04-21,31.98,0,,,,0,1,8900995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3215,IOOS
+Coriolis,k_999/k_999_20220803,Fisheries and Oceans Canada,DFO,2022-08-03,2022,2022-10-29,86.57,0,,,,0,1,8900995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3212,IOOS
+Coriolis,k_999/k_999_20230516,Fisheries and Oceans Canada,DFO,2023-03-20,2023,2023-06-17,89.22,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,8900995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3215,IOOS
+Coriolis,k_999/k_999_20230811,Fisheries and Oceans Canada,DFO,2023-08-11,2023,2023-08-31,20.95,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,8900995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3214,
+Coriolis,k_999/k_999_20230418,Fisheries and Oceans Canada,DFO,2023-03-20,2023,2023-05-12,53.87,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,8900995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3215,IOOS
 Coriolis,k_999/k_999_20241023,University of Victoria,University of Victoria,2024-10-23,2024,2024-11-14,22.02,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,8900995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,1,1,g3216,IOOS
 Coriolis,k_999/k_999_20241119,University of Victoria,University of Victoria,2024-11-19,2024,2025-01-09,51.69,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,8900995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,1,1,g3217,IOOS
 Coriolis,k_999/k_999_20250317,University of Victoria,University of Victoria,2025-03-17,2025,2025-04-09,23.83,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,8900995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,1,1,g3218,
@@ -3233,13 +3233,13 @@ Coriolis,laochra-na-mara/laochra-na-mara_20170811,Marine Institute,Marine Instit
 Coriolis,maria/maria_20170601,NATO STO-CMRE,NATO STO-CMRE (Science and Technology Organization - Centre for Maritime Research and Experimentation),2017-06-01,2017,2017-06-05,3.98,0,,,,0,1,6801663,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3231,
 Coriolis,marlin/marlin_20160704,University of East Anglia,UEA,2016-07-04,2016,2016-07-15,11.37,0,,,,0,1,68948,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Seaglider,0,1,g3232,
 Coriolis,marlin/marlin_20221204,University of East Anglia,UEA,2022-12-04,2022,2023-01-18,45.84,0,,,,0,1,6800948,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Seaglider,0,1,g3233,
-Coriolis,marvin_1003/marvin_1003_20220928,DFO,DFO,2022-09-28,2022,2022-10-13,14.93,0,,,,0,1,8900997,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3234,IOOS
+Coriolis,marvin_1003/marvin_1003_20220928,Fisheries and Oceans Canada,DFO,2022-09-28,2022,2022-10-13,14.93,0,,,,0,1,8900997,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3234,IOOS
 Coriolis,laochra-na-mara/laochra-na-mara_20190527,Marine Institute,Marine Institute,2019-05-27,2019,2019-06-03,6.88,0,,,,0,1,6801525,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3235,
-Coriolis,marvin_1003/marvin_1003_20221018,DFO,DFO,2022-10-18,2022,2022-11-24,36.87,0,,,,0,1,8900997,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3236,IOOS
+Coriolis,marvin_1003/marvin_1003_20221018,Fisheries and Oceans Canada,DFO,2022-10-18,2022,2022-11-24,36.87,0,,,,0,1,8900997,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3236,IOOS
 Coriolis,marvin_1003/marvin_1003_20231127,University of Victoria,University of Victoria,2023-09-29,2023,2024-01-09,102.59,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,8900997,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3237,IOOS
 Coriolis,marvin_1003/marvin_1003_20240116,University of Victoria,University of Victoria,2024-01-16,2024,2024-02-07,22.95,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,8900997,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3238,IOOS
 Coriolis,marco/marco_20181122,OGS,OGS,2018-11-22,2018,2018-12-04,12.25,0,,,,0,1,6801665,EGO,0,A,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Seaglider,0,1,g3239,
-Coriolis,marvin_1003/marvin_1003_20221129,DFO,DFO,2022-11-29,2022,2023-01-09,40.83,0,,,,0,1,8900997,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3240,IOOS
+Coriolis,marvin_1003/marvin_1003_20221129,Fisheries and Oceans Canada,DFO,2022-11-29,2022,2023-01-09,40.83,0,,,,0,1,8900997,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3240,IOOS
 Coriolis,maria/maria_20170608,NATO STO-CMRE,NATO STO-CMRE (Science and Technology Organization - Centre for Maritime Research and Experimentation),2017-06-08,2017,2017-06-16,7.88,0,,,,0,1,6801663,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3241,
 Coriolis,marvin_1003/marvin_1003_20240516,University of Victoria,University of Victoria,2024-05-16,2024,2024-05-28,12.89,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,8900997,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3242,
 Coriolis,marvin_1003/marvin_1003_20240416,University of Victoria,University of Victoria,2024-04-16,2024,2024-05-10,24.85,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,8900997,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3243,IOOS
@@ -3258,7 +3258,7 @@ Coriolis,mia/mia_20190521,Tallinn University of Technology,Tallinn University of
 Coriolis,mia/mia_20140818,Tallinn University of Technology,Tallinn University of Technology,2014-08-18,2014,2014-08-19,1.45,0,,,,0,1,6801697,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3256,
 Coriolis,mia/mia_20160504,Tallinn University of Technology,Tallinn University of Technology,2016-05-04,2016,2016-05-16,12.50,0,,,,0,1,6801697,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3257,
 Coriolis,mia/mia_20190721,Tallinn University of Technology,Tallinn University of Technology,2019-07-21,2019,2019-08-21,31.00,0,,,,0,1,6801697,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3258,
-Coriolis,mike-rorider/mike-rorider_20210704,DFO,DFO,2021-07-04,2021,2021-08-03,30.54,0,,,,0,1,4803927,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3259,IOOS
+Coriolis,mike-rorider/mike-rorider_20210704,Fisheries and Oceans Canada,DFO,2021-07-04,2021,2021-08-03,30.54,0,,,,0,1,4803927,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3259,IOOS
 Coriolis,mia/mia_20190924,Tallinn University of Technology,Tallinn University of Technology,2019-09-24,2019,2019-10-23,29.00,0,,,,0,1,6801697,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3260,
 Coriolis,mia/mia_20200228,Tallinn University of Technology,Tallinn University of Technology,2020-02-28,2020,2020-03-22,22.54,0,,,,0,1,6801697,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3261,
 Coriolis,mia/mia_20200804,Tallinn University of Technology,Tallinn University of Technology,2020-08-04,2020,2020-09-02,28.46,0,,,,0,1,6801697,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3262,
@@ -3337,7 +3337,7 @@ Coriolis,p202/p202_20201203,Oceanic Platform of the Canary Islands - PLOCAN,Ocea
 Coriolis,p302/p302_20190402,Oceanic Platform of the Canary Islands - PLOCAN,Oceanic Platform of the Canary Islands - PLOCAN,2019-04-02,2019,2019-06-12,70.79,0,,,,0,1,6801636,EGO,0,A,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Seaglider,0,1,g3335,
 Coriolis,p401/p401_20200611,Oceanic Platform of the Canary Islands - PLOCAN,Oceanic Platform of the Canary Islands - PLOCAN,2020-06-11,2020,2020-06-16,5.34,0,,,,0,1,6801633,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3336,
 Coriolis,pancake/pancake_20181209,National Oceanography Centre,NOCS,2018-12-09,2018,,,0,,,,0,1,6801546,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3337,BODC
-Coriolis,pearldiver/pearldiver_20191203,DFO,DFO,2019-12-04,2019,2020-01-20,47.11,0,,,,0,1,6801735,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3338,
+Coriolis,pearldiver/pearldiver_20191203,Fisheries and Oceans Canada,DFO,2019-12-04,2019,2020-01-20,47.11,0,,,,0,1,6801735,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3338,
 Coriolis,pascal/pascal_978_20250429,BIO,BIO,2025-04-29,2025,2025-05-28,29.36,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean,0,1,8901131,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,1,1,g3339,
 Coriolis,pheidippides/pheidippides_20170210,University of Cyprus,University of Cyprus,2017-02-10,2017,2017-03-13,31.95,0,,,,0,1,6800450,EGO,0,A,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Seaglider,0,1,g3340,
 Coriolis,peggy/peggy_20240417,CEOTR,CEOTR,2024-04-17,2024,2024-10-18,184.90,0,,,,0,1,8901092,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3341,OTN
@@ -3357,10 +3357,10 @@ Coriolis,pytheas/pytheas_20090501,CNRS / Division Technique Insu,CNRS / Division
 Coriolis,pytheas/pytheas_20100823,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2010-07-16,2010,2010-09-18,64.30,0,,,,0,1,6801504,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3355,
 Coriolis,raleigh/raleigh_20230319,National Oceanography Centre,NOCS,2023-03-19,2023,,,0,,,,0,1,6800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3356,BODC
 Coriolis,pytheas/pytheas_20091112,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2009-11-20,2009,2009-11-28,8.76,0,,,,0,1,6801504,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3357,
-Coriolis,rosie_713/rosie_713_20220531,DFO,DFO,2022-05-31,2022,2022-09-15,107.02,0,,,,0,1,4803919,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3358,IOOS
+Coriolis,rosie_713/rosie_713_20220531,Fisheries and Oceans Canada,DFO,2022-05-31,2022,2022-09-15,107.02,0,,,,0,1,4803919,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3358,IOOS
 Coriolis,sambro/sambro_20260409,CEOTR,CEOTR,2026-04-09,2026,2026-04-22,13.71,0,,,,0,1,4803924,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,1,1,g3359,OTN
 Coriolis,rosie_713/rosie_713_20240501,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2024-05-01,2024,2024-09-03,125.55,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803919,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3360,
-Coriolis,rosie_713/rosie_713_20230810,DFO,DFO,2023-08-10,2023,2023-09-19,40.27,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803919,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3361,IOOS
+Coriolis,rosie_713/rosie_713_20230810,Fisheries and Oceans Canada,DFO,2023-08-10,2023,2023-09-19,40.27,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803919,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3361,IOOS
 Coriolis,scapa/scapa_20170210,SAMS,SAMS,2017-02-10,2017,,,0,,,,0,1,68944,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Seaglider,0,1,g3362,
 Coriolis,scotia/scotia_20240623,CEOTR,CEOTR,2024-06-23,2024,2024-11-01,131.56,0,,,,0,1,4803922,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,1,1,g3363,OTN
 Coriolis,sdeep00/sdeep00_20121127,SOCIB,SOCIB (Sistema de Observación y predicción Costero de las Islas Baleares),2012-11-27,2012,2012-12-13,16.05,0,,,,0,1,68457,EGO,0,P,1,1,1,Argo-style 0-9,0,1,,Not stated,0,Slocum,0,1,g3364,
@@ -3528,56 +3528,56 @@ Coriolis,sea017/sea017_20250519,IFREMER,IFREMER,2025-05-19,2025,2025-05-22,3.37,
 Coriolis,sea017/sea017_20260707,OSU STAMAR,OSU STAMAR,2026-07-07,2026,2026-07-23,16.06,0,,,,0,1,6801554,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3526,
 Coriolis,sea017/sea017_20260617,OSU STAMAR,OSU STAMAR,2026-06-17,2026,2026-07-05,18.35,0,,,,0,1,6801554,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3527,
 Coriolis,sea017/sea017_20250620,IFREMER,IFREMER,2025-06-20,2025,2025-06-26,6.18,0,,,,0,1,6801554,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3528,
-Coriolis,sea019/sea019_20180319,DFO,DFO,2018-03-19,2018,2018-03-22,3.45,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3529,
-Coriolis,sea019/sea019_20180515,DFO,DFO,2018-05-15,2018,2018-05-17,2.57,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3530,
-Coriolis,sea019/sea019_20180724,DFO,DFO,2018-07-24,2018,2018-08-14,21.50,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3531,
-Coriolis,sea019/sea019_20190314,DFO,DFO,2019-03-14,2019,2019-04-05,22.62,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3532,
-Coriolis,sea019/sea019_20200217,DFO,DFO,2020-02-17,2020,2020-03-09,21.54,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3533,
-Coriolis,sea019/sea019_20191022,DFO,DFO,2019-10-22,2019,2019-11-14,23.50,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3534,
-Coriolis,sea019/sea019_20200618,DFO,DFO,2020-06-18,2020,2020-07-06,18.49,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3535,
-Coriolis,sea019/sea019_20200928,DFO,DFO,2020-09-28,2020,2020-10-16,18.65,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3536,
-Coriolis,sea019/sea019_20210507,DFO,DFO,2021-05-07,2021,2021-05-11,4.32,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3537,
-Coriolis,sea019/sea019_20211020,DFO,DFO,2021-10-20,2021,2021-10-25,5.46,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3538,
-Coriolis,sea019/sea019_20220201,DFO,DFO,2022-02-01,2022,2022-02-13,12.88,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3539,
-Coriolis,sea019/sea019_20230908,DFO,DFO,2023-09-08,2023,2023-09-28,20.51,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3540,
+Coriolis,sea019/sea019_20180319,Fisheries and Oceans Canada,DFO,2018-03-19,2018,2018-03-22,3.45,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3529,
+Coriolis,sea019/sea019_20180515,Fisheries and Oceans Canada,DFO,2018-05-15,2018,2018-05-17,2.57,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3530,
+Coriolis,sea019/sea019_20180724,Fisheries and Oceans Canada,DFO,2018-07-24,2018,2018-08-14,21.50,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3531,
+Coriolis,sea019/sea019_20190314,Fisheries and Oceans Canada,DFO,2019-03-14,2019,2019-04-05,22.62,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3532,
+Coriolis,sea019/sea019_20200217,Fisheries and Oceans Canada,DFO,2020-02-17,2020,2020-03-09,21.54,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3533,
+Coriolis,sea019/sea019_20191022,Fisheries and Oceans Canada,DFO,2019-10-22,2019,2019-11-14,23.50,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3534,
+Coriolis,sea019/sea019_20200618,Fisheries and Oceans Canada,DFO,2020-06-18,2020,2020-07-06,18.49,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3535,
+Coriolis,sea019/sea019_20200928,Fisheries and Oceans Canada,DFO,2020-09-28,2020,2020-10-16,18.65,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3536,
+Coriolis,sea019/sea019_20210507,Fisheries and Oceans Canada,DFO,2021-05-07,2021,2021-05-11,4.32,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3537,
+Coriolis,sea019/sea019_20211020,Fisheries and Oceans Canada,DFO,2021-10-20,2021,2021-10-25,5.46,0,,,,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3538,
+Coriolis,sea019/sea019_20220201,Fisheries and Oceans Canada,DFO,2022-02-01,2022,2022-02-13,12.88,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3539,
+Coriolis,sea019/sea019_20230908,Fisheries and Oceans Canada,DFO,2023-09-08,2023,2023-09-28,20.51,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3540,
 Coriolis,sea019/sea019_20240409,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2024-04-09,2024,2024-04-29,20.49,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3541,
 Coriolis,sea019/sea019_20240514,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2024-04-09,2024,2024-06-04,56.48,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3542,
 Coriolis,sea019/sea019_20241024,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2024-10-24,2024,2024-11-19,26.51,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3543,
 Coriolis,sea019/sea019_20240617,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2024-06-17,2024,2024-07-09,22.48,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3544,
 Coriolis,sea019/sea019_20250211,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2025-02-11,2025,2025-02-28,17.68,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3545,
-Coriolis,sea021/sea021_20180411,DFO,DFO,2018-04-11,2018,2018-04-25,14.14,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3546,
+Coriolis,sea021/sea021_20180411,Fisheries and Oceans Canada,DFO,2018-04-11,2018,2018-04-25,14.14,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3546,
 Coriolis,sea019/sea019_20250515,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2025-05-15,2025,2025-05-19,4.59,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3547,
 Coriolis,sea019/sea019_20260310,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2026-03-10,2026,2026-03-30,20.95,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800925,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3548,
-Coriolis,sea021/sea021_20180517,DFO,DFO,2018-05-17,2018,2018-06-04,17.96,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3549,
-Coriolis,sea021/sea021_20181120,DFO,DFO,2018-11-20,2018,2018-12-06,16.53,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3550,
-Coriolis,sea021/sea021_20190222,DFO,DFO,2019-02-22,2019,2019-03-14,20.52,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3551,
-Coriolis,sea021/sea021_20190329,DFO,DFO,2019-03-29,2019,2019-04-18,20.52,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3552,
-Coriolis,sea021/sea021_20190917,DFO,DFO,2019-09-17,2019,2019-10-06,19.37,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3553,
-Coriolis,sea021/sea021_20210215,DFO,DFO,2021-02-15,2021,2021-03-10,23.47,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3554,
-Coriolis,sea021/sea021_20210407,DFO,DFO,2021-04-07,2021,2021-04-29,22.59,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3555,
+Coriolis,sea021/sea021_20180517,Fisheries and Oceans Canada,DFO,2018-05-17,2018,2018-06-04,17.96,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3549,
+Coriolis,sea021/sea021_20181120,Fisheries and Oceans Canada,DFO,2018-11-20,2018,2018-12-06,16.53,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3550,
+Coriolis,sea021/sea021_20190222,Fisheries and Oceans Canada,DFO,2019-02-22,2019,2019-03-14,20.52,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3551,
+Coriolis,sea021/sea021_20190329,Fisheries and Oceans Canada,DFO,2019-03-29,2019,2019-04-18,20.52,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3552,
+Coriolis,sea021/sea021_20190917,Fisheries and Oceans Canada,DFO,2019-09-17,2019,2019-10-06,19.37,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3553,
+Coriolis,sea021/sea021_20210215,Fisheries and Oceans Canada,DFO,2021-02-15,2021,2021-03-10,23.47,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3554,
+Coriolis,sea021/sea021_20210407,Fisheries and Oceans Canada,DFO,2021-04-07,2021,2021-04-29,22.59,0,,,,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3555,
 Coriolis,sea021/sea021_20230223,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2023-02-23,2023,2023-03-14,19.49,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3556,
-Coriolis,sea021/sea021_20230411,DFO,DFO,2023-02-23,2023,2023-03-14,19.49,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3557,
-Coriolis,sea021/sea021_20230928,DFO,DFO,2023-09-28,2023,2023-10-11,13.79,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3558,
+Coriolis,sea021/sea021_20230411,Fisheries and Oceans Canada,DFO,2023-02-23,2023,2023-03-14,19.49,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3557,
+Coriolis,sea021/sea021_20230928,Fisheries and Oceans Canada,DFO,2023-09-28,2023,2023-10-11,13.79,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3558,
 Coriolis,sea021/sea021_20240910,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2024-09-10,2024,2024-10-05,25.01,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3559,
 Coriolis,sea021/sea021_20240202,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2024-02-02,2024,2024-03-12,39.69,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3560,
 Coriolis,sea021/sea021_20260423,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2026-04-23,2026,2026-05-06,13.91,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800926,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3561,
-Coriolis,sea022/sea022_20180628,DFO,DFO,2018-06-28,2018,2018-07-20,22.53,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3562,
-Coriolis,sea022/sea022_20190702,DFO,DFO,2019-07-04,2019,2019-07-24,19.67,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3563,
-Coriolis,sea022/sea022_20181106,DFO,DFO,2018-11-06,2018,2018-11-27,21.67,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3564,
-Coriolis,sea022/sea022_20190806,DFO,DFO,2019-08-06,2019,2019-08-26,20.61,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3565,
-Coriolis,sea022/sea022_20200309,DFO,DFO,2020-03-09,2020,2020-03-25,16.62,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3566,
-Coriolis,sea022/sea022_20190917,DFO,DFO,2019-09-17,2019,2019-10-06,19.34,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3567,
-Coriolis,sea022/sea022_20200724,DFO,DFO,2020-07-24,2020,2020-08-12,19.87,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3568,
-Coriolis,sea022/sea022_20200820,DFO,DFO,2020-08-20,2020,2020-09-15,26.63,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3569,
-Coriolis,sea022/sea022_20200916,DFO,DFO,2020-09-16,2020,2020-10-07,21.23,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3570,
-Coriolis,sea022/sea022_20210310,DFO,DFO,2021-03-10,2021,2021-03-31,21.45,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3571,
-Coriolis,sea022/sea022_20210531,DFO,DFO,2021-05-31,2021,2021-06-03,3.72,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3572,
-Coriolis,sea022/sea022_20210712,DFO,DFO,2021-07-12,2021,2021-08-03,22.49,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3573,
-Coriolis,sea022/sea022_20220406,DFO,DFO,2022-04-06,2022,2022-04-29,23.46,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3574,
-Coriolis,sea022/sea022_20210914,DFO,DFO,2021-09-14,2021,2021-10-05,21.47,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3575,
-Coriolis,sea022/sea022_20220908,DFO,DFO,2022-09-08,2022,2022-09-29,21.44,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3576,
+Coriolis,sea022/sea022_20180628,Fisheries and Oceans Canada,DFO,2018-06-28,2018,2018-07-20,22.53,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3562,
+Coriolis,sea022/sea022_20190702,Fisheries and Oceans Canada,DFO,2019-07-04,2019,2019-07-24,19.67,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3563,
+Coriolis,sea022/sea022_20181106,Fisheries and Oceans Canada,DFO,2018-11-06,2018,2018-11-27,21.67,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3564,
+Coriolis,sea022/sea022_20190806,Fisheries and Oceans Canada,DFO,2019-08-06,2019,2019-08-26,20.61,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3565,
+Coriolis,sea022/sea022_20200309,Fisheries and Oceans Canada,DFO,2020-03-09,2020,2020-03-25,16.62,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3566,
+Coriolis,sea022/sea022_20190917,Fisheries and Oceans Canada,DFO,2019-09-17,2019,2019-10-06,19.34,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3567,
+Coriolis,sea022/sea022_20200724,Fisheries and Oceans Canada,DFO,2020-07-24,2020,2020-08-12,19.87,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3568,
+Coriolis,sea022/sea022_20200820,Fisheries and Oceans Canada,DFO,2020-08-20,2020,2020-09-15,26.63,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3569,
+Coriolis,sea022/sea022_20200916,Fisheries and Oceans Canada,DFO,2020-09-16,2020,2020-10-07,21.23,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3570,
+Coriolis,sea022/sea022_20210310,Fisheries and Oceans Canada,DFO,2021-03-10,2021,2021-03-31,21.45,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3571,
+Coriolis,sea022/sea022_20210531,Fisheries and Oceans Canada,DFO,2021-05-31,2021,2021-06-03,3.72,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3572,
+Coriolis,sea022/sea022_20210712,Fisheries and Oceans Canada,DFO,2021-07-12,2021,2021-08-03,22.49,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3573,
+Coriolis,sea022/sea022_20220406,Fisheries and Oceans Canada,DFO,2022-04-06,2022,2022-04-29,23.46,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3574,
+Coriolis,sea022/sea022_20210914,Fisheries and Oceans Canada,DFO,2021-09-14,2021,2021-10-05,21.47,0,,,,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3575,
+Coriolis,sea022/sea022_20220908,Fisheries and Oceans Canada,DFO,2022-09-08,2022,2022-09-29,21.44,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3576,
 Coriolis,sea022/sea022_20230317,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2023-03-17,2023,2023-04-11,25.48,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3577,
-Coriolis,sea022/sea022_20230613,DFO,DFO,2023-06-13,2023,2023-07-11,28.63,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3578,
+Coriolis,sea022/sea022_20230613,Fisheries and Oceans Canada,DFO,2023-06-13,2023,2023-07-11,28.63,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3578,
 Coriolis,sea022/sea022_20240606,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2024-06-06,2024,2024-06-12,6.97,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3579,
 Coriolis,sea023/sea023_20210910,UPVD,UPVD,2021-09-10,2021,2021-09-18,8.24,0,,,,0,1,6801555,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3580,
 Coriolis,sea022/sea022_20250304,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2025-03-04,2025,2025-03-24,20.63,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3581,
@@ -3588,24 +3588,24 @@ Coriolis,sea023/sea023_20230726,IFREMER,IFREMER,2023-07-26,2023,2023-08-09,13.77
 Coriolis,sea022/sea022_20251006,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2025-10-06,2025,2025-10-20,14.99,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3586,
 Coriolis,sea023/sea023_20230711,IFREMER,IFREMER,2023-07-11,2023,2023-07-24,12.54,0,,,,0,1,6801555,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3587,
 Coriolis,sea023/sea023_20231118,IFREMER,IFREMER,2023-11-18,2023,2023-11-28,9.78,0,,,,0,1,6801555,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3588,
-Coriolis,sea024/sea024_20180604,DFO,DFO,2018-06-04,2018,2018-06-28,24.52,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3589,
-Coriolis,sea024/sea024_20181015,DFO,DFO,2018-10-15,2018,2018-10-25,9.57,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3590,
-Coriolis,sea024/sea024_20190607,DFO,DFO,2019-06-07,2019,2019-06-25,18.54,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3591,
-Coriolis,sea024/sea024_20190807,DFO,DFO,2019-08-07,2019,2019-08-29,22.42,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3592,
-Coriolis,sea024/sea024_20190924,DFO,DFO,2019-09-24,2019,2019-10-15,21.55,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3593,
-Coriolis,sea024/sea024_20191114,DFO,DFO,2019-11-14,2019,2019-12-05,21.54,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3594,
-Coriolis,sea024/sea024_20200706,DFO,DFO,2020-07-06,2020,2020-07-15,9.91,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3595,
-Coriolis,sea024/sea024_20210621,DFO,DFO,2021-06-21,2021,2021-06-30,9.40,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3596,
-Coriolis,sea024/sea024_20210901,DFO,DFO,2021-09-01,2021,2021-09-28,27.70,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3597,
-Coriolis,sea024/sea024_20210721,DFO,DFO,2021-07-21,2021,2021-08-10,20.56,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3598,
-Coriolis,sea024/sea024_20210929,DFO,DFO,2021-09-29,2021,2021-10-27,28.49,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3599,
-Coriolis,sea024/sea024_20220303,DFO,DFO,2022-03-03,2022,2022-03-24,21.49,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3600,
+Coriolis,sea024/sea024_20180604,Fisheries and Oceans Canada,DFO,2018-06-04,2018,2018-06-28,24.52,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3589,
+Coriolis,sea024/sea024_20181015,Fisheries and Oceans Canada,DFO,2018-10-15,2018,2018-10-25,9.57,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3590,
+Coriolis,sea024/sea024_20190607,Fisheries and Oceans Canada,DFO,2019-06-07,2019,2019-06-25,18.54,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3591,
+Coriolis,sea024/sea024_20190807,Fisheries and Oceans Canada,DFO,2019-08-07,2019,2019-08-29,22.42,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3592,
+Coriolis,sea024/sea024_20190924,Fisheries and Oceans Canada,DFO,2019-09-24,2019,2019-10-15,21.55,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3593,
+Coriolis,sea024/sea024_20191114,Fisheries and Oceans Canada,DFO,2019-11-14,2019,2019-12-05,21.54,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3594,
+Coriolis,sea024/sea024_20200706,Fisheries and Oceans Canada,DFO,2020-07-06,2020,2020-07-15,9.91,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3595,
+Coriolis,sea024/sea024_20210621,Fisheries and Oceans Canada,DFO,2021-06-21,2021,2021-06-30,9.40,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3596,
+Coriolis,sea024/sea024_20210901,Fisheries and Oceans Canada,DFO,2021-09-01,2021,2021-09-28,27.70,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3597,
+Coriolis,sea024/sea024_20210721,Fisheries and Oceans Canada,DFO,2021-07-21,2021,2021-08-10,20.56,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3598,
+Coriolis,sea024/sea024_20210929,Fisheries and Oceans Canada,DFO,2021-09-29,2021,2021-10-27,28.49,0,,,,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3599,
+Coriolis,sea024/sea024_20220303,Fisheries and Oceans Canada,DFO,2022-03-03,2022,2022-03-24,21.49,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3600,
 Coriolis,sea027/sea027_20211027,IFREMER,IFREMER,2021-10-27,2021,2021-11-10,14.38,0,,,,0,1,6801556,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3601,
 Coriolis,sea027/sea027_20220303,IFREMER,IFREMER,2022-03-03,2022,2022-03-14,10.97,0,,,,0,1,6801556,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3602,
 Coriolis,sea027/sea027_20220315,IFREMER,IFREMER,2022-03-15,2022,2022-03-29,13.65,0,,,,0,1,6801556,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3603,
 Coriolis,sea027/sea027_20220330,IFREMER,IFREMER,2022-03-30,2022,2022-04-11,11.79,0,,,,0,1,6801556,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3604,
 Coriolis,sea024/sea024_20260423,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2026-04-23,2026,2026-05-06,13.92,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3605,
-Coriolis,sea024/sea024_20230621,DFO,DFO,2023-06-21,2023,2023-07-18,27.43,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3606,
+Coriolis,sea024/sea024_20230621,Fisheries and Oceans Canada,DFO,2023-06-21,2023,2023-07-18,27.43,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800994,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3606,
 Coriolis,sea027/sea027_20220413,IFREMER,IFREMER,2022-04-13,2022,2022-04-27,13.86,0,,,,0,1,6801556,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3607,
 Coriolis,sea027/sea027_20220428,IFREMER,IFREMER,2022-04-28,2022,2022-05-12,13.89,0,,,,0,1,6801556,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3608,
 Coriolis,sea027/sea027_20220513,IFREMER,IFREMER,2022-05-13,2022,2022-05-27,13.90,0,,,,0,1,6801556,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3609,
@@ -3637,14 +3637,14 @@ Coriolis,sea027/sea027_20241206,IFREMER,IFREMER,2024-12-06,2024,2024-12-30,23.71
 Coriolis,sea030/sea030_20210214,UPVD,UPVD,2021-02-14,2021,2021-02-18,4.17,0,,,,0,1,6801557,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3635,
 Coriolis,sea030/sea030_20230710,ALSEAMAR,ALSEAMAR,2023-07-10,2023,2023-07-20,10.16,0,,,,0,1,6801557,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3636,
 Coriolis,sea030/sea030_20220223,UPVD,UPVD,2022-02-23,2022,2022-03-07,12.19,0,,,,0,1,6801557,EGO,0,P,1,1,1,Argo-style 0-9,1,1,Automatic QC,Automatic QC,0,SeaExplorer,0,2,g3637,
-Coriolis,sea032/sea032_20181015,DFO,DFO,2018-10-15,2018,2018-10-25,10.45,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3638,
-Coriolis,sea032/sea032_20190116,DFO,DFO,2019-01-16,2019,2019-02-06,21.67,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3639,
-Coriolis,sea032/sea032_20201020,DFO,DFO,2020-10-20,2020,2020-10-30,10.70,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3640,
-Coriolis,sea032/sea032_20210607,DFO,DFO,2021-06-07,2021,2021-06-21,14.43,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3641,
-Coriolis,sea032/sea032_20210712,DFO,DFO,2021-07-12,2021,2021-08-03,22.49,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3642,
-Coriolis,sea032/sea032_20210914,DFO,DFO,2021-09-14,2021,2021-10-05,21.47,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3643,
-Coriolis,sea032/sea032_20220915,DFO,DFO,2022-09-15,2022,2022-10-05,20.62,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3644,
-Coriolis,sea032/sea032_20230523,DFO,DFO,2023-05-23,2023,2023-06-13,21.55,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3645,
+Coriolis,sea032/sea032_20181015,Fisheries and Oceans Canada,DFO,2018-10-15,2018,2018-10-25,10.45,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3638,
+Coriolis,sea032/sea032_20190116,Fisheries and Oceans Canada,DFO,2019-01-16,2019,2019-02-06,21.67,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3639,
+Coriolis,sea032/sea032_20201020,Fisheries and Oceans Canada,DFO,2020-10-20,2020,2020-10-30,10.70,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3640,
+Coriolis,sea032/sea032_20210607,Fisheries and Oceans Canada,DFO,2021-06-07,2021,2021-06-21,14.43,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3641,
+Coriolis,sea032/sea032_20210712,Fisheries and Oceans Canada,DFO,2021-07-12,2021,2021-08-03,22.49,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3642,
+Coriolis,sea032/sea032_20210914,Fisheries and Oceans Canada,DFO,2021-09-14,2021,2021-10-05,21.47,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3643,
+Coriolis,sea032/sea032_20220915,Fisheries and Oceans Canada,DFO,2022-09-15,2022,2022-10-05,20.62,0,,,,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3644,
+Coriolis,sea032/sea032_20230523,Fisheries and Oceans Canada,DFO,2023-05-23,2023,2023-06-13,21.55,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3645,
 Coriolis,sea032/sea032_20241004,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2024-10-04,2024,2024-10-24,20.37,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3646,
 Coriolis,sea032/sea032_20240314,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2024-03-14,2024,2024-04-09,26.51,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean > Atlantic Zone Monitoring Program,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3647,
 Coriolis,sea032/sea032_20250324,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2025-03-24,2025,2025-04-15,22.51,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3648,
@@ -3654,12 +3654,12 @@ Coriolis,sea032/sea032_20251027,Fisheries and Oceans Canada,Fisheries and Oceans
 Coriolis,sea032/sea032_20250609,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2025-06-09,2025,2025-07-03,24.52,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3652,
 Coriolis,sea032/sea032_20251125,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2025-11-25,2025,2025-12-17,22.97,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3653,
 Coriolis,sea032/sea032_20260129,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2026-01-29,2026,2026-02-10,12.51,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3654,
-Coriolis,sea035/sea035_20190719,DFO,DFO,2019-07-19,2019,2019-07-22,3.30,0,,,,0,1,4803917,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3655,IOOS
+Coriolis,sea035/sea035_20190719,Fisheries and Oceans Canada,DFO,2019-07-19,2019,2019-07-22,3.30,0,,,,0,1,4803917,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3655,IOOS
 Coriolis,sea032/sea032_20260331,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2026-03-31,2026,2026-04-23,23.52,1,BOON,Northwest Atlantic Ocean,OceanGliders > BOON > Northwest Atlantic Ocean,0,1,4800937,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3656,
-Coriolis,sea035/sea035_20230518,DFO,DFO,2023-05-18,2023,2023-06-14,27.93,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803917,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3658,IOOS
-Coriolis,sea035/sea035_20230620,DFO,DFO,2023-05-18,2023,2023-07-12,55.98,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803917,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3658,IOOS
-Coriolis,sea035/sea035_20230811,DFO,DFO,2023-08-11,2023,2023-09-11,31.52,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803917,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3659,IOOS
-Coriolis,sea035/sea035_20230720,DFO,DFO,2023-07-20,2023,2023-08-09,20.87,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803917,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3660,IOOS
+Coriolis,sea035/sea035_20230518,Fisheries and Oceans Canada,DFO,2023-05-18,2023,2023-06-14,27.93,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803917,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3658,IOOS
+Coriolis,sea035/sea035_20230620,Fisheries and Oceans Canada,DFO,2023-05-18,2023,2023-07-12,55.98,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803917,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3658,IOOS
+Coriolis,sea035/sea035_20230811,Fisheries and Oceans Canada,DFO,2023-08-11,2023,2023-09-11,31.52,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803917,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3659,IOOS
+Coriolis,sea035/sea035_20230720,Fisheries and Oceans Canada,DFO,2023-07-20,2023,2023-08-09,20.87,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803917,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3660,IOOS
 Coriolis,sea035/sea035_20231019,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2023-10-19,2023,2023-11-11,23.82,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803917,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3661,IOOS
 Coriolis,sea035/sea035_20250501,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2025-05-01,2025,2025-05-21,20.68,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803917,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3662,
 Coriolis,sea035/sea035_20250527,Fisheries and Oceans Canada,Fisheries and Oceans Canada,2025-05-01,2025,2025-06-16,46.76,1,BOON,Northeast Pacific Ocean,OceanGliders > BOON > Northeast Pacific Ocean > C-PROOF,0,1,4803917,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3663,
@@ -3722,19 +3722,19 @@ Coriolis,sea042/sea042_20220203,IFREMER,IFREMER,2022-02-03,2022,2022-02-16,12.88
 Coriolis,sea042/sea042_20220217,IFREMER,IFREMER,2022-02-17,2022,2022-03-01,12.02,0,,,,0,1,6801561,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3720,
 Coriolis,sea042/sea042_20220303,IFREMER,IFREMER,2022-03-03,2022,2022-03-14,10.93,0,,,,0,1,6801561,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3721,
 Coriolis,sea042/sea042_20220329,IFREMER,IFREMER,2022-03-29,2022,2022-04-11,13.09,0,,,,0,1,6801561,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3722,
-Coriolis,sea046/sea046_20200717,DFO,DFO,2020-07-17,2020,2020-08-06,20.21,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3723,IOOS
-Coriolis,sea046/sea046_20201006,DFO,DFO,2020-10-06,2020,2020-10-28,22.45,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3724,IOOS
-Coriolis,sea046/sea046_20200908,DFO,DFO,2020-09-08,2020,2020-09-30,22.98,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3725,IOOS
-Coriolis,sea046/sea046_20200810,DFO,DFO,2020-08-10,2020,2020-09-02,23.93,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3726,IOOS
-Coriolis,sea046/sea046_20201103,DFO,DFO,2020-11-03,2020,2020-11-25,22.62,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3727,IOOS
-Coriolis,sea046/sea046_20210212,DFO,DFO,2021-02-12,2021,2021-03-10,26.52,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3728,IOOS
-Coriolis,sea046/sea046_20210413,DFO,DFO,2021-04-13,2021,2021-05-05,22.77,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3729,IOOS
-Coriolis,sea046/sea046_20210325,DFO,DFO,2021-03-25,2021,2021-04-08,14.58,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3730,IOOS
-Coriolis,sea046/sea046_20210511,DFO,DFO,2021-05-11,2021,2021-06-01,21.45,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3731,IOOS
-Coriolis,sea046/sea046_20220507,DFO,DFO,2022-05-07,2022,2022-06-01,25.91,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3732,IOOS
-Coriolis,sea046/sea046_20220608,DFO,DFO,2022-06-08,2022,2022-07-01,23.83,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3733,IOOS
+Coriolis,sea046/sea046_20200717,Fisheries and Oceans Canada,DFO,2020-07-17,2020,2020-08-06,20.21,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3723,IOOS
+Coriolis,sea046/sea046_20201006,Fisheries and Oceans Canada,DFO,2020-10-06,2020,2020-10-28,22.45,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3724,IOOS
+Coriolis,sea046/sea046_20200908,Fisheries and Oceans Canada,DFO,2020-09-08,2020,2020-09-30,22.98,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3725,IOOS
+Coriolis,sea046/sea046_20200810,Fisheries and Oceans Canada,DFO,2020-08-10,2020,2020-09-02,23.93,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3726,IOOS
+Coriolis,sea046/sea046_20201103,Fisheries and Oceans Canada,DFO,2020-11-03,2020,2020-11-25,22.62,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3727,IOOS
+Coriolis,sea046/sea046_20210212,Fisheries and Oceans Canada,DFO,2021-02-12,2021,2021-03-10,26.52,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3728,IOOS
+Coriolis,sea046/sea046_20210413,Fisheries and Oceans Canada,DFO,2021-04-13,2021,2021-05-05,22.77,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3729,IOOS
+Coriolis,sea046/sea046_20210325,Fisheries and Oceans Canada,DFO,2021-03-25,2021,2021-04-08,14.58,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3730,IOOS
+Coriolis,sea046/sea046_20210511,Fisheries and Oceans Canada,DFO,2021-05-11,2021,2021-06-01,21.45,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3731,IOOS
+Coriolis,sea046/sea046_20220507,Fisheries and Oceans Canada,DFO,2022-05-07,2022,2022-06-01,25.91,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3732,IOOS
+Coriolis,sea046/sea046_20220608,Fisheries and Oceans Canada,DFO,2022-06-08,2022,2022-07-01,23.83,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3733,IOOS
 Coriolis,sea049/sea049_20240710,CEFREM,CEFREM,2024-07-10,2024,2024-07-26,15.86,0,,,,0,1,8901080,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3734,
-Coriolis,sea046/sea046_20220707,DFO,DFO,2022-07-07,2022,2022-07-28,21.14,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3735,IOOS
+Coriolis,sea046/sea046_20220707,Fisheries and Oceans Canada,DFO,2022-07-07,2022,2022-07-28,21.14,0,,,,0,1,4803918,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,SeaExplorer,0,1,g3735,IOOS
 Coriolis,sea049/sea049_20240902,CEFREM,CEFREM,2024-09-02,2024,2024-09-20,17.93,0,,,,0,1,8901080,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,0,1,g3736,
 Coriolis,sea049/sea049_20250619,CEFREM,CEFREM,2025-06-19,2025,2025-06-23,3.76,0,,,,0,1,8901080,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3737,
 Coriolis,sea049/sea049_20241101,CEFREM,CEFREM,2024-11-01,2024,2024-12-15,44.15,0,,,,0,1,8901080,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,SeaExplorer,1,1,g3738,
@@ -3834,13 +3834,13 @@ Coriolis,sl3u1064/sl3u1064_20240801,SOCIB,SOCIB (Sistema de Observación y predi
 Coriolis,sl3u1064/sl3u1064_20250409,SOCIB,SOCIB (Sistema de Observación y predicción Costero de las Islas Baleares),2025-04-09,2025,2025-05-07,27.92,0,,,,0,1,8901025,EGO,0,P,1,1,1,Argo-style 0-9,1,1,Not stated,Not stated,0,Slocum,1,2,g3832,
 Coriolis,stella/stella_20180207,National Oceanography Centre,NOCL,2018-02-07,2018,,,0,,,,0,1,68993,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3833,
 Coriolis,sl3u1064/sl3u1064_20250520,SOCIB,SOCIB (Sistema de Observación y predicción Costero de las Islas Baleares),2025-05-20,2025,2025-09-01,103.79,1,BOON,Marginal Seas,OceanGliders > BOON > Marginal Seas > CANALES Endurance Line,0,1,8901025,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,1,1,g3834,
-Coriolis,sn651/sn651_20170724,DFO,DFO,2017-07-25,2017,2017-07-28,3.26,0,,,,0,1,4800995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3835,
+Coriolis,sn651/sn651_20170724,Fisheries and Oceans Canada,DFO,2017-07-25,2017,2017-07-28,3.26,0,,,,0,1,4800995,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3835,
 Coriolis,tenuse/tenuse_20100630,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2010-07-02,2010,2010-07-20,18.37,0,,,,0,1,6800953,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3836,
 Coriolis,tenuse/tenuse_20100823,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2010-08-26,2010,2010-10-02,37.40,0,,,,0,1,6800953,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3837,
 Coriolis,tenuse/tenuse_20101007,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2010-10-07,2010,2010-12-02,56.46,0,,,,0,1,6800953,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3838,
 Coriolis,tenuse/tenuse_20110303,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2011-03-03,2011,2011-04-28,56.17,0,,,,0,1,6800953,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3839,
 Coriolis,tenuse/tenuse_20110829,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2011-08-29,2011,2011-10-22,54.25,0,,,,0,1,6800953,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3840,
-Coriolis,sunfish/sunfish_20211202,DFO,DFO,2021-12-02,2021,2022-06-08,187.77,0,,,,0,1,6801509,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3841,
+Coriolis,sunfish/sunfish_20211202,Fisheries and Oceans Canada,DFO,2021-12-02,2021,2022-06-08,187.77,0,,,,0,1,6801509,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3841,
 Coriolis,tenuse/tenuse_20120710,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2012-07-10,2012,2012-07-17,7.14,0,,,,0,1,6800953,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3842,
 Coriolis,tenuse/tenuse_20120719,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2012-08-22,2012,2012-10-02,41.33,0,,,,0,1,6800953,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3843,
 Coriolis,tenuse/tenuse_20130409,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2013-04-10,2013,2013-05-30,49.96,0,,,,0,1,6800953,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3844,
@@ -3904,7 +3904,7 @@ Coriolis,unit_403/unit_403_20151120,OGS,OGS/MAOS,2015-11-20,2015,2015-12-01,10.8
 Coriolis,unit_403/unit_403_20160422,OGS,OGS/MAOS,2016-04-22,2016,2016-05-01,8.75,0,,,,0,1,6800957,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3902,
 Coriolis,unit_403/unit_403_20161203,OGS,OGS/MAOS,2016-12-03,2016,2017-04-06,123.89,0,,,,0,1,6800957,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3903,
 Coriolis,unit_403/unit_403_20170506,OGS,OGS,2017-05-06,2017,2017-05-08,2.24,0,,,,0,1,6800957,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3904,
-Coriolis,unit_334/unit_334_20210905,DFO,DFO,2021-09-06,2021,2021-11-09,63.34,0,,,,0,1,6801670,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3905,
+Coriolis,unit_334/unit_334_20210905,Fisheries and Oceans Canada,DFO,2021-09-06,2021,2021-11-09,63.34,0,,,,0,1,6801670,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3905,
 Coriolis,unit_403/unit_403_20180129,OGS,OGS,2018-01-29,2018,2018-01-31,1.99,0,,,,0,1,6800957,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3906,
 Coriolis,verd/verd_20210508,University of Bergen - UoB,University of Bergen - UoB,2021-05-08,2021,2022-01-16,253.08,0,,,,0,1,6801622,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3907,
 Coriolis,verd/verd_20220308,University of Bergen - UoB,University of Bergen - UoB,2022-03-08,2022,2022-05-24,77.09,0,,,,0,1,6801622,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3908,
@@ -3912,12 +3912,12 @@ Coriolis,urd/urd_20221021,University of Bergen - UoB,University of Bergen - UoB,
 Coriolis,verd/verd_20220609,University of Bergen - UoB,University of Bergen - UoB,2022-06-09,2022,2022-06-29,19.77,0,,,,0,1,6801622,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3910,
 Coriolis,urd/urd_20210709,University of Bergen - UoB,University of Bergen - UoB,2021-07-09,2021,2022-01-12,187.40,0,,,,0,1,6801621,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3911,
 Coriolis,verd/verd_20220805,University of Bergen - UoB,University of Bergen - UoB,2022-08-05,2022,2022-11-07,94.63,0,,,,0,1,6801622,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3912,
-Coriolis,wall-E/Wall-E_20190718,DFO,DFO,2019-07-19,2019,2019-10-22,94.78,0,,,,0,1,4800996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3913,IOOS
-Coriolis,wall-E/Wall-E_20191208,DFO,DFO,2019-12-09,2019,2020-03-27,108.96,0,,,,0,1,4800996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3914,IOOS
+Coriolis,wall-E/Wall-E_20190718,Fisheries and Oceans Canada,DFO,2019-07-19,2019,2019-10-22,94.78,0,,,,0,1,4800996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3913,IOOS
+Coriolis,wall-E/Wall-E_20191208,Fisheries and Oceans Canada,DFO,2019-12-09,2019,2020-03-27,108.96,0,,,,0,1,4800996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3914,IOOS
 Coriolis,verd/verd_20230221,University of Bergen - UoB,University of Bergen - UoB,2023-02-21,2023,2023-03-24,30.39,0,,,,0,1,6801622,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3915,
-Coriolis,wall-E/Wall-E_20200616,DFO,DFO,2020-06-16,2020,2020-07-01,14.82,0,,,,0,1,4800996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3916,IOOS
-Coriolis,wall-E/Wall-E_20210121,DFO,DFO,2021-01-21,2021,2021-05-11,110.19,0,,,,0,1,4800996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3917,IOOS
-Coriolis,wall-E/Wall-E_20210902,DFO,DFO,2021-09-02,2021,2021-12-05,93.56,0,,,,0,1,4800996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3918,IOOS
+Coriolis,wall-E/Wall-E_20200616,Fisheries and Oceans Canada,DFO,2020-06-16,2020,2020-07-01,14.82,0,,,,0,1,4800996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3916,IOOS
+Coriolis,wall-E/Wall-E_20210121,Fisheries and Oceans Canada,DFO,2021-01-21,2021,2021-05-11,110.19,0,,,,0,1,4800996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3917,IOOS
+Coriolis,wall-E/Wall-E_20210902,Fisheries and Oceans Canada,DFO,2021-09-02,2021,2021-12-05,93.56,0,,,,0,1,4800996,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Not stated,,0,Slocum,0,1,g3918,IOOS
 Coriolis,wallis/wallis_20090125,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2009-01-25,2009,2009-02-27,33.40,0,,,,0,1,6100869,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3919,
 Coriolis,wallis/wallis_20100603,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2010-06-03,2010,2010-07-08,35.91,0,,,,0,1,6100869,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3920,
 Coriolis,wallis/wallis_20100809,CNRS / Division Technique Insu,CNRS / Division Technique Insu,2010-08-09,2010,2010-08-25,16.53,0,,,,0,1,6100869,EGO,0,R,0,1,1,Argo-style 0-9,1,0,Automatic QC,,0,Slocum,0,1,g3921,

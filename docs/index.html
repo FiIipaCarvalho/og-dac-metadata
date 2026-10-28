@@ -281,8 +281,8 @@
       <li><b>Active since Oct 2024:</b> data end (or, where no end date is given, start) on or after 2024-10-27.</li>
       <li><b>Coriolis</b> serves mostly EGO-format files, which carry <code>network</code> only when the provider adds it (C-PROOF's do), alongside some OG1 files. Its institution is the glider owner in its deployment metadata; times, glider model and WMO ID come from the GDAC's own trajectory index.</li>
       <li><b>Format:</b> OG1.0 when Conventions or format_version name OG 1.0; EGO; IOOS DAC (IOOS Glider NetCDF, including older Unidata/COARDS files); IMOS; else Other.</li>
-      <li><b>Real-time vs recovered:</b> IOOS <code>-delayed</code> datasets, VOTO <code>delayed_</code>/<code>OG_complete_</code>, OTN <code>_delayed</code>, BODC's recovery file collection, Coriolis data mode P (its P files are full resolution: checked on two Slocum deployments, 1.6 to 2 s sampling against 4 to 14 s in the R files) and IMOS mission folders are recovered; the rest are real time. "Delayed" in IOOS, VOTO and OTN names means recovered, not delayed-mode QC.</li>
-      <li><b>QC flags in Coriolis P files:</b> they have flag variables (EGO requires them), but in one checked SOCIB file (sdeep01_0028_P) 66% of the 15.6 million flag values were 0 (no QC performed), 22% were 1 and 87 were 4; the file states qc_manual "none".</li>
+      <li><b>Real-time vs recovered:</b> IOOS <code>-delayed</code> datasets, VOTO <code>delayed_</code>/<code>OG_complete_</code>, OTN <code>_delayed</code>, BODC's recovery file collection, Coriolis data mode P (its P files are full resolution, checked on two Slocum deployments: see Spot checks) and IMOS mission folders are recovered; the rest are real time. "Delayed" in IOOS, VOTO and OTN names means recovered, not delayed-mode QC.</li>
+      <li><b>QC flags in Coriolis P files:</b> they have flag variables (EGO requires them), but in the one P file checked most flag values were 0, "no QC performed" (see Spot checks), and the file states qc_manual "none".</li>
       <li><b>QC level</b> (per stream, highest stated): <b>Delayed mode</b> when the metadata say the data were manually calibrated or quality controlled in delayed mode, or data_mode is D (IMOS "Delayed Mode"); <b>Automatic QC</b> when they state automatic, QARTOD or Argo-method QC, or cite the EGO QC-tests manual or processing chain; <b>No QC</b> when they say no QC, raw, Level 0 or "as is" (IMOS FV00 real-time files included); otherwise <b>Not stated</b>. Most of this is free text in processing_level. VOTO's OG1 files state QARTOD QC but carry no flag variables.</li>
       <li><b>Glider-days:</b> end minus start of the deployment's data (ERDDAP time range, file time coverage, or first and last valid JULD/TIME in EGO files); spans under 0 or over 400 days are left out. The tile sums unique deployments.</li>
       <li><b>QC flags:</b> any flag variable (flag_values or flag_meanings attributes, or a name ending in _qc). <b>CF:</b> every flag variable has flag_values and a flag_meanings list of the same length. <b>Scheme:</b> from the flag values: IOC/QARTOD (1, 2, 3, 4, 9), Argo-style (0 to 9), SeaDataNet L20 (with A, B, Q), Other; "Not described" means _qc variables without flag attributes.</li>
@@ -318,7 +318,7 @@
           <tr><td>Real time vs recovered</td><td>Marked by dataset names (IOOS <code>-delayed</code>, VOTO <code>nrt_</code>/<code>delayed_</code>, OTN <code>_realtime</code>/<code>_delayed</code>), a separate file collection (BODC), a data_mode letter (Coriolis R/A/P) or a folder and file version (IMOS <code>REALTIME/</code> FV00 vs FV01). No two data centres use the same mechanism.</td></tr>
           <tr><td>What "delayed" means</td><td>Recovered full-resolution data at IOOS, VOTO and OTN; delayed-mode scientific QC at IMOS (and in Argo practice). The same word marks different products.</td></tr>
           <tr><td>QC level</td><td>Stated in free-text <code>processing_level</code> (IOOS, VOTO, BODC, OTN), by citing a QC manual (Coriolis <code>qc_manual</code>), or by <code>data_mode</code> (IMOS). No controlled list, so "delayed mode dataset" and "no quality control" can appear in the same sentence.</td></tr>
-          <tr><td>QC flags</td><td>IOC/QARTOD 1, 2, 3, 4, 9 (IOOS, VOTO IOOS-format files), Argo-style 0 to 9 (Coriolis EGO, IMOS, OTN positions), <code>_QC</code> variables without flag attributes (BODC OG1), or none (VOTO OG1, most OTN). Same numbers carry different words (code 2 "not_evaluated" vs "UNKNOWN").</td></tr>
+          <tr><td>QC flags</td><td>IOC/QARTOD 1, 2, 3, 4, 9 (IOOS, VOTO IOOS-format files), Argo-style 0 to 9 (Coriolis EGO, IMOS, the few flagged OTN files), <code>_QC</code> variables without flag attributes (BODC OG1), or none (VOTO OG1, most OTN). Same numbers carry different words (code 2 "not_evaluated" vs "UNKNOWN").</td></tr>
           <tr><td>File format</td><td>OG1.0 (VOTO, BODC), IOOS Glider DAC v2/v3 (IOOS, OTN, VOTO), EGO 1.2 to 1.4 (Coriolis), IMOS-1.4 (IMOS).</td></tr>
           <tr><td>Network and site tags</td><td>Present only where the provider writes them (VOTO; C-PROOF, Scripps, WHOI at IOOS; C-PROOF and others in EGO at Coriolis). Site written as <code>site</code> or <code>oceanGliders_site</code>. Some values use networks or regions not in the BOON vocabulary, or ";" instead of "," between networks.</td></tr>
           <tr><td>WMO ID</td><td>Global attribute (VOTO <code>wmo_id</code>, BODC <code>wmoid</code>), platform variable (IOOS), deployment JSON and index (Coriolis), or absent (IMOS, most OTN).</td></tr>
@@ -338,10 +338,10 @@
         <h4><i data-dac="IOOS"></i>IOOS</h4>
         <p class="kn"><span data-source="dac_profile" data-where="source=IOOS" data-field="records" class="dash-skeleton">—</span> records · <span data-source="dac_profile" data-where="source=IOOS" data-field="tagged_share" class="dash-skeleton">—</span> tagged · <span data-source="dac_profile" data-where="source=IOOS" data-field="og1_share" class="dash-skeleton">—</span> OG1 · <span data-source="dac_profile" data-where="source=IOOS" data-field="recovered_share" class="dash-skeleton">—</span> recovered · <span data-source="dac_profile" data-where="source=IOOS" data-field="dm_share" class="dash-skeleton">—</span> delayed-mode QC · <span data-source="dac_profile" data-where="source=IOOS" data-field="qc_cf_share" class="dash-skeleton">—</span> CF QC flags · <span data-source="dac_profile" data-where="source=IOOS" data-field="wmo_share" class="dash-skeleton">—</span> WMO ID</p>
         <h5>Missing or incomplete</h5>
-        <ul><li>The OceanGliders <code>network</code> tag is used by only three institutions (C-PROOF, Scripps, WHOI); the other contributors, including the largest (Rutgers, the OOI arrays, Oregon State, NAVOCEANO), carry none.</li>
+        <ul><li>The OceanGliders <code>network</code> tag is used only by C-PROOF, Scripps and WHOI; the other contributors, including the largest (Rutgers, the OOI arrays, Oregon State, NAVOCEANO), carry none.</li>
 <li>No attribute for the glider model, so about half the records can't be assigned a platform type.</li>
 <li>No OG1.0 output; files follow the IOOS Glider DAC format (v2/v3).</li>
-<li>Site is written as <code>oceanGliders_site</code> (C-PROOF files), not the BOON guideline's <code>site</code>.</li></ul>
+<li>Scripps and WHOI write <code>site</code> as in the BOON guideline; most C-PROOF datasets have no site attribute, and a few use the non-standard <code>oceanGliders_site</code>.</li></ul>
         <h5>Does differently</h5>
         <ul><li>"Delayed" in dataset names means recovered full-resolution data; whether it was quality controlled is only in free-text <code>processing_level</code>, which often says "Delayed mode dataset" alongside "No quality control provided".</li>
 <li>The WMO ID sits on the <code>platform</code> variable, not in the global attributes.</li>
@@ -351,10 +351,10 @@
         <h4><i data-dac="VOTO"></i>VOTO</h4>
         <p class="kn"><span data-source="dac_profile" data-where="source=VOTO" data-field="records" class="dash-skeleton">—</span> records · <span data-source="dac_profile" data-where="source=VOTO" data-field="tagged_share" class="dash-skeleton">—</span> tagged · <span data-source="dac_profile" data-where="source=VOTO" data-field="og1_share" class="dash-skeleton">—</span> OG1 · <span data-source="dac_profile" data-where="source=VOTO" data-field="recovered_share" class="dash-skeleton">—</span> recovered · <span data-source="dac_profile" data-where="source=VOTO" data-field="dm_share" class="dash-skeleton">—</span> delayed-mode QC · <span data-source="dac_profile" data-where="source=VOTO" data-field="qc_cf_share" class="dash-skeleton">—</span> CF QC flags · <span data-source="dac_profile" data-where="source=VOTO" data-field="wmo_share" class="dash-skeleton">—</span> WMO ID</p>
         <h5>Missing or incomplete</h5>
-        <ul><li>Its OG1 files state QARTOD QC in <code>processing_level</code> but carry no flag variables; the flags exist only in the parallel IOOS-format datasets.</li>
+        <ul><li>Its OG1 files carry no QC flag variables, including those whose <code>processing_level</code> states QARTOD QC; the flags exist only in the parallel IOOS-format datasets.</li>
 <li>No delayed-mode (scientific) QC is stated for any deployment.</li></ul>
         <h5>Does differently</h5>
-        <ul><li>The reference case for tagging: almost every deployment has <code>network</code> and <code>site</code>, with values from the BOON vocabulary.</li>
+        <ul><li>The reference case for tagging: most deployments have <code>network</code> and <code>site</code>, with values from the BOON vocabulary.</li>
 <li>Publishes each deployment twice (IOOS format and OG1), each as real time and recovered: <code>nrt_</code>, <code>delayed_</code>, <code>OG_nrt_</code>, <code>OG_complete_</code>; "delayed" means recovered.</li></ul>
       </div>
       <div class="og-card og-dac" id="dac-bodc">
@@ -373,7 +373,7 @@
         <p class="kn"><span data-source="dac_profile" data-where="source=OTN" data-field="records" class="dash-skeleton">—</span> records · <span data-source="dac_profile" data-where="source=OTN" data-field="tagged_share" class="dash-skeleton">—</span> tagged · <span data-source="dac_profile" data-where="source=OTN" data-field="og1_share" class="dash-skeleton">—</span> OG1 · <span data-source="dac_profile" data-where="source=OTN" data-field="recovered_share" class="dash-skeleton">—</span> recovered · <span data-source="dac_profile" data-where="source=OTN" data-field="dm_share" class="dash-skeleton">—</span> delayed-mode QC · <span data-source="dac_profile" data-where="source=OTN" data-field="qc_cf_share" class="dash-skeleton">—</span> CF QC flags · <span data-source="dac_profile" data-where="source=OTN" data-field="wmo_share" class="dash-skeleton">—</span> WMO ID</p>
         <h5>Missing or incomplete</h5>
         <ul><li>No <code>network</code> tags and few WMO IDs.</li>
-<li>Most files carry no QC flags; where present they cover GPS positions only, and some <code>flag_meanings</code> strings are malformed.</li>
+<li>Most files carry no QC flags; the few that do flag positions and some measured variables, and some of their <code>flag_meanings</code> strings are malformed.</li>
 <li>Wave gliders sit in the same collection as underwater gliders, with no attribute to separate them other than <code>platform_type</code>.</li></ul>
         <h5>Does differently</h5>
         <ul><li>Real time and recovered as <code>_realtime</code> and <code>_delayed</code> datasets in the IOOS v3 "noqartod" format; every file says it is provided "as is" without QC.</li></ul>
@@ -387,7 +387,7 @@
 <li>Recovered (P) files come almost entirely from one provider (SOCIB), so the P convention is in practice one provider's choice, not a GDAC-wide rule.</li>
 <li>Time metadata are unreliable: no time-coverage attributes in EGO files, and the GDAC index's start times include 1970/2000 placeholders; per-deployment summaries from its ERDDAP aggregation time out.</li></ul>
         <h5>Does differently</h5>
-        <ul><li>Tags only where the provider writes them into EGO 1.4 files (C-PROOF, University of Victoria, DFO, SOCIB, BIO, CEOTR).</li>
+        <ul><li>Tags only where the provider writes them into EGO 1.4 files (University of Victoria and Fisheries and Oceans Canada for C-PROOF, SOCIB, BIO, CEOTR).</li>
 <li>States automatic QC by citing the EGO QC-tests manual (<code>qc_manual</code> DOI) rather than in <code>processing_level</code>.</li>
 <li>Publishes a machine-readable index of every file (<code>glider_traj_index.txt</code>), which no other data centre does.</li></ul>
       </div>

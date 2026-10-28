@@ -41,7 +41,7 @@ PART = [  # applied to the first-listed organisation
 ]
 ALIAS = {
     'noc': 'National Oceanography Centre', 'nocs': 'National Oceanography Centre', 'nocl': 'National Oceanography Centre',
-    'nocs nocl': 'National Oceanography Centre', 'bodc': 'National Oceanography Centre', 'national oceanography centre': 'National Oceanography Centre',
+    'nocs nocl': 'National Oceanography Centre', 'dfo': 'Fisheries and Oceans Canada', 'bodc': 'National Oceanography Centre', 'national oceanography centre': 'National Oceanography Centre',
     'voiceoftheocean': 'Voice of the Ocean Foundation', 'voice of the ocean foundation': 'Voice of the Ocean Foundation',
     'anfog (australian national facility for ocean gliders)': 'ANFOG (IMOS)', 'otn': 'Ocean Tracking Network',
     'dalhousie, oceanography': 'Dalhousie University', 'uea': 'University of East Anglia', 'hzg': 'Helmholtz-Zentrum Hereon',

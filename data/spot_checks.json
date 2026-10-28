@@ -2,7 +2,7 @@
  {
   "id": "p-res-crate",
   "check": "Coriolis P files are recovered (full-resolution) data",
-  "where": "crate_20210303 (Ifremer, Slocum G2)",
+  "where": "crate_20210303 (Slocum G2, MOOSE; owner CNRS DT INSU in its deployment metadata)",
   "result": "P file 2,149,585 samples at a 1.6 s median step; R file 643,882 samples at 4.0 s",
   "date": "2026-10-28"
  },
@@ -54,5 +54,12 @@
   "where": "VOTO, BODC and OTN ERDDAPs",
   "result": "a global attribute named id differs from the ERDDAP datasetID, so tools must key on datasetID",
   "date": "2026-10-27"
+ },
+ {
+  "id": "spot-6",
+  "check": "One deployment per data centre: every derived field against its raw metadata",
+  "where": "IOOS sp207-20260923T1722, VOTO SEA068_M30, BODC 755, OTN 100, Coriolis crate_20210303, IMOS AIMS20151021",
+  "result": "all fields match the raw attributes, dataset names, time ranges and index entries",
+  "date": "2026-10-28"
  }
 ]
