@@ -4,7 +4,7 @@ Harvests glider deployment metadata from six glider data assembly centres (DACs)
 
 It describes **readiness, not compliance**: the `network`/`site` requirement was only agreed in October 2026.
 
-- **Dashboard (snapshot 2026-10-27/28):** `docs/index.html`, published with GitHub Pages; the same page in `dashboard/index.html` runs as a claude.ai Dashboard artifact.
+- **Dashboard (snapshot 2026-10-27/28): https://fiiipacarvalho.github.io/og-dac-metadata/** (built from `docs/index.html`); the same page in `dashboard/index.html` runs as a claude.ai Dashboard artifact.
 - **Data snapshot:** `data/glider_deployments.csv` (one row per deployment per data centre, 4,370 rows) and `data/spot_checks.json` (checks made by opening files).
 - **Prompt that reproduces it:** [PROMPT.md](PROMPT.md).
 
