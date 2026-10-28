@@ -32,7 +32,7 @@ Gotchas to handle: some ERDDAPs publish a global attribute `id` that is not the 
 ## Dashboard
 
 - Each data centre has its own colour throughout. Tagged records are drawn in that colour, untagged in grey; categories are told apart by **pattern** in the data centre's colour (solid for the target category, then stripes, dots, fine lines, faded, outline), never by shades of one colour.
-- **Tiles:** records, unique deployments, tagged (and share), data centres with tags "N of M", institutions tagging "N of M", glider-days and tagged share.
+- **Tiles**, in three labelled rows: deployments (records, unique, glider-days); OceanGliders network tag (tagged deployments, share, glider-days share, data centres with tags "N of M", institutions tagging "N of M"); OG1.0 format (the same five figures for OG1.0).
 - **Deployments by data centre** (tagged solid, untagged faded).
 - **By start year**, with a Highlight switch (Tagged | OG1.0), a Records | Glider-days switch and three views: highlighted vs all (grey all, highlighted part coloured by data centre), All by data centre, highlighted only.
 - **Where the tags point:** mission > region.

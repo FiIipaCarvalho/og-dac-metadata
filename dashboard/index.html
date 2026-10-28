@@ -4,6 +4,7 @@
   .og-head p { margin: var(--cds-gap-xs) 0 0; color: var(--color-fg-muted); max-width: 75ch; }
   .og-head .og-take { color: var(--color-fg); font-size: var(--cds-font-size-heading); }
   .og-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr)); gap: var(--cds-gap-md); }
+  .og-tilehead { margin: 0 0 calc(-1 * var(--cds-gap-md)); font-size: var(--cds-font-size-caption); text-transform: uppercase; letter-spacing: .05em; color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); }
   .og-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
   .og-tile .lab { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
   .og-tile .num { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; }
@@ -81,15 +82,27 @@
     <p>Every glider deployment found on six data centres: the IOOS Glider DAC, VOTO, BODC, OTN, Coriolis (the OceanGliders GDAC) and IMOS/ANFOG. A deployment record is tagged when its <code>network</code> global attribute starts with "OceanGliders". The same deployment can be held by more than one data centre; unique deployments are matched on WMO ID and start date. The tag became an OG1.0 requirement only in October 2026, so this shows readiness, not compliance.</p>
   </header>
 
-  <section class="og-tiles" aria-label="Headline figures">
+  <p class="og-tilehead">Deployments</p>
+  <section class="og-tiles" aria-label="Deployments">
     <div class="og-tile"><span class="lab">Deployment records</span><span class="num dash-skeleton" data-source="summary" data-field="records" data-row="0">—</span></div>
     <div class="og-tile"><span class="lab">Unique deployments</span><span class="num dash-skeleton" data-source="summary" data-field="unique" data-row="0">—</span></div>
-    <div class="og-tile"><span class="lab">Tagged OceanGliders</span><span class="num dash-skeleton" data-source="summary" data-field="tagged_unique" data-row="0">—</span></div>
+    <div class="og-tile"><span class="lab">Glider-days</span><span class="num dash-skeleton" data-source="summary" data-field="glider_days" data-row="0">—</span></div>
+  </section>
+  <p class="og-tilehead">OceanGliders network tag</p>
+  <section class="og-tiles" aria-label="OceanGliders network tag">
+    <div class="og-tile"><span class="lab">Tagged deployments</span><span class="num dash-skeleton" data-source="summary" data-field="tagged_unique" data-row="0">—</span></div>
     <div class="og-tile"><span class="lab">Share tagged</span><span class="num dash-skeleton" data-source="summary" data-field="share" data-row="0">—</span></div>
+    <div class="og-tile"><span class="lab">Glider-days tagged</span><span class="num dash-skeleton" data-source="summary" data-field="days_share" data-row="0">—</span></div>
     <div class="og-tile"><span class="lab">Data centres with tags</span><span class="num dash-skeleton" data-source="summary" data-field="sources_tagging" data-row="0">—</span></div>
     <div class="og-tile"><span class="lab">Institutions tagging</span><span class="num dash-skeleton" data-source="summary" data-field="tagging_institutions" data-row="0">—</span></div>
-    <div class="og-tile"><span class="lab">Glider-days</span><span class="num dash-skeleton" data-source="summary" data-field="glider_days" data-row="0">—</span></div>
-    <div class="og-tile"><span class="lab">Glider-days tagged</span><span class="num dash-skeleton" data-source="summary" data-field="days_share" data-row="0">—</span></div>
+  </section>
+  <p class="og-tilehead">OG1.0 format</p>
+  <section class="og-tiles" aria-label="OG1.0 format">
+    <div class="og-tile"><span class="lab">OG1.0 deployments</span><span class="num dash-skeleton" data-source="summary" data-field="og1_unique" data-row="0">—</span></div>
+    <div class="og-tile"><span class="lab">Share OG1.0</span><span class="num dash-skeleton" data-source="summary" data-field="og1_share" data-row="0">—</span></div>
+    <div class="og-tile"><span class="lab">Glider-days OG1.0</span><span class="num dash-skeleton" data-source="summary" data-field="og1_days_share" data-row="0">—</span></div>
+    <div class="og-tile"><span class="lab">Data centres with OG1.0</span><span class="num dash-skeleton" data-source="summary" data-field="sources_og1" data-row="0">—</span></div>
+    <div class="og-tile"><span class="lab">Institutions with OG1.0</span><span class="num dash-skeleton" data-source="summary" data-field="institutions_og1" data-row="0">—</span></div>
   </section>
 
   <section class="og-card" id="by-source-card">
@@ -392,7 +405,7 @@ Gotchas to handle: some ERDDAPs publish a global attribute `id` that is not the 
 ## Dashboard
 
 - Each data centre has its own colour throughout. Tagged records are drawn in that colour, untagged in grey; categories are told apart by **pattern** in the data centre&#x27;s colour (solid for the target category, then stripes, dots, fine lines, faded, outline), never by shades of one colour.
-- **Tiles:** records, unique deployments, tagged (and share), data centres with tags &quot;N of M&quot;, institutions tagging &quot;N of M&quot;, glider-days and tagged share.
+- **Tiles**, in three labelled rows: deployments (records, unique, glider-days); OceanGliders network tag (tagged deployments, share, glider-days share, data centres with tags &quot;N of M&quot;, institutions tagging &quot;N of M&quot;); OG1.0 format (the same five figures for OG1.0).
 - **Deployments by data centre** (tagged solid, untagged faded).
 - **By start year**, with a Highlight switch (Tagged | OG1.0), a Records | Glider-days switch and three views: highlighted vs all (grey all, highlighted part coloured by data centre), All by data centre, highlighted only.
 - **Where the tags point:** mission &gt; region.
@@ -414,7 +427,7 @@ window.OG_SOURCES = ['IOOS', 'VOTO', 'BODC', 'OTN', 'Coriolis', 'IMOS'];
 
 dash.calc('summary', {
   title: 'Headline counts',
-  description: 'Records, unique deployments (matched across data centres), tagged deployments and who holds them.',
+  description: 'Records, unique deployments (matched across data centres), tagged and OG1.0 deployments, and who holds them.',
   inputs: ['deployments'],
   fn: (deployments) => {
     const groups = new Map();
@@ -429,12 +442,23 @@ dash.calc('summary', {
       g.days = Math.max(g.days, v); g.tagged = g.tagged || d.tagged === '1';
       gdays.set(d.group, g);
     }
+    const og1Groups = new Map();
+    for (const d of deployments) og1Groups.set(d.group, (og1Groups.get(d.group) || false) || d.og1_available === '1');
+    for (const d of deployments) { const g = gdays.get(d.group); if (g && d.og1_available === '1') g.og1 = true; }
+    const og1 = deployments.filter(d => d.og1_available === '1');
+    const og1Unique = [...og1Groups.values()].filter(Boolean).length;
     const totalDays = [...gdays.values()].reduce((s, g) => s + g.days, 0);
     const taggedDays = [...gdays.values()].filter(g => g.tagged).reduce((s, g) => s + g.days, 0);
+    const og1Days = [...gdays.values()].filter(g => g.og1).reduce((s, g) => s + g.days, 0);
     return [{
       glider_days: Math.round(totalDays),
       tagged_days: Math.round(taggedDays),
       days_share: totalDays ? taggedDays / totalDays : 0,
+      og1_unique: og1Unique,
+      og1_share: og1Unique / groups.size,
+      og1_days_share: totalDays ? og1Days / totalDays : 0,
+      sources_og1: new Set(og1.map(d => d.source)).size,
+      institutions_og1: new Set(og1.map(d => d.institution)).size,
       records: deployments.length,
       unique: groups.size,
       tagged_unique: taggedUnique,
@@ -933,13 +957,13 @@ dash.calc('by_institution', {
     if (s.status === 'ok' && s.data.length) {
       const r = s.data[0];
       take.classList.remove('dash-skeleton');
-      take.textContent = `${fmt(r.tagged_unique)} of ${fmt(r.unique)} unique glider deployments (${pct1(r.share)}) carry the OceanGliders network tag, held by ${r.sources_tagging} of ${r.sources} data centres and coming from ${r.tagging_institutions} of ${r.institutions} institutions.`;
+      take.textContent = `${fmt(r.tagged_unique)} of ${fmt(r.unique)} unique glider deployments (${pct1(r.share)}) carry the OceanGliders network tag, from ${r.tagging_institutions} of ${r.institutions} institutions; ${fmt(r.og1_unique)} (${pct1(r.og1_share)}) are available in OG1.0 format, from ${r.sources_og1} of ${r.sources} data centres.`;
       for (const e of document.querySelectorAll('[data-source="summary"]')) {
         e.classList.remove('dash-skeleton');
         const f = e.dataset.field;
-        e.textContent = (f === 'share' || f === 'days_share') ? pct1(r[f])
-          : f === 'sources_tagging' ? `${r[f]} of ${r.sources}`
-          : f === 'tagging_institutions' ? `${r[f]} of ${fmt(r.institutions)}`
+        e.textContent = ['share', 'days_share', 'og1_share', 'og1_days_share'].includes(f) ? pct1(r[f])
+          : (f === 'sources_tagging' || f === 'sources_og1') ? `${r[f]} of ${r.sources}`
+          : (f === 'tagging_institutions' || f === 'institutions_og1') ? `${r[f]} of ${fmt(r.institutions)}`
           : fmt(r[f]);
       }
     } else {
