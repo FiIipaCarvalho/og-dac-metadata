@@ -1,0 +1,58 @@
+[
+ {
+  "id": "p-res-crate",
+  "check": "Coriolis P files are recovered (full-resolution) data",
+  "where": "crate_20210303 (Ifremer, Slocum G2)",
+  "result": "P file 2,149,585 samples at a 1.6 s median step; R file 643,882 samples at 4.0 s",
+  "date": "2026-10-28"
+ },
+ {
+  "id": "p-res-sdeep",
+  "check": "Coriolis P files are recovered (full-resolution) data",
+  "where": "sdeep01_0028 (SOCIB, Slocum G2 Deep)",
+  "result": "P file 916,266 samples at 2.0 s; R file 74,665 samples at 14.0 s",
+  "date": "2026-10-28"
+ },
+ {
+  "id": "p-flags",
+  "check": "QC flags in a Coriolis P file",
+  "where": "sdeep01_0028_P (SOCIB), all 19 QC variables",
+  "result": "15,586,822 flag values: 66.3% flag 0 (no QC performed), 21.9% flag 1, 87 values flag 4, 11.8% fill; qc_manual \"none\"",
+  "date": "2026-10-28"
+ },
+ {
+  "id": "bodc-ranges",
+  "check": "BODC recovery files readable remotely",
+  "where": "Public_OG1_Data_001_Recovery (linkedsystems.uk ERDDAP)",
+  "result": "53 recovery deployments held only as a file collection; byte-range requests refused (HTTP 416), so headers need whole-file downloads",
+  "date": "2026-10-28"
+ },
+ {
+  "id": "coriolis-erddap",
+  "check": "Per-deployment time range from the Coriolis ERDDAP aggregation",
+  "where": "OceanGlidersGDACTrajectories (erddap.ifremer.fr)",
+  "result": "orderByMinMax by deployment timed out after 300 s (HTTP 502); the GDAC's glider_traj_index.txt was used instead",
+  "date": "2026-10-28"
+ },
+ {
+  "id": "coriolis-index",
+  "check": "Coriolis index start times",
+  "where": "glider_traj_index.txt",
+  "result": "time_coverage_start holds 1970/2000 placeholder values or an earlier deployment's start for some files; deployment_start_date or the folder date used instead",
+  "date": "2026-10-28"
+ },
+ {
+  "id": "otn-meanings",
+  "check": "OTN flag attributes",
+  "where": "OTN ERDDAP datasets with flag variables",
+  "result": "flag_meanings in some datasets run two words together, giving 9 meanings for 10 values (not CF-valid)",
+  "date": "2026-10-27"
+ },
+ {
+  "id": "id-attr",
+  "check": "Dataset identity in ERDDAP metadata",
+  "where": "VOTO, BODC and OTN ERDDAPs",
+  "result": "a global attribute named id differs from the ERDDAP datasetID, so tools must key on datasetID",
+  "date": "2026-10-27"
+ }
+]

@@ -1,0 +1,1049 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OceanGliders data centre metadata</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:wght@400;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+  /* stand-ins for the claude.ai dashboard theme tokens */
+  :root {
+    --font-anthropic-sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-anthropic-serif: "Source Serif 4", Georgia, serif;
+    --color-fg: #1f2328; --color-fg-muted: #5c6670; --color-bg: #f7f8fa; --color-panel: #ffffff;
+    --color-border-line: #dde1e6; --color-ok: #1f8a4c; --color-warn: #c98a00; --color-bad: #c43c3c;
+    --cds-text-secondary: #5c6670; --cds-surface-popover: #ffffff; --cds-border: #dde1e6;
+    --cds-shadow-popover: 0 4px 16px rgba(0,0,0,.12);
+    --cds-chart-grid: #eceff2; --cds-chart-axis: #b8bfc7; --cds-chart-muted: #c3c9d0; --cds-chart-reference: #8a939c;
+    --cds-font-size-caption: .8rem; --cds-font-size-body: .95rem; --cds-font-size-heading: 1.05rem; --cds-font-size-title: 1.6rem;
+    --cds-font-weight-medium: 600; --cds-radius: 8px;
+    --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 12px; --cds-gap-lg: 20px; --cds-gap-xl: 32px;
+    --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 16px;
+    --cds-dur-slow: .3s; --cds-ease-out: ease-out;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-fg: #e6e8eb; --color-fg-muted: #9aa4ae; --color-bg: #15181c; --color-panel: #1d2126;
+      --color-border-line: #2e343b; --color-ok: #3fb872; --color-warn: #e0a520; --color-bad: #e06363;
+      --cds-text-secondary: #9aa4ae; --cds-surface-popover: #1d2126; --cds-border: #2e343b;
+      --cds-chart-grid: #262b31; --cds-chart-axis: #4a525b; --cds-chart-muted: #4b535c;
+      color-scheme: dark;
+    }
+  }
+  body { margin: 0; background: var(--color-bg); color: var(--color-fg); font-family: var(--font-anthropic-sans); }
+  #dash-root { padding: 24px clamp(16px, 4vw, 48px); max-width: 1400px; margin: 0 auto; }
+  .dash-skeleton { color: transparent !important; background: var(--color-border-line); border-radius: 4px; }
+  a { color: inherit; }
+</style>
+<script>
+/* minimal stand-in for the claude.ai `dash` object: datasets, calcs, onData, colours, links */
+(function () {
+  const DATASETS = {
+    deployments: () => fetch('data/glider_deployments.csv').then(r => r.text()).then(t => d3.csvParse(t)),
+    spot_checks: () => fetch('data/spot_checks.json').then(r => r.json())
+  };
+  const store = {}, calcs = {}, cache = {}, listeners = [];
+  const status = (id) => store[id] ? store[id] : { status: 'loading', data: [] };
+  function calcResult(id) {
+    if (cache[id]) return cache[id];
+    const c = calcs[id];
+    const ins = c.inputs.map(i => window.dash.data(i));
+    if (ins.some(x => x.status !== 'ok')) return { status: ins.find(x => x.status !== 'ok').status, data: [] };
+    try { cache[id] = { status: 'ok', data: c.fn(...ins.map(x => x.data)) }; }
+    catch (e) { console.error(id, e); cache[id] = { status: 'error', data: [], message: String(e) }; }
+    return cache[id];
+  }
+  const fire = () => listeners.forEach(fn => { try { fn(); } catch (e) { console.error(e); } });
+  window.dash = {
+    data: (id) => calcs[id] ? calcResult(id) : status(id),
+    calc: (id, spec) => { calcs[id] = spec; },
+    loader: () => {},
+    onData: (fn) => { listeners.push(fn); try { fn(); } catch (e) { console.error(e); } },
+    colors: ['#2f6fd0', '#e0752d', '#2a9d8f', '#c2410c', '#7c5cc4', '#d4a017', '#5b8c3a', '#b5447e'],
+    refresh: () => {}, params: () => ({}), setParams: () => {}, resetParams: () => {},
+    setLink: (name) => { try { history.replaceState(null, '', '#' + name); } catch (e) {} }
+  };
+  Promise.all(Object.entries(DATASETS).map(([id, load]) => load()
+    .then(d => { store[id] = { status: 'ok', data: d }; })
+    .catch(e => { store[id] = { status: 'error', data: [], message: String(e) }; })))
+    .then(fire);
+  let w = window.innerWidth;
+  window.addEventListener('resize', () => { if (window.innerWidth !== w) { w = window.innerWidth; fire(); } });
+})();
+</script>
+</head>
+<body>
+<div id="dash-root">
+<style>
+  .og { display: flex; flex-direction: column; gap: var(--cds-gap-xl); font-family: var(--font-anthropic-sans); }
+  .og-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+  .og-head p { margin: var(--cds-gap-xs) 0 0; color: var(--color-fg-muted); max-width: 75ch; }
+  .og-head .og-take { color: var(--color-fg); font-size: var(--cds-font-size-heading); }
+  .og-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr)); gap: var(--cds-gap-md); }
+  .og-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
+  .og-tile .lab { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+  .og-tile .num { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; }
+  .og-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: var(--cds-gap-md); }
+  .og-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
+  .og-card h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+  .og-card .note { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin: 0; }
+  .og-legend { display: flex; gap: var(--cds-gap-md); flex-wrap: wrap; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .og-legend span { display: inline-flex; align-items: center; gap: var(--cds-gap-xs); }
+  .og-legend i { width: 0.7rem; height: 0.7rem; border-radius: 2px; display: inline-block; }
+  .og-legend i.faded { opacity: .35; }
+  .og-chart { position: relative; min-height: 260px; }
+  .og-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); white-space: nowrap; z-index: 2; }
+  .og-tip .t { color: var(--cds-text-secondary); }
+  .og-tip i { width: .6rem; height: .6rem; border-radius: 2px; display: inline-block; margin-right: var(--cds-gap-xs); }
+  .og-bars { display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-height: 200px; position: relative; }
+  .og-row { display: grid; grid-template-columns: minmax(7rem, 15rem) 1fr 4.5rem; gap: var(--cds-gap-sm); align-items: center; font-size: var(--cds-font-size-caption); }
+  .og-row .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .og-row .bar { display: flex; height: 14px; border-radius: 3px; overflow: hidden; }
+  .og-row .bar div { height: 100%; }
+  .og-row .bar div.faded { opacity: .35; }
+  .og-dim .og-row .bar div + div { border-left: 1px solid var(--color-panel); }
+  .og-row .cnt { text-align: right; font-variant-numeric: tabular-nums; color: var(--color-fg-muted); }
+  @media (max-width: 34rem) { .og-row { grid-template-columns: 1fr 4rem; } .og-row .name { grid-column: 1 / -1; } }
+  .og-dims { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--cds-gap-lg); }
+  .og-dim { display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
+  .og-dim .og-legend i { width: 1rem; height: .8rem; border-radius: 2px; }
+  .og-dim .og-row .bar { height: 18px; }
+  .og-dim h3 { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); margin: 0; }
+  .og-row .name i { width: .6rem; height: .6rem; border-radius: 2px; display: inline-block; margin-right: var(--cds-gap-xs); vertical-align: baseline; }
+  .og-catbar { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: center; }
+  .og-catbar .note { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin: 0; }
+  .og-seg { display: inline-flex; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; align-self: flex-start; }
+  .og-seg button { font: inherit; font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); background: none; border: 0; color: var(--color-fg-muted); cursor: pointer; }
+  .og-seg button[aria-pressed="true"] { background: var(--color-bg); color: var(--color-fg); }
+  .og-seg button:focus-visible, .og-table th button:focus-visible { outline: 2px solid var(--cds-chart-axis); outline-offset: 2px; }
+  .og-tools { display: flex; gap: var(--cds-gap-sm); flex-wrap: wrap; align-items: center; }
+  .og-tools input { font: inherit; padding: var(--cds-pad-xs) var(--cds-pad-sm); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); min-width: 0; flex: 1 1 14rem; max-width: 22rem; }
+  .og-tablebox { max-height: 34rem; overflow: auto; }
+  .og-table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+  .og-table th { position: sticky; top: 0; background: var(--color-panel); text-align: right; font-weight: var(--cds-font-weight-medium); padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); z-index: 1; }
+  .og-table th:nth-child(-n+2), .og-table td:nth-child(-n+2) { text-align: left; }
+  .og-table th button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  .og-table td { padding: var(--cds-pad-xs) var(--cds-pad-sm); text-align: right; border-bottom: 1px solid var(--color-border-line); }
+  .og-chip { display: inline-flex; align-items: center; gap: var(--cds-gap-xs); white-space: nowrap; }
+  .og-chip i { width: .6rem; height: .6rem; border-radius: 2px; display: inline-block; }
+  .og-defs { margin: 0; padding-left: 1.1rem; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); display: grid; gap: var(--cds-gap-xs); }
+  .og-report { display: flex; flex-direction: column; gap: var(--cds-gap-lg); }
+  .og-report h2 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; }
+  .og-report h3 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+  .og-report p, .og-report li { max-width: 80ch; line-height: 1.5; }
+  .og-report p { margin: 0; }
+  .og-report ul, .og-report ol { margin: 0; padding-left: 1.2rem; display: grid; gap: var(--cds-gap-xs); }
+  .og-dacs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--cds-gap-md); }
+  .og-dac h4 { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); display: flex; align-items: center; gap: var(--cds-gap-xs); }
+  .og-dac h4 i { width: .8rem; height: .8rem; border-radius: 2px; display: inline-block; }
+  .og-dac .kn { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+  .og-dac h5 { margin: var(--cds-gap-xs) 0 0; font-size: var(--cds-font-size-caption); text-transform: uppercase; letter-spacing: .04em; color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); }
+  .og-diff td, .og-diff th { text-align: left !important; vertical-align: top; }
+  .og-diff td:first-child { font-weight: var(--cds-font-weight-medium); white-space: nowrap; }
+  .og-jump { font-size: var(--cds-font-size-caption); display: flex; gap: var(--cds-gap-md); flex-wrap: wrap; }
+  .og-prompt summary { cursor: pointer; font-weight: var(--cds-font-weight-medium); }
+  .og-prompt pre { white-space: pre-wrap; word-break: break-word; font-size: var(--cds-font-size-caption); line-height: 1.5; background: var(--color-bg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md); max-height: 40rem; overflow: auto; margin: var(--cds-gap-sm) 0 0; }
+  [data-dash-source-state=empty] { color: transparent; }
+  [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+  .og-fail { display: flex; align-items: center; justify-content: center; gap: var(--cds-gap-xs); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); min-height: inherit; }
+  .og-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+</style>
+
+<div class="og">
+  <header class="og-head">
+    <h1 id="title">OceanGliders tag adoption across glider data centres</h1>
+    <p class="og-take dash-skeleton" id="takeaway">—</p>
+    <p class="og-jump"><a href="#findings" id="jump-findings">Findings and guidance for data centres</a><a href="#limitations" id="jump-limits">Assumptions and limitations</a><a href="#how-made" id="jump-how">How this dashboard was made</a></p>
+    <p>Every glider deployment found on six data centres: the IOOS Glider DAC, VOTO, BODC, OTN, Coriolis (the OceanGliders GDAC) and IMOS/ANFOG. A deployment record is tagged when its <code>network</code> global attribute starts with "OceanGliders". The same deployment can be held by more than one data centre; unique deployments are matched on WMO ID and start date. The tag became an OG1.0 requirement only in October 2026, so this shows readiness, not compliance.</p>
+  </header>
+
+  <section class="og-tiles" aria-label="Headline figures">
+    <div class="og-tile"><span class="lab">Deployment records</span><span class="num dash-skeleton" data-source="summary" data-field="records" data-row="0">—</span></div>
+    <div class="og-tile"><span class="lab">Unique deployments</span><span class="num dash-skeleton" data-source="summary" data-field="unique" data-row="0">—</span></div>
+    <div class="og-tile"><span class="lab">Tagged OceanGliders</span><span class="num dash-skeleton" data-source="summary" data-field="tagged_unique" data-row="0">—</span></div>
+    <div class="og-tile"><span class="lab">Share tagged</span><span class="num dash-skeleton" data-source="summary" data-field="share" data-row="0">—</span></div>
+    <div class="og-tile"><span class="lab">Data centres with tags</span><span class="num dash-skeleton" data-source="summary" data-field="sources_tagging" data-row="0">—</span></div>
+    <div class="og-tile"><span class="lab">Institutions tagging</span><span class="num dash-skeleton" data-source="summary" data-field="tagging_institutions" data-row="0">—</span></div>
+    <div class="og-tile"><span class="lab">Glider-days</span><span class="num dash-skeleton" data-source="summary" data-field="glider_days" data-row="0">—</span></div>
+    <div class="og-tile"><span class="lab">Glider-days tagged</span><span class="num dash-skeleton" data-source="summary" data-field="days_share" data-row="0">—</span></div>
+  </section>
+
+  <section class="og-card" id="by-source-card">
+    <h2>Deployments by data centre</h2>
+    <p class="note">Records held by each data centre. Solid: tagged OceanGliders. Faded: not tagged.</p>
+    <div class="og-legend" id="source-legend"></div>
+    <div class="og-bars" id="by-source" data-source="by_source"></div>
+  </section>
+
+  <section class="og-grid">
+    <div class="og-card" id="by-year-card">
+      <h2>Deployments by start year</h2>
+      <p class="note" id="yr-note">All records per start year in grey; the tagged part in the colour of the data centre holding it.</p>
+      <div class="og-seg" role="group" aria-label="Which deployments">
+        <button type="button" id="yr-mix" aria-pressed="true">Tagged vs all</button>
+        <button type="button" id="yr-all" aria-pressed="false">All by data centre</button>
+        <button type="button" id="yr-tag" aria-pressed="false">Tagged only</button>
+      </div>
+      <div class="og-seg" role="group" aria-label="Measure">
+        <button type="button" id="yr-records" aria-pressed="true">Records</button>
+        <button type="button" id="yr-days" aria-pressed="false">Glider-days</button>
+      </div>
+      <div class="og-legend" id="year-legend"></div>
+      <div class="og-chart" id="by-year" data-source="by_year"></div>
+    </div>
+    <div class="og-card" id="by-mission-card">
+      <h2>Where the tags point</h2>
+      <p class="note">Tagged records by mission and region, from the <code>network</code> value, coloured by data centre.</p>
+      <div class="og-bars" id="by-mission" data-source="by_mission"></div>
+    </div>
+  </section>
+
+  <div class="og-catbar" id="cat-controls">
+    <span class="note">Format, data mode, QC and platform cards show:</span>
+    <div class="og-seg" role="group" aria-label="Which records in the category cards">
+      <button type="button" id="cat-mix" aria-pressed="true">Tagged vs all</button>
+      <button type="button" id="cat-all" aria-pressed="false">All by data centre</button>
+      <button type="button" id="cat-tag" aria-pressed="false">Tagged only</button>
+    </div>
+    <span class="note" id="cat-note">Colour: tagged records, in the data centre's colour; grey: not tagged. Patterns mark the category.</span>
+  </div>
+
+  <section class="og-card" id="format-card">
+    <h2>Format and data mode</h2>
+    <p class="note">Records per data centre by file format (OG1.0 counted when any of a deployment's files is OG1.0), and deployments with real-time (telemetered, often decimated) and recovered (full-resolution) data, by the highest QC level stated for each.</p>
+    <div class="og-dims">
+      <div class="og-dim"><h3>Format</h3><div class="og-legend" id="leg-format"></div><div class="og-bars" id="dim-format" data-source="by_source_dims"></div></div>
+      <div class="og-dim"><h3>Real-time and recovered data, by QC level</h3><div class="og-legend" id="leg-stream"></div><div class="og-bars" id="dim-stream" data-source="by_source_dims"></div></div>
+    </div>
+  </section>
+
+  <section class="og-grid">
+    <div class="og-card" id="qc-card">
+      <h2>Quality control flags</h2>
+      <p class="note">Whether records carry QC flag variables, whether the flags are described the CF way (flag_values with a matching flag_meanings), and which flag scheme they use.</p>
+      <div class="og-dim"><h3>Flags present and described</h3><div class="og-legend" id="leg-qc"></div><div class="og-bars" id="dim-qc" data-source="by_source_dims"></div></div>
+      <div class="og-dim"><h3>Flag scheme</h3><div class="og-legend" id="leg-scheme"></div><div class="og-bars" id="dim-scheme" data-source="by_source_dims"></div></div>
+    </div>
+    <div class="og-card" id="platform-card">
+      <h2>Platforms</h2>
+      <p class="note">Glider type per data centre, where the metadata say. The IOOS format has no glider-model attribute, so many IOOS records are unknown.</p>
+      <div class="og-dim"><div class="og-legend" id="leg-platform"></div><div class="og-bars" id="dim-platform" data-source="by_source_dims"></div></div>
+    </div>
+  </section>
+
+  <section class="og-card" id="by-inst-card">
+    <h2>Contributions by institution</h2>
+    <p class="note">The 25 largest contributors by records, split by data centre. Solid: tagged. Faded: not tagged.</p>
+    <div class="og-bars" id="by-inst" data-source="by_institution"></div>
+  </section>
+
+  <section class="og-card" id="matrix-card">
+    <h2>Readiness by institution and data centre</h2>
+    <p class="note">Share of each institution's records meeting each criterion, per data centre. For the steering team: names institutions against a requirement that is new.</p>
+    <div class="og-tools"><label for="inst-search" class="note">Search</label><input id="inst-search" type="search" placeholder="Institution or data centre">
+      <div class="og-seg" role="group" aria-label="Cell shading">
+        <button type="button" id="shade-grad" aria-pressed="true">Gradient</button>
+        <button type="button" id="shade-traffic" aria-pressed="false">Traffic light</button>
+      </div>
+      <span class="note" id="shade-note"></span></div>
+    <div class="og-tablebox">
+      <table class="og-table" id="matrix" data-source="by_institution" data-row-key="institution,source">
+        <thead><tr>
+          <th data-field="institution"><button type="button" data-k="institution">Institution</button></th>
+          <th data-field="source"><button type="button" data-k="source">Data centre</button></th>
+          <th data-field="deployments"><button type="button" data-k="deployments">Records</button></th>
+          <th data-field="tagged_share"><button type="button" data-k="tagged_share">Network tag</button></th>
+          <th data-field="site_share"><button type="button" data-k="site_share">Site tag</button></th>
+          <th data-field="recovered_share"><button type="button" data-k="recovered_share">Recovered data</button></th>
+          <th data-field="dm_share"><button type="button" data-k="dm_share">Delayed-mode QC</button></th>
+          <th data-field="wmo_share"><button type="button" data-k="wmo_share">WMO ID</button></th>
+          <th data-field="recent_share"><button type="button" data-k="recent_share">Active since Oct 2024</button></th>
+          <th data-field="og1_share"><button type="button" data-k="og1_share">OG1.0</button></th>
+          <th data-field="qc_share"><button type="button" data-k="qc_share">QC flags</button></th>
+          <th data-field="qc_cf_share"><button type="button" data-k="qc_cf_share">QC flags CF</button></th>
+          <th data-field="glider_days"><button type="button" data-k="glider_days">Glider-days</button></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <ul class="og-defs">
+      <li><b>Network tag:</b> global attribute <code>network</code> starts with "OceanGliders" (on any of the deployment's files).</li>
+      <li><b>Site tag:</b> global attribute <code>oceanGliders_site</code> or <code>site</code> is present.</li>
+      <li><b>Delayed mode:</b> the data centre holds a delayed-mode or recovery file for the deployment.</li>
+      <li><b>WMO ID:</b> a 5 to 8 digit WMO identifier in the metadata.</li>
+      <li><b>Active since Oct 2024:</b> data end (or, where no end date is given, start) on or after 2024-10-27.</li>
+      <li><b>Coriolis</b> serves mostly EGO-format files, which carry <code>network</code> only when the provider adds it (C-PROOF's do), alongside some OG1 files. Its institution is the glider owner in its deployment metadata; times, glider model and WMO ID come from the GDAC's own trajectory index.</li>
+      <li><b>Format:</b> OG1.0 when Conventions or format_version name OG 1.0; EGO; IOOS DAC (IOOS Glider NetCDF, including older Unidata/COARDS files); IMOS; else Other.</li>
+      <li><b>Real-time vs recovered:</b> IOOS <code>-delayed</code> datasets, VOTO <code>delayed_</code>/<code>OG_complete_</code>, OTN <code>_delayed</code>, BODC's recovery file collection, Coriolis data mode P (its P files are full resolution: checked on two Slocum deployments, 1.6 to 2 s sampling against 4 to 14 s in the R files) and IMOS mission folders are recovered; the rest are real time. "Delayed" in IOOS, VOTO and OTN names means recovered, not delayed-mode QC.</li>
+      <li><b>QC flags in Coriolis P files:</b> they have flag variables (EGO requires them), but in one checked SOCIB file (sdeep01_0028_P) 66% of the 15.6 million flag values were 0 (no QC performed), 22% were 1 and 87 were 4; the file states qc_manual "none".</li>
+      <li><b>QC level</b> (per stream, highest stated): <b>Delayed mode</b> when the metadata say the data were manually calibrated or quality controlled in delayed mode, or data_mode is D (IMOS "Delayed Mode"); <b>Automatic QC</b> when they state automatic, QARTOD or Argo-method QC, or cite the EGO QC-tests manual or processing chain; <b>No QC</b> when they say no QC, raw, Level 0 or "as is" (IMOS FV00 real-time files included); otherwise <b>Not stated</b>. Most of this is free text in processing_level. VOTO's OG1 files state QARTOD QC but carry no flag variables.</li>
+      <li><b>Glider-days:</b> end minus start of the deployment's data (ERDDAP time range, file time coverage, or first and last valid JULD/TIME in EGO files); spans under 0 or over 400 days are left out. The tile sums unique deployments.</li>
+      <li><b>QC flags:</b> any flag variable (flag_values or flag_meanings attributes, or a name ending in _qc). <b>CF:</b> every flag variable has flag_values and a flag_meanings list of the same length. <b>Scheme:</b> from the flag values: IOC/QARTOD (1, 2, 3, 4, 9), Argo-style (0 to 9), SeaDataNet L20 (with A, B, Q), Other; "Not described" means _qc variables without flag attributes.</li>
+      <li><b>Platform:</b> from platform, instrument and glider-model attributes, title and summary text and the Coriolis index; wave gliders (surface vehicles) are left out of every count.</li>
+      <li><b>BODC</b> recovery (delayed) data are held as OG1 files in ERDDAP file collections, not as datasets; their deployments are counted from each folder's deployment metadata, and QC for deployments known only from those files is "Not read" (the server doesn't allow reading file headers without downloading whole files).</li>
+      <li><b>Unique deployments:</b> records on different data centres with the same WMO ID and start dates within 3 days count once. IMOS records have no WMO ID and OTN few, so the unique count is an upper bound.</li>
+    </ul>
+  </section>
+
+  <section class="og-report og-card" id="findings">
+    <h2>Findings for data management across data centres</h2>
+    <p class="og-take" id="report-lede">—</p>
+    <p>Written as a starting point for organising glider data management across data assembly centres, and for a federated OceanGliders ERDDAP. Every number below comes from the same snapshot as the charts above (2026-10-27/28); the spot checks at the end record what was verified by opening files.</p>
+
+    <h3>Data centre profiles</h3>
+    <div class="og-tablebox">
+      <table class="og-table" id="dac-profile" data-source="dac_profile" data-row-key="source">
+        <thead><tr>
+          <th data-field="source">Data centre</th><th data-field="records">Records</th><th data-field="tagged_share">Network tag</th>
+          <th data-field="site_share">Site tag</th><th data-field="og1_share">OG1.0</th><th data-field="recovered_share">Recovered data</th>
+          <th data-field="dm_share">Delayed-mode QC</th><th data-field="qc_cf_share">CF QC flags</th><th data-field="wmo_share">WMO ID</th>
+          <th data-field="platform_known_share">Platform known</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h3>Where data centres behave differently</h3>
+    <div class="og-tablebox">
+      <table class="og-table og-diff">
+        <thead><tr><th>Product or field</th><th>How it differs</th></tr></thead>
+        <tbody>
+          <tr><td>Real time vs recovered</td><td>Marked by dataset names (IOOS <code>-delayed</code>, VOTO <code>nrt_</code>/<code>delayed_</code>, OTN <code>_realtime</code>/<code>_delayed</code>), a separate file collection (BODC), a data_mode letter (Coriolis R/A/P) or a folder and file version (IMOS <code>REALTIME/</code> FV00 vs FV01). No two data centres use the same mechanism.</td></tr>
+          <tr><td>What "delayed" means</td><td>Recovered full-resolution data at IOOS, VOTO and OTN; delayed-mode scientific QC at IMOS (and in Argo practice). The same word marks different products.</td></tr>
+          <tr><td>QC level</td><td>Stated in free-text <code>processing_level</code> (IOOS, VOTO, BODC, OTN), by citing a QC manual (Coriolis <code>qc_manual</code>), or by <code>data_mode</code> (IMOS). No controlled list, so "delayed mode dataset" and "no quality control" can appear in the same sentence.</td></tr>
+          <tr><td>QC flags</td><td>IOC/QARTOD 1, 2, 3, 4, 9 (IOOS, VOTO IOOS-format files), Argo-style 0 to 9 (Coriolis EGO, IMOS, OTN positions), <code>_QC</code> variables without flag attributes (BODC OG1), or none (VOTO OG1, most OTN). Same numbers carry different words (code 2 "not_evaluated" vs "UNKNOWN").</td></tr>
+          <tr><td>File format</td><td>OG1.0 (VOTO, BODC), IOOS Glider DAC v2/v3 (IOOS, OTN, VOTO), EGO 1.2 to 1.4 (Coriolis), IMOS-1.4 (IMOS).</td></tr>
+          <tr><td>Network and site tags</td><td>Present only where the provider writes them (VOTO; C-PROOF, Scripps, WHOI at IOOS; C-PROOF and others in EGO at Coriolis). Site written as <code>site</code> or <code>oceanGliders_site</code>. Some values use networks or regions not in the BOON vocabulary, or ";" instead of "," between networks.</td></tr>
+          <tr><td>WMO ID</td><td>Global attribute (VOTO <code>wmo_id</code>, BODC <code>wmoid</code>), platform variable (IOOS), deployment JSON and index (Coriolis), or absent (IMOS, most OTN).</td></tr>
+          <tr><td>Glider model</td><td>Global attributes (VOTO), instrument list (BODC), platform variables (EGO), folder name (IMOS), or not recorded (IOOS).</td></tr>
+          <tr><td>Time coverage</td><td>ERDDAP time ranges (IOOS, VOTO, BODC, OTN), file attributes (IMOS), or neither (EGO files; the Coriolis index fills the gap but its start times are unreliable).</td></tr>
+          <tr><td>Institution</td><td>Free text: acronyms (NOC, NOCS, NOCL), full names, or lists of partners in one string.</td></tr>
+          <tr><td>Access</td><td>ERDDAP datasets (IOOS, VOTO, OTN, BODC real time), an ERDDAP file collection without byte ranges (BODC recovery), an HTTP file tree with an index (Coriolis) or an S3 archive (IMOS).</td></tr>
+          <tr><td>Processing software</td><td>Not recorded in any standard attribute; at best free text in <code>history</code> or <code>processing</code>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Guidance for each data centre</h3>
+    <p>For each data centre: what is missing for an OceanGliders dataset (tags, format, QC description, identifiers), and where it does the same thing differently from the others.</p>
+    <div class="og-dacs">
+      <div class="og-card og-dac" id="dac-ioos">
+        <h4><i data-dac="IOOS"></i>IOOS</h4>
+        <p class="kn"><span data-source="dac_profile" data-where="source=IOOS" data-field="records" class="dash-skeleton">—</span> records · <span data-source="dac_profile" data-where="source=IOOS" data-field="tagged_share" class="dash-skeleton">—</span> tagged · <span data-source="dac_profile" data-where="source=IOOS" data-field="og1_share" class="dash-skeleton">—</span> OG1 · <span data-source="dac_profile" data-where="source=IOOS" data-field="recovered_share" class="dash-skeleton">—</span> recovered · <span data-source="dac_profile" data-where="source=IOOS" data-field="dm_share" class="dash-skeleton">—</span> delayed-mode QC · <span data-source="dac_profile" data-where="source=IOOS" data-field="qc_cf_share" class="dash-skeleton">—</span> CF QC flags · <span data-source="dac_profile" data-where="source=IOOS" data-field="wmo_share" class="dash-skeleton">—</span> WMO ID</p>
+        <h5>Missing or incomplete</h5>
+        <ul><li>The OceanGliders <code>network</code> tag is used by only three institutions (C-PROOF, Scripps, WHOI); the other contributors, including the largest (Rutgers, the OOI arrays, Oregon State, NAVOCEANO), carry none.</li>
+<li>No attribute for the glider model, so about half the records can't be assigned a platform type.</li>
+<li>No OG1.0 output; files follow the IOOS Glider DAC format (v2/v3).</li>
+<li>Site is written as <code>oceanGliders_site</code> (C-PROOF files), not the BOON guideline's <code>site</code>.</li></ul>
+        <h5>Does differently</h5>
+        <ul><li>"Delayed" in dataset names means recovered full-resolution data; whether it was quality controlled is only in free-text <code>processing_level</code>, which often says "Delayed mode dataset" alongside "No quality control provided".</li>
+<li>The WMO ID sits on the <code>platform</code> variable, not in the global attributes.</li>
+<li>QC flags mostly IOC/QARTOD (1, 2, 3, 4, 9), but some groups use Argo-style 0 to 9 and some files hold flag variables with "No QC performed".</li></ul>
+      </div>
+      <div class="og-card og-dac" id="dac-voto">
+        <h4><i data-dac="VOTO"></i>VOTO</h4>
+        <p class="kn"><span data-source="dac_profile" data-where="source=VOTO" data-field="records" class="dash-skeleton">—</span> records · <span data-source="dac_profile" data-where="source=VOTO" data-field="tagged_share" class="dash-skeleton">—</span> tagged · <span data-source="dac_profile" data-where="source=VOTO" data-field="og1_share" class="dash-skeleton">—</span> OG1 · <span data-source="dac_profile" data-where="source=VOTO" data-field="recovered_share" class="dash-skeleton">—</span> recovered · <span data-source="dac_profile" data-where="source=VOTO" data-field="dm_share" class="dash-skeleton">—</span> delayed-mode QC · <span data-source="dac_profile" data-where="source=VOTO" data-field="qc_cf_share" class="dash-skeleton">—</span> CF QC flags · <span data-source="dac_profile" data-where="source=VOTO" data-field="wmo_share" class="dash-skeleton">—</span> WMO ID</p>
+        <h5>Missing or incomplete</h5>
+        <ul><li>Its OG1 files state QARTOD QC in <code>processing_level</code> but carry no flag variables; the flags exist only in the parallel IOOS-format datasets.</li>
+<li>No delayed-mode (scientific) QC is stated for any deployment.</li></ul>
+        <h5>Does differently</h5>
+        <ul><li>The reference case for tagging: almost every deployment has <code>network</code> and <code>site</code>, with values from the BOON vocabulary.</li>
+<li>Publishes each deployment twice (IOOS format and OG1), each as real time and recovered: <code>nrt_</code>, <code>delayed_</code>, <code>OG_nrt_</code>, <code>OG_complete_</code>; "delayed" means recovered.</li></ul>
+      </div>
+      <div class="og-card og-dac" id="dac-bodc">
+        <h4><i data-dac="BODC"></i>BODC</h4>
+        <p class="kn"><span data-source="dac_profile" data-where="source=BODC" data-field="records" class="dash-skeleton">—</span> records · <span data-source="dac_profile" data-where="source=BODC" data-field="tagged_share" class="dash-skeleton">—</span> tagged · <span data-source="dac_profile" data-where="source=BODC" data-field="og1_share" class="dash-skeleton">—</span> OG1 · <span data-source="dac_profile" data-where="source=BODC" data-field="recovered_share" class="dash-skeleton">—</span> recovered · <span data-source="dac_profile" data-where="source=BODC" data-field="dm_share" class="dash-skeleton">—</span> delayed-mode QC · <span data-source="dac_profile" data-where="source=BODC" data-field="qc_cf_share" class="dash-skeleton">—</span> CF QC flags · <span data-source="dac_profile" data-where="source=BODC" data-field="wmo_share" class="dash-skeleton">—</span> WMO ID</p>
+        <h5>Missing or incomplete</h5>
+        <ul><li>No <code>network</code> or <code>site</code> tags.</li>
+<li>Recovery data are not ERDDAP datasets: they sit in a file collection whose files can't be read by byte range, so their metadata can't be inspected without downloading whole files.</li>
+<li><code>_QC</code> variables have no <code>flag_values</code> or <code>flag_meanings</code>, so they are not CF-described and their scheme can't be read.</li>
+<li>The ERDDAP holds mostly recent deployments; older NOC deployments appear only on Coriolis, and recent ones (from 2025) don't reach Coriolis.</li></ul>
+        <h5>Does differently</h5>
+        <ul><li>Real-time OG1 datasets on ERDDAP, named <code>_R</code>, with <code>processing_level</code> "No quality control applied"; recovery files expected to move to <code>_P</code> under the proposed OG1 data modes.</li></ul>
+      </div>
+      <div class="og-card og-dac" id="dac-otn">
+        <h4><i data-dac="OTN"></i>OTN</h4>
+        <p class="kn"><span data-source="dac_profile" data-where="source=OTN" data-field="records" class="dash-skeleton">—</span> records · <span data-source="dac_profile" data-where="source=OTN" data-field="tagged_share" class="dash-skeleton">—</span> tagged · <span data-source="dac_profile" data-where="source=OTN" data-field="og1_share" class="dash-skeleton">—</span> OG1 · <span data-source="dac_profile" data-where="source=OTN" data-field="recovered_share" class="dash-skeleton">—</span> recovered · <span data-source="dac_profile" data-where="source=OTN" data-field="dm_share" class="dash-skeleton">—</span> delayed-mode QC · <span data-source="dac_profile" data-where="source=OTN" data-field="qc_cf_share" class="dash-skeleton">—</span> CF QC flags · <span data-source="dac_profile" data-where="source=OTN" data-field="wmo_share" class="dash-skeleton">—</span> WMO ID</p>
+        <h5>Missing or incomplete</h5>
+        <ul><li>No <code>network</code> tags and few WMO IDs.</li>
+<li>Most files carry no QC flags; where present they cover GPS positions only, and some <code>flag_meanings</code> strings are malformed.</li>
+<li>Wave gliders sit in the same collection as underwater gliders, with no attribute to separate them other than <code>platform_type</code>.</li></ul>
+        <h5>Does differently</h5>
+        <ul><li>Real time and recovered as <code>_realtime</code> and <code>_delayed</code> datasets in the IOOS v3 "noqartod" format; every file says it is provided "as is" without QC.</li></ul>
+      </div>
+      <div class="og-card og-dac" id="dac-coriolis">
+        <h4><i data-dac="Coriolis"></i>Coriolis</h4>
+        <p class="kn"><span data-source="dac_profile" data-where="source=Coriolis" data-field="records" class="dash-skeleton">—</span> records · <span data-source="dac_profile" data-where="source=Coriolis" data-field="tagged_share" class="dash-skeleton">—</span> tagged · <span data-source="dac_profile" data-where="source=Coriolis" data-field="og1_share" class="dash-skeleton">—</span> OG1 · <span data-source="dac_profile" data-where="source=Coriolis" data-field="recovered_share" class="dash-skeleton">—</span> recovered · <span data-source="dac_profile" data-where="source=Coriolis" data-field="dm_share" class="dash-skeleton">—</span> delayed-mode QC · <span data-source="dac_profile" data-where="source=Coriolis" data-field="qc_cf_share" class="dash-skeleton">—</span> CF QC flags · <span data-source="dac_profile" data-where="source=Coriolis" data-field="wmo_share" class="dash-skeleton">—</span> WMO ID</p>
+        <h5>Missing or incomplete</h5>
+        <ul><li>Only EGO files; no OG1.0 output.</li>
+<li>Recovered data are labelled with data mode P (verified as full resolution) rather than a documented "recovered" mode; their QC flags are mostly 0 (no QC performed) and <code>qc_manual</code> says "none".</li>
+<li>Recovered (P) files come almost entirely from one provider (SOCIB), so the P convention is in practice one provider's choice, not a GDAC-wide rule.</li>
+<li>Time metadata are unreliable: no time-coverage attributes in EGO files, and the GDAC index's start times include 1970/2000 placeholders; per-deployment summaries from its ERDDAP aggregation time out.</li></ul>
+        <h5>Does differently</h5>
+        <ul><li>Tags only where the provider writes them into EGO 1.4 files (C-PROOF, University of Victoria, DFO, SOCIB, BIO, CEOTR).</li>
+<li>States automatic QC by citing the EGO QC-tests manual (<code>qc_manual</code> DOI) rather than in <code>processing_level</code>.</li>
+<li>Publishes a machine-readable index of every file (<code>glider_traj_index.txt</code>), which no other data centre does.</li></ul>
+      </div>
+      <div class="og-card og-dac" id="dac-imos">
+        <h4><i data-dac="IMOS"></i>IMOS</h4>
+        <p class="kn"><span data-source="dac_profile" data-where="source=IMOS" data-field="records" class="dash-skeleton">—</span> records · <span data-source="dac_profile" data-where="source=IMOS" data-field="tagged_share" class="dash-skeleton">—</span> tagged · <span data-source="dac_profile" data-where="source=IMOS" data-field="og1_share" class="dash-skeleton">—</span> OG1 · <span data-source="dac_profile" data-where="source=IMOS" data-field="recovered_share" class="dash-skeleton">—</span> recovered · <span data-source="dac_profile" data-where="source=IMOS" data-field="dm_share" class="dash-skeleton">—</span> delayed-mode QC · <span data-source="dac_profile" data-where="source=IMOS" data-field="qc_cf_share" class="dash-skeleton">—</span> CF QC flags · <span data-source="dac_profile" data-where="source=IMOS" data-field="wmo_share" class="dash-skeleton">—</span> WMO ID</p>
+        <h5>Missing or incomplete</h5>
+        <ul><li>No <code>network</code> or <code>site</code> tags.</li>
+<li>No WMO IDs in the files, so its deployments can't be matched against other data centres or OceanOPS.</li>
+<li>IMOS-format NetCDF, not OG1.0; files served from an S3 archive and the AODN portal, not ERDDAP.</li></ul>
+        <h5>Does differently</h5>
+        <ul><li>The clearest separation of streams and QC level: real time (FV00, "Near Real Time Mode") in <code>REALTIME/</code> and delayed mode (FV01, "Delayed Mode") per mission, with QC flags on nearly every file; the only data centre where delayed-mode QC is the norm.</li></ul>
+      </div>
+    </div>
+
+    <h3>Towards a federated OceanGliders ERDDAP</h3>
+    <ol>
+      <li><b>One dataset per deployment and stream, with a mandatory data mode.</b> Publish real-time, recovered and delayed-mode products as separate datasets with a consistent name and a <code>data_mode</code> attribute that every data centre fills the same way (R real time, P recovered, D delayed-mode QC, as proposed for OG1). Stop using "delayed" for recovered data.</li>
+      <li><b>A controlled QC level.</b> Replace free-text <code>processing_level</code> with a short controlled list (raw; automatic QC; delayed-mode QC), plus a citation of the QC procedure and the processing software and version.</li>
+      <li><b>One flag scheme, CF-described.</b> Require <code>flag_values</code> and matching <code>flag_meanings</code> on every QC variable, from one agreed scheme linked to a vocabulary (SeaDataNet L20 has been proposed), with real flag values, not placeholders.</li>
+      <li><b>Required discovery attributes, as global attributes.</b> <code>network</code> and <code>site</code> (validated against the BOON vocabulary), WMO ID, glider model, institution as a persistent identifier (e.g. EDMO or ROR), and <code>time_coverage_start</code>/<code>end</code>.</li>
+      <li><b>ERDDAP-to-ERDDAP harvesting.</b> Every data centre exposes each product as an ERDDAP dataset (not a file tree), so a federated ERDDAP can aggregate them with EDDTableFromErddap; recovery files need byte-range access at minimum.</li>
+      <li><b>A shared deployment identifier.</b> The same deployment appears at more than one data centre (e.g. NOC on BODC and Coriolis); a persistent deployment ID (OceanOPS ID, or WMO ID plus start date) avoids double counting and lets a federated catalogue link the copies.</li>
+      <li><b>Validation at ingestion.</b> Check attributes, vocabulary values and time coverage when files arrive, and report back to the provider; most issues above would be caught automatically.</li>
+    </ol>
+    <p id="noc-line">—</p>
+
+
+    <h3 id="limitations">Assumptions and limitations</h3>
+    <ul>
+      <li><b>A snapshot of six data centres.</b> Read on 2026-10-27/28 from IOOS, VOTO, BODC, OTN, Coriolis and IMOS. Glider data held only elsewhere (other national or institutional servers, EMODnet) are not counted, so totals describe these six, not the global fleet.</li>
+      <li><b>Metadata, not data.</b> Everything comes from what the files and catalogues state (global attributes, flag attributes, names, indexes). Work that was done but not recorded is invisible: a centre may apply delayed-mode QC that its files don't mention, and the dashboard will show "automatic" or "not stated".</li>
+      <li><b>QC level is read from free text.</b> Most data centres describe QC in free-text <code>processing_level</code>, classified by keywords (rules under Definitions). Unusual wording can be misclassified; QC flag values themselves were checked in only one file.</li>
+      <li><b>Real time vs recovered follows each centre's naming.</b> Dataset names, folders and data-mode letters were taken at face value. Coriolis data mode P was checked as full resolution on two Slocum deployments (Ifremer, SOCIB) and assumed for all P files; IMOS mission (FV01) folders are taken as recovered from their "Delayed Mode" label.</li>
+      <li><b>What counts as a deployment.</b> Records are grouped per data centre by its own key (IOOS dataset without <code>-delayed</code>, VOTO glider and mission, BODC and OTN deployment number, Coriolis and IMOS folder). A deployment split across several keys, or one key holding several deployments, is miscounted.</li>
+      <li><b>Unique deployments are an upper bound.</b> Copies on different centres are matched only on WMO ID and start date within 3 days. IMOS records no WMO IDs and OTN few, and wrong start dates break matches, so some duplicates remain.</li>
+      <li><b>Tagged means the attribute is there.</b> A record counts as tagged if <code>network</code> starts with "OceanGliders"; values outside the BOON vocabulary still count. Format is read from Conventions and format_version strings; files were not validated against the OG1.0 specification.</li>
+      <li><b>CF check is shallow.</b> "CF-described" means every flag variable has <code>flag_values</code> and a <code>flag_meanings</code> list of the same length; meanings were not checked against a vocabulary, nor flags against the data.</li>
+      <li><b>Glider-days come from metadata time ranges.</b> They can include pre- or post-deployment test data; spans under 0 or over 400 days are left out, and deployments without an end time (BODC folders without ERDDAP datasets, some Coriolis files) have none. The total sums unique deployments, taking the longest span in each match group.</li>
+      <li><b>BODC file collections were not opened.</b> BODC's recovery and older real-time OG1 files can't be read by byte range, so their tags and QC are unknown ("Not read") unless an ERDDAP dataset exists for the same deployment; they are assumed to be OG1 from the collection name.</li>
+      <li><b>Platform and institution are text matching.</b> Glider type is matched in attributes and titles (IOOS has no glider-model attribute, so many IOOS records are "Unknown"); wave gliders were dropped the same way. Institution names were merged by a hand-made alias list (raw names kept in the data); groupings such as "Multi-institution partnership" and separate OOI arrays are judgment calls.</li>
+      <li><b>"Active since Oct 2024"</b> uses the end date, or the start date where no end date is known.</li>
+      <li><b>Built with an AI assistant.</b> Harvest, classification and page were produced by Claude for Filipa Carvalho and spot-checked against raw metadata and files (table below); not independently reviewed. The scripts are kept in <code>lab_docs/scripts/oceangliders_tags</code> so the analysis can be re-run and checked.</li>
+    </ul>
+
+    <h3>Spot checks behind these findings</h3>
+    <div class="og-tablebox">
+      <table class="og-table og-diff" id="spot-checks" data-source="spot_checks" data-row-key="id">
+        <thead><tr><th data-field="check">Check</th><th data-field="where">Where</th><th data-field="result">Result</th><th data-field="date">Date</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h3 id="how-made">How this dashboard was made</h3>
+    <p>The prompt below, synthesised from the requests made while building this dashboard, reproduces the harvest, the analyses and this page. The scripts that implement it are in <code>lab_docs/scripts/oceangliders_tags</code> (README and PROMPT.md).</p>
+    <details class="og-prompt" id="prompt-box"><summary>Show the prompt</summary><pre>Build an interactive dashboard, for the OceanGliders steering team and glider data-centre managers, showing how far glider data across data centres meet OceanGliders&#x27; requirements (OG1.0 format, `network` and `site` tags from the BOON metadata guidelines, an approved data centre), and use it as a launchpad for organising data management across data assembly centres (DACs), with a federated OceanGliders ERDDAP in mind. Frame everything as readiness, not compliance: the `network`/`site` requirement was only agreed in October 2026.
+
+## Data: harvest every glider deployment from six data centres, from the root of each
+
+1. **IOOS Glider DAC** (https://gliders.ioos.us/erddap): `allDatasets`, then `info/&lt;datasetID&gt;/index.csv` for every dataset. Keep all global attributes, the `platform` variable&#x27;s `wmo_id` and `type`, the variable list, and `flag_values`/`flag_meanings` of every flag variable.
+2. **VOTO** (https://erddap.observations.voiceoftheocean.org/erddap): the `nrt_`, `delayed_`, `OG_nrt_` and `OG_complete_` datasets; same fields.
+3. **BODC** (https://linkedsystems.uk/erddap): datasets with glider/Slocum/Seaglider in the title, plus the OG1 file collections `Public_OG1_Data_001` (real time) and `Public_OG1_Data_001_Recovery` (recovery), one EGO deployment JSON per folder (the files can&#x27;t be read by byte range).
+4. **OTN** (https://erddap.oceantrack.org/erddap): Trajectory/TrajectoryProfile datasets.
+5. **Coriolis, the OceanGliders GDAC** (https://data-oceangliders.ifremer.fr/): `glider_traj_index.txt` (time coverage, WMO, glider model, owner per file), each deployment folder&#x27;s JSON, and each NetCDF header read by HTTP byte range.
+6. **IMOS ANFOG** (S3 `imos-data`, prefix `IMOS/ANFOG/`): one header per deployment folder (FV01 preferred) by byte range.
+
+Gotchas to handle: some ERDDAPs publish a global attribute `id` that is not the datasetID (store the datasetID separately); netCDF4 isn&#x27;t thread-safe (read files in processes); check a file&#x27;s signature before choosing the classic or HDF5 reader (a wrong guess sits through long timeouts); EGO files have no time-coverage attributes and often fill `TIME` but not `JULD`; the Coriolis index `time_coverage_start` has 1970/2000 placeholders and earlier-deployment starts (use `deployment_start_date`, or the folder date when they disagree by more than 60 days); keep Coriolis to a few parallel requests.
+
+## One row per deployment per data centre, with
+
+- **Tag:** `network` starts with &quot;OceanGliders&quot;; mission and region from its `&gt;` parts; **site** from `site` or `oceanGliders_site`.
+- **Format:** OG1.0, EGO, IOOS DAC (incl. older Unidata/COARDS files), IMOS, Other; plus OG1 available on any file.
+- **Data mode column:** from `data_mode`, else naming, with recovered datasets as P (never D from a name).
+- **Stream:** real time (telemetered, often decimated) vs recovered (full resolution). Recovered: IOOS `-delayed`, VOTO `delayed_`/`OG_complete_`, OTN `_delayed`, BODC recovery collection, Coriolis data mode P (verify by sampling resolution of a P vs R file), IMOS mission folders. &quot;Delayed&quot; in names means recovered, not delayed-mode QC.
+- **QC level per stream** (highest stated): Delayed mode (manually calibrated / QC&#x27;d in delayed mode, data_mode D, IMOS &quot;Delayed Mode&quot;); Automatic QC (automatic, QARTOD, Argo-method, EGO QC-tests manual DOI 10.13155/51485 or EGO processing chain, data_mode A); No QC (no QC, raw, Level 0, &quot;as is&quot;, IMOS FV00); else Not stated; BODC folder-only deployments Not read. Check &quot;no QC&quot; wording before &quot;delayed mode&quot;, because IOOS writes &quot;Delayed mode dataset&quot; for recovered raw data.
+- **QC flags:** present (flag attributes or `_qc` names); CF-described (every flag variable has `flag_values` and an equal-length `flag_meanings`); scheme by majority of flag variables (IOC/QARTOD 1,2,3,4,9; Argo-style 0-9; SeaDataNet L20 with A/B/Q; Other; Not described).
+- **Platform:** Slocum, Seaglider, SeaExplorer, Spray or Unknown from attributes, title/summary text and the Coriolis index; drop wave gliders everywhere.
+- **Glider-days:** end minus start; leave out spans under 0 or over 400 days.
+- **WMO ID**, **active since** two years before the snapshot, **institution** normalised (merge spelling variants and acronyms, keep the raw string), and a **match group** for the same deployment on more than one data centre (same WMO ID, start dates within 3 days).
+
+## Dashboard
+
+- Each data centre has its own colour throughout. Tagged records are drawn in that colour, untagged in grey; categories are told apart by **pattern** in the data centre&#x27;s colour (solid for the target category, then stripes, dots, fine lines, faded, outline), never by shades of one colour.
+- **Tiles:** records, unique deployments, tagged (and share), data centres with tags &quot;N of M&quot;, institutions tagging &quot;N of M&quot;, glider-days and tagged share.
+- **Deployments by data centre** (tagged solid, untagged faded).
+- **By start year**, with a Records | Glider-days switch and three views: Tagged vs all (grey all, coloured tagged by data centre), All by data centre, Tagged only.
+- **Where the tags point:** mission &gt; region.
+- **Format**, **real-time and recovered data by QC level** (two rows per data centre), **QC flags** (present/CF and scheme) and **platforms**, all with the same three-way switch.
+- **Largest institutions** split by data centre.
+- **Readiness matrix** by institution and data centre (network tag, site tag, recovered data, delayed-mode QC, WMO ID, active, OG1.0, QC flags, CF flags, glider-days), sortable and searchable, with a Gradient | Traffic light switch (red under 50%, amber 50-80% with a strong amber, green 80% and over).
+- **Definitions** for every criterion and caveat.
+- **Assumptions and limitations** of the analysis (snapshot scope, metadata not data, free-text QC classification, naming-based streams, deployment keys, matching as an upper bound, shallow CF and format checks, glider-days from metadata, unread BODC files, text-matched platform and institution, AI-built and spot-checked), and **How this dashboard was made** with this prompt, both linked from the top of the page.
+- **Findings report** at the end: a lede, data-centre profile table (traffic light), &quot;where data centres behave differently&quot; table (stream separation, meaning of &quot;delayed&quot;, QC level statements, flag schemes, format, tags, WMO ID, glider model, time coverage, institution naming, access, processing software), a guidance card per data centre (&quot;missing or incomplete&quot; and &quot;does differently&quot;, with its key numbers), recommendations for a federated OceanGliders ERDDAP (one dataset per deployment and stream with R/P/D data mode; controlled QC level; one CF-described flag scheme; required global discovery attributes validated against the BOON vocabulary; ERDDAP-to-ERDDAP harvesting; a shared deployment ID; validation at ingestion), a worked duplication example (NOC on BODC and Coriolis), and a table of the spot checks made by opening files.
+
+## Verify before publishing
+
+Spot-check at least one deployment per data centre against its raw metadata; check every claim in the guidance against the data (counts, shares, who holds the tags); state what was checked by opening files; and keep every number on the page computed from the data.</pre></details>
+  </section>
+</div>
+
+<script>
+window.OG_SOURCES = ['IOOS', 'VOTO', 'BODC', 'OTN', 'Coriolis', 'IMOS'];
+
+dash.calc('summary', {
+  title: 'Headline counts',
+  description: 'Records, unique deployments (matched across data centres), tagged deployments and who holds them.',
+  inputs: ['deployments'],
+  fn: (deployments) => {
+    const groups = new Map();
+    for (const d of deployments) groups.set(d.group, (groups.get(d.group) || false) || d.tagged === '1');
+    const tagged = deployments.filter(d => d.tagged === '1');
+    const taggedUnique = [...groups.values()].filter(Boolean).length;
+    const gdays = new Map();
+    for (const d of deployments) {
+      const v = Number(d.glider_days);
+      if (!Number.isFinite(v) || d.glider_days === '') continue;
+      const g = gdays.get(d.group) || { days: 0, tagged: false };
+      g.days = Math.max(g.days, v); g.tagged = g.tagged || d.tagged === '1';
+      gdays.set(d.group, g);
+    }
+    const totalDays = [...gdays.values()].reduce((s, g) => s + g.days, 0);
+    const taggedDays = [...gdays.values()].filter(g => g.tagged).reduce((s, g) => s + g.days, 0);
+    return [{
+      glider_days: Math.round(totalDays),
+      tagged_days: Math.round(taggedDays),
+      days_share: totalDays ? taggedDays / totalDays : 0,
+      records: deployments.length,
+      unique: groups.size,
+      tagged_unique: taggedUnique,
+      share: taggedUnique / groups.size,
+      sources: new Set(deployments.map(d => d.source)).size,
+      sources_tagging: new Set(tagged.map(d => d.source)).size,
+      institutions: new Set(deployments.map(d => d.institution)).size,
+      tagging_institutions: new Set(tagged.map(d => d.institution)).size
+    }];
+  }
+});
+
+dash.calc('by_source', {
+  title: 'Records by data centre',
+  description: 'Deployment records per data centre, tagged, and how many are also held by another data centre.',
+  inputs: ['deployments'],
+  fn: (deployments) => {
+    const m = new Map();
+    for (const d of deployments) {
+      const r = m.get(d.source) || { source: d.source, deployments: 0, tagged: 0, also_elsewhere: 0 };
+      r.deployments++;
+      if (d.tagged === '1') r.tagged++;
+      if (d.also_in) r.also_elsewhere++;
+      m.set(d.source, r);
+    }
+    return [...m.values()].sort((a, b) => b.deployments - a.deployments);
+  }
+});
+
+dash.calc('by_year', {
+  title: 'Records by start year and data centre',
+  description: 'Deployment records per start year and data centre, all and tagged.',
+  inputs: ['deployments'],
+  fn: (deployments) => {
+    const m = new Map();
+    for (const d of deployments) {
+      if (!d.start_year) continue;
+      const k = d.start_year + '|' + d.source;
+      const r = m.get(k) || { year: d.start_year, source: d.source, all: 0, tagged: 0, days_all: 0, days_tagged: 0 };
+      const v = Number(d.glider_days);
+      const gd = d.glider_days !== '' && Number.isFinite(v) ? v : 0;
+      r.all++; r.days_all += gd;
+      if (d.tagged === '1') { r.tagged++; r.days_tagged += gd; }
+      m.set(k, r);
+    }
+    return [...m.values()].sort((a, b) => a.year.localeCompare(b.year));
+  }
+});
+
+dash.calc('by_mission', {
+  title: 'Tagged records by mission, region and data centre',
+  description: 'Tagged records grouped by the mission and region in the network attribute, per data centre.',
+  inputs: ['deployments'],
+  fn: (deployments) => {
+    const m = new Map();
+    for (const d of deployments.filter(d => d.tagged === '1')) {
+      const g = d.mission + ' > ' + d.region;
+      const k = g + '|' + d.source;
+      const r = m.get(k) || { group: g, source: d.source, deployments: 0 };
+      r.deployments++;
+      m.set(k, r);
+    }
+    return [...m.values()];
+  }
+});
+
+dash.calc('by_source_dims', {
+  title: 'Records by data centre and category',
+  description: 'Records and glider-days per data centre for format, data stream and QC level, QC flags and platform.',
+  inputs: ['deployments'],
+  fn: (deployments) => {
+    const qc = (d) => d.qc_present === '' ? 'Not read' : d.qc_present !== '1' ? 'No QC flags' : d.qc_scheme === 'Not described' ? 'QC flags, not described' : d.qc_cf === '1' ? 'QC flags, CF' : 'QC flags, CF incomplete';
+    const dims = {
+      format: (d) => d.format || 'Other',
+      qc: qc,
+      qc_scheme: (d) => d.qc_scheme || 'None',
+      platform: (d) => d.platform || 'Unknown'
+    };
+    const m = new Map();
+    for (const d of deployments) {
+      for (const [stream, has, lv] of [['NRT', d.nrt, d.nrt_qc], ['Recovered', d.recovered, d.rec_qc]]) {
+        if (has !== '1') continue;
+        const k = d.source + '|stream|' + stream + '|' + lv;
+        const r = m.get(k) || { source: d.source, dimension: 'stream', stream, category: lv || 'Not stated', records: 0, tagged_records: 0, glider_days: 0 };
+        r.records++;
+        if (d.tagged === '1') r.tagged_records++;
+        m.set(k, r);
+      }
+      const v = Number(d.glider_days);
+      for (const [dim, f] of Object.entries(dims)) {
+        const c = f(d), k = d.source + '|' + dim + '|' + c;
+        const r = m.get(k) || { source: d.source, dimension: dim, category: c, records: 0, tagged_records: 0, glider_days: 0 };
+        r.records++;
+        if (d.tagged === '1') r.tagged_records++;
+        if (d.glider_days !== '' && Number.isFinite(v)) r.glider_days += v;
+        m.set(k, r);
+      }
+    }
+    return [...m.values()];
+  }
+});
+
+dash.calc('dac_profile', {
+  title: 'Data centre profiles',
+  description: 'Per data centre: records and the share meeting each OceanGliders readiness criterion.',
+  inputs: ['deployments'],
+  fn: (deployments) => {
+    const m = new Map();
+    for (const d of deployments) {
+      const r = m.get(d.source) || { source: d.source, n: 0, tagged: 0, site: 0, og1: 0, rec: 0, dm: 0, cf: 0, wmo: 0, plat: 0 };
+      r.n++;
+      if (d.tagged === '1') r.tagged++;
+      if (d.site === '1') r.site++;
+      if (d.og1_available === '1') r.og1++;
+      if (d.recovered === '1') r.rec++;
+      if (d.dm_any === '1') r.dm++;
+      if (d.qc_cf === '1') r.cf++;
+      if (d.wmo === '1') r.wmo++;
+      if (d.platform && d.platform !== 'Unknown') r.plat++;
+      m.set(d.source, r);
+    }
+    return [...m.values()].map(r => ({ source: r.source, records: r.n, tagged_share: r.tagged / r.n, site_share: r.site / r.n,
+      og1_share: r.og1 / r.n, recovered_share: r.rec / r.n, dm_share: r.dm / r.n, qc_cf_share: r.cf / r.n,
+      wmo_share: r.wmo / r.n, platform_known_share: r.plat / r.n }));
+  }
+});
+
+dash.calc('noc_overlap', {
+  title: 'NOC deployments on BODC and Coriolis',
+  description: 'National Oceanography Centre deployments on BODC, how many are also on Coriolis, and the latest year on each.',
+  inputs: ['deployments'],
+  fn: (deployments) => {
+    const noc = deployments.filter(d => d.institution === 'National Oceanography Centre');
+    const b = noc.filter(d => d.source === 'BODC'), c = noc.filter(d => d.source === 'Coriolis');
+    const yr = (rows) => rows.map(d => d.start_year).filter(y => y && y > '1990').sort().pop() || '';
+    return [{ bodc: b.length, bodc_on_coriolis: b.filter(d => d.also_in.includes('Coriolis')).length,
+      coriolis: c.length, bodc_latest: yr(b), coriolis_latest: yr(c),
+      bodc_after_coriolis: b.filter(d => d.start_year > yr(c)).length }];
+  }
+});
+
+dash.calc('by_institution', {
+  title: 'Readiness by institution and data centre',
+  description: 'Per institution and data centre: records, tagged records and the share meeting each readiness criterion.',
+  inputs: ['deployments'],
+  fn: (deployments) => {
+    const m = new Map();
+    for (const d of deployments) {
+      const k = d.institution + '|' + d.source;
+      const r = m.get(k) || { institution: d.institution, source: d.source, deployments: 0, tagged: 0, site: 0, recovered: 0, dm_any: 0, wmo: 0, recent: 0, og1_available: 0, qc_present: 0, qc_cf: 0, days: 0 };
+      r.deployments++;
+      for (const f of ['tagged', 'site', 'recovered', 'dm_any', 'wmo', 'recent', 'og1_available', 'qc_present', 'qc_cf']) if (d[f] === '1') r[f]++;
+      const v = Number(d.glider_days);
+      if (d.glider_days !== '' && Number.isFinite(v)) r.days += v;
+      m.set(k, r);
+    }
+    return [...m.values()].map(r => ({
+      institution: r.institution, source: r.source, deployments: r.deployments, tagged: r.tagged,
+      tagged_share: r.tagged / r.deployments, site_share: r.site / r.deployments,
+      recovered_share: r.recovered / r.deployments, dm_share: r.dm_any / r.deployments, wmo_share: r.wmo / r.deployments,
+      recent_share: r.recent / r.deployments,
+      og1_share: r.og1_available / r.deployments, qc_share: r.qc_present / r.deployments,
+      qc_cf_share: r.qc_cf / r.deployments, glider_days: Math.round(r.days)
+    })).sort((a, b) => b.deployments - a.deployments);
+  }
+});
+</script>
+
+<script>
+(() => {
+  const fmt = d3.format(',');
+  const pct = d3.format('.0%');
+  const pct1 = d3.format('.1%');
+  const SRC = window.OG_SOURCES;
+  const color = (s) => dash.colors[Math.max(0, SRC.indexOf(s)) % dash.colors.length];
+  let yearMetric = 'records';
+  let catMode = 'mix';
+  let shading = 'gradient';
+  let yearMode = 'mix', sortKey = 'deployments', sortDir = -1, query = '', instRows = [];
+
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const fail = (box, st) => {
+    box.replaceChildren();
+    box.classList.toggle('dash-skeleton', st === 'loading');
+    if (st === 'error' || st === 'connect') box.append(el('div', 'og-fail', 'Failed to load'));
+  };
+  const sourceLegend = (box, present) => {
+    box.replaceChildren();
+    for (const s of SRC.filter(s => present.has(s))) {
+      const sp = el('span'); const i = el('i'); i.style.background = color(s); sp.append(i, document.createTextNode(s)); box.append(sp);
+    }
+  };
+  const tip = (box) => { let t = box.querySelector('.og-tip'); if (!t) { t = el('div', 'og-tip'); t.hidden = true; box.append(t); } return t; };
+  const showTip = (box, ev, title, lines) => {
+    const t = tip(box); t.replaceChildren(el('div', 't', title));
+    for (const [c, txt] of lines) { const d = el('div'); if (c) { const i = el('i'); i.style.background = c; d.append(i); } d.append(document.createTextNode(txt)); t.append(d); }
+    t.hidden = false;
+    const r = box.getBoundingClientRect();
+    const x = ev.clientX - r.left, y = ev.clientY - r.top;
+    t.style.left = Math.max(0, Math.min(x + 12, box.clientWidth - t.offsetWidth)) + 'px';
+    t.style.top = Math.max(0, y - t.offsetHeight - 8) + 'px';
+  };
+  const hideTip = (box) => { tip(box).hidden = true; };
+
+  // one row per label; segments [{source, value, faded}]
+  function stackRows(box, rows, total) {
+    box.replaceChildren();
+    const max = d3.max(rows, r => total(r)) || 1;
+    for (const r of rows) {
+      const row = el('div', 'og-row');
+      const n = el('div', 'name', r.label); n.title = r.label;
+      const bar = el('div', 'bar');
+      for (const s of r.segments) {
+        if (!s.value) continue;
+        const d = el('div', s.faded ? 'faded' : '');
+        d.style.width = (100 * s.value / max) + '%'; d.style.background = color(s.source);
+        d.addEventListener('mousemove', (ev) => showTip(box, ev, r.label, [[color(s.source), `${s.source}, ${s.faded ? 'not tagged' : 'tagged'}: ${fmt(s.value)}`]]));
+        d.addEventListener('mouseleave', () => hideTip(box));
+        bar.append(d);
+      }
+      row.append(n, bar, el('div', 'cnt', fmt(total(r))));
+      box.append(row);
+    }
+  }
+
+  function drawYears(box, rows) {
+    box.replaceChildren();
+    const days = yearMetric === 'days';
+    const key = yearMode === 'all' ? (days ? 'days_all' : 'all') : (days ? 'days_tagged' : 'tagged');
+    const allKey = days ? 'days_all' : 'all', tagKey = days ? 'days_tagged' : 'tagged';
+    const UNT = 'Not tagged';
+    const muted = getComputedStyle(box).getPropertyValue('--cds-chart-muted').trim() || '#bbb';
+    const col = (k) => k === UNT ? muted : color(k);
+    const years = [...new Set(rows.map(r => r.year))].sort();
+    const present = SRC.filter(s => rows.some(r => r.source === s && r[key] > 0));
+    const table = years.map(y => {
+      const o = { year: y }; for (const s of present) o[s] = 0; o[UNT] = 0;
+      for (const r of rows) if (r.year === y) {
+        if (present.includes(r.source)) o[r.source] += r[key];
+        if (yearMode === 'mix') o[UNT] += r[allKey] - r[tagKey];
+      }
+      return o;
+    });
+    const keys = yearMode === 'mix' ? [...present, UNT] : present;
+    const legendBox = document.getElementById('year-legend');
+    legendBox.replaceChildren();
+    for (const k of keys) { const sp = el('span'); const i = el('i'); i.style.background = col(k); sp.append(i, document.createTextNode(k === UNT ? 'Not tagged (all data centres)' : k + (yearMode === 'all' ? '' : ' (tagged)'))); legendBox.append(sp); }
+    const stack = d3.stack().keys(keys)(table);
+    const w = box.clientWidth || 400, h = 260, m = { t: 8, r: 8, b: 26, l: 40 };
+    const x = d3.scaleBand(years, [m.l, w - m.r]).padding(0.2);
+    const ymax = d3.max(table, o => d3.sum(keys, s => o[s])) || 1;
+    const y = d3.scaleLinear([0, ymax], [h - m.b, m.t]).nice();
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${w} ${h}`).attr('role', 'img').attr('aria-label', 'Deployment records by start year and data centre');
+    svg.append('g').selectAll('line').data(y.ticks(4)).join('line').attr('x1', m.l).attr('x2', w - m.r).attr('y1', d => y(d)).attr('y2', d => y(d)).attr('stroke', 'var(--cds-chart-grid)');
+    const ya = svg.append('g').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickFormat(d3.format('~s')).tickSize(0).tickPadding(6)).attr('font-size', null).attr('font-family', null);
+    ya.select('.domain').remove();
+    ya.selectAll('text').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)');
+    const every = Math.ceil(years.length / Math.max(1, Math.floor((w - m.l) / 40)));
+    const xa = svg.append('g').attr('transform', `translate(0,${h - m.b})`).call(d3.axisBottom(x).tickValues(years.filter((d, i) => i % every === 0)).tickSize(0).tickPadding(8)).attr('font-size', null).attr('font-family', null);
+    xa.select('.domain').attr('stroke', 'var(--cds-chart-axis)');
+    xa.selectAll('text').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)');
+    const bw = Math.min(32, x.bandwidth()), off = (x.bandwidth() - bw) / 2;
+    svg.append('g').selectAll('g').data(stack).join('g').attr('fill', s => col(s.key))
+      .selectAll('rect').data(s => s).join('rect')
+      .attr('x', d => x(d.data.year) + off).attr('width', bw).attr('y', d => y(d[1])).attr('height', d => Math.max(0, y(d[0]) - y(d[1])));
+    svg.append('g').selectAll('rect').data(table).join('rect')
+      .attr('x', o => x(o.year)).attr('width', x.bandwidth()).attr('y', m.t).attr('height', h - m.b - m.t).attr('fill', 'transparent')
+      .on('mousemove', (ev, o) => {
+        const tot = d3.sum(keys, s => o[s]), tg = d3.sum(present, s => o[s]);
+        const unit = days ? 'glider-days' : 'records', f0 = d3.format(',.0f');
+        const head = yearMode === 'mix' ? `${o.year}: ${f0(tg)} of ${f0(tot)} ${unit} tagged (${pct(tot ? tg / tot : 0)})` : `${o.year}: ${f0(tot)} ${yearMode === 'all' ? unit : 'tagged ' + unit}`;
+        showTip(box, ev, head, keys.filter(s => o[s] > 0).reverse().map(s => [col(s), `${s === UNT ? 'Not tagged' : s}: ${f0(o[s])}`]));
+      })
+      .on('mouseleave', () => hideTip(box));
+  }
+
+  const DIM_BOXES = [['format', 'dim-format', 'leg-format'], ['stream', 'dim-stream', 'leg-stream'], ['qc', 'dim-qc', 'leg-qc'], ['qc_scheme', 'dim-scheme', 'leg-scheme'], ['platform', 'dim-platform', 'leg-platform']];
+  const CATS = {
+    format: ['OG1.0', 'EGO', 'IOOS DAC', 'IMOS', 'Other'],
+    stream: ['Delayed mode', 'Automatic QC', 'No QC', 'Not stated', 'Not read'],
+    qc: ['QC flags, CF', 'QC flags, CF incomplete', 'QC flags, not described', 'No QC flags', 'Not read'],
+    qc_scheme: ['IOC/QARTOD 1-4,9', 'Argo-style 0-9', 'SeaDataNet L20', 'Other', 'Not described', 'None', 'Not read'],
+    platform: ['Slocum', 'Seaglider', 'SeaExplorer', 'Spray', 'Unknown']
+  };
+  // categories keep the data centre's colour and differ by pattern: solid (first, the target), stripes,
+  // dots, fine lines, faded, outline
+  function patternStyle(i, c) {
+    const s = { backgroundColor: 'transparent', backgroundImage: 'none', backgroundSize: 'auto', opacity: '1', boxShadow: 'none' };
+    switch (i) {
+      case 0: s.backgroundColor = c; break;
+      case 1: s.backgroundImage = `repeating-linear-gradient(45deg, ${c} 0 2.5px, transparent 2.5px 5.5px)`; break;
+      case 2: s.backgroundImage = `radial-gradient(${c} 1.3px, transparent 1.6px)`; s.backgroundSize = '5px 5px'; break;
+      case 3: s.backgroundImage = `repeating-linear-gradient(90deg, ${c} 0 1px, transparent 1px 4px)`; break;
+      case 4: s.backgroundColor = c; s.opacity = '.3'; break;
+      default: s.boxShadow = `inset 0 0 0 1.5px ${c}`;
+    }
+    return s;
+  }
+  function drawDim(dim, boxId, legId, rows, labelFor) {
+    const box = document.getElementById(boxId), leg = document.getElementById(legId);
+    const sub = rows.filter(r => r.dimension === dim);
+    const order = [...CATS[dim].filter(c => sub.some(r => r.category === c)), ...[...new Set(sub.map(r => r.category))].filter(c => !CATS[dim].includes(c))];
+    const neutral = getComputedStyle(box).getPropertyValue('--color-fg-muted').trim() || '#666';
+    leg.replaceChildren();
+    for (const c of order) { const sp = el('span'); const i = el('i'); Object.assign(i.style, patternStyle(order.indexOf(c), neutral)); sp.append(i, document.createTextNode(c)); leg.append(sp); }
+    box.replaceChildren();
+    const grey = getComputedStyle(box).getPropertyValue('--cds-chart-muted').trim() || '#bbb';
+    const rowKey = (r) => r.stream ? `${r.source} · ${r.stream}` : r.source;
+    const bySrc = d3.rollups(sub, v => v, rowKey).sort((a, b) => (SRC.indexOf(a[1][0].source) - SRC.indexOf(b[1][0].source)) || a[0].localeCompare(b[0]));
+    for (const [label, v] of bySrc) {
+      const src = v[0].source;
+      const tot = d3.sum(v, r => catMode === 'tagged' ? r.tagged_records : r.records);
+      const row = el('div', 'og-row');
+      const n = el('div', 'name'); const sw = el('i'); sw.style.background = color(src); n.append(sw, document.createTextNode(label)); n.title = label;
+      const bar = el('div', 'bar');
+      const rowLabel = label;
+      const seg = (value, c, col, label) => {
+        if (!value || !tot) return;
+        const d = el('div'); d.style.width = (100 * value / tot) + '%'; Object.assign(d.style, patternStyle(order.indexOf(c), col));
+        d.addEventListener('mousemove', (ev) => showTip(box, ev, rowLabel, [[col, `${c}${label}: ${fmt(value)} (${pct(value / tot)})`]]));
+        d.addEventListener('mouseleave', () => hideTip(box));
+        bar.append(d);
+      };
+      for (const c of order) {
+        const r = v.find(x => x.category === c); if (!r) continue;
+        if (catMode === 'all') seg(r.records, c, color(src), '');
+        else if (catMode === 'tagged') seg(r.tagged_records, c, color(src), ', tagged');
+        else { seg(r.tagged_records, c, color(src), ', tagged'); seg(r.records - r.tagged_records, c, grey, ', not tagged'); }
+      }
+      row.append(n, bar, el('div', 'cnt', fmt(tot)));
+      box.append(row);
+    }
+  }
+
+  function drawTable(rows) {
+    const tb = document.querySelector('#matrix tbody');
+    tb.replaceChildren();
+    const cs = getComputedStyle(tb);
+    const ok = cs.getPropertyValue('--color-ok').trim() || 'green', warn = cs.getPropertyValue('--color-warn').trim() || 'orange', bad = cs.getPropertyValue('--color-bad').trim() || 'red';
+    const q = query.toLowerCase();
+    const list = rows.filter(r => !q || r.institution.toLowerCase().includes(q) || r.source.toLowerCase().includes(q)).slice()
+      .sort((a, b) => (sortKey === 'institution' || sortKey === 'source') ? sortDir * a[sortKey].localeCompare(b[sortKey]) : sortDir * (a[sortKey] - b[sortKey]));
+    for (const r of list) {
+      const tr = el('tr');
+      tr.dataset.key = encodeURIComponent(r.institution) + ',' + encodeURIComponent(r.source);
+      tr.append(el('td', '', r.institution));
+      const chip = el('span', 'og-chip'); const i = el('i'); i.style.background = color(r.source); chip.append(i, document.createTextNode(r.source));
+      const tds = el('td'); tds.append(chip); tr.append(tds);
+      tr.append(el('td', '', fmt(r.deployments)));
+      for (const k of ['tagged_share', 'site_share', 'recovered_share', 'dm_share', 'wmo_share', 'recent_share', 'og1_share', 'qc_share', 'qc_cf_share']) {
+        const td = el('td', '', pct(r[k]));
+        let c;
+        if (shading === 'traffic') { c = d3.color(r[k] >= 0.8 ? ok : r[k] >= 0.5 ? warn : bad); if (c) c.opacity = r[k] >= 0.8 ? 0.35 : r[k] >= 0.5 ? 0.6 : 0.35; }
+        else { c = d3.color(ok); if (c) c.opacity = 0.08 + 0.42 * r[k]; }
+        if (c && (shading === 'traffic' || r[k] > 0)) td.style.background = c.formatRgb();
+        tr.append(td);
+      }
+      tr.append(el('td', '', fmt(r.glider_days)));
+      tb.append(tr);
+    }
+    document.querySelectorAll('#matrix th').forEach(th => {
+      const k = th.querySelector('button').dataset.k;
+      th.setAttribute('aria-sort', k === sortKey ? (sortDir > 0 ? 'ascending' : 'descending') : 'none');
+    });
+  }
+
+  document.querySelectorAll('#matrix th button').forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.k;
+    if (k === sortKey) sortDir = -sortDir; else { sortKey = k; sortDir = (k === 'institution' || k === 'source') ? 1 : -1; }
+    drawTable(instRows);
+  }));
+  document.getElementById('inst-search').addEventListener('input', (e) => { query = e.target.value; drawTable(instRows); });
+  const setShade = (s) => {
+    shading = s;
+    document.getElementById('shade-grad').setAttribute('aria-pressed', String(s === 'gradient'));
+    document.getElementById('shade-traffic').setAttribute('aria-pressed', String(s === 'traffic'));
+    document.getElementById('shade-note').textContent = s === 'traffic' ? 'Red under 50%, amber 50 to 80%, green 80% and over.' : '';
+    drawTable(instRows);
+  };
+  document.getElementById('shade-grad').addEventListener('click', () => setShade('gradient'));
+  document.getElementById('shade-traffic').addEventListener('click', () => setShade('traffic'));
+  const setYear = (mode) => {
+    yearMode = mode;
+    for (const [id, m] of [['yr-mix', 'mix'], ['yr-all', 'all'], ['yr-tag', 'tagged']]) document.getElementById(id).setAttribute('aria-pressed', String(mode === m));
+    const unit = yearMetric === 'days' ? 'glider-days' : 'records';
+    document.getElementById('yr-note').textContent = mode === 'mix' ? `All ${unit} per start year in grey; the tagged part in the colour of the data centre holding it.`
+      : mode === 'all' ? `All ${unit} per start year, stacked by data centre.` : `Tagged ${unit} per start year, stacked by data centre.`;
+    const yv = dash.data('by_year'); if (yv.status === 'ok') drawYears(document.getElementById('by-year'), yv.data);
+  };
+  const setMetric = (m) => {
+    yearMetric = m;
+    document.getElementById('yr-records').setAttribute('aria-pressed', String(m === 'records'));
+    document.getElementById('yr-days').setAttribute('aria-pressed', String(m === 'days'));
+    setYear(yearMode);
+  };
+  document.getElementById('yr-records').addEventListener('click', () => setMetric('records'));
+  document.getElementById('yr-days').addEventListener('click', () => setMetric('days'));
+  document.getElementById('yr-mix').addEventListener('click', () => setYear('mix'));
+  const drawDims = () => {
+    const sd = dash.data('by_source_dims');
+    if (sd.status !== 'ok') return;
+    for (const [dim, b, l] of DIM_BOXES) drawDim(dim, b, l, sd.data);
+  };
+  const setCat = (m) => {
+    catMode = m;
+    for (const [id, k] of [['cat-mix', 'mix'], ['cat-all', 'all'], ['cat-tag', 'tagged']]) document.getElementById(id).setAttribute('aria-pressed', String(m === k));
+    document.getElementById('cat-note').textContent = m === 'mix' ? "Colour: tagged records, in the data centre's colour; grey: not tagged. Patterns mark the category."
+      : m === 'all' ? "All records in the data centre's colour. Patterns mark the category." : "Tagged records only, in the data centre's colour; data centres with none show 0. Patterns mark the category.";
+    drawDims();
+  };
+  document.getElementById('cat-mix').addEventListener('click', () => setCat('mix'));
+  document.getElementById('cat-all').addEventListener('click', () => setCat('all'));
+  document.getElementById('cat-tag').addEventListener('click', () => setCat('tagged'));
+  document.getElementById('yr-all').addEventListener('click', () => setYear('all'));
+  document.getElementById('yr-tag').addEventListener('click', () => setYear('tagged'));
+
+  const PROFILE_COLS = ['records', 'tagged_share', 'site_share', 'og1_share', 'recovered_share', 'dm_share', 'qc_cf_share', 'wmo_share', 'platform_known_share'];
+  function drawReport() {
+    const prof = dash.data('dac_profile');
+    const tb = document.querySelector('#dac-profile tbody');
+    tb.replaceChildren();
+    for (const e of document.querySelectorAll('[data-dac]')) e.style.background = color(e.dataset.dac);
+    if (prof.status === 'ok') {
+      const cs = getComputedStyle(tb);
+      const ok = cs.getPropertyValue('--color-ok').trim() || 'green', warn = cs.getPropertyValue('--color-warn').trim() || 'orange', bad = cs.getPropertyValue('--color-bad').trim() || 'red';
+      for (const r of prof.data.slice().sort((a, b) => SRC.indexOf(a.source) - SRC.indexOf(b.source))) {
+        const tr = el('tr');
+        const chip = el('span', 'og-chip'); const i = el('i'); i.style.background = color(r.source); chip.append(i, document.createTextNode(r.source));
+        const td0 = el('td'); td0.append(chip); tr.append(td0);
+        for (const k of PROFILE_COLS) {
+          const td = el('td', '', k === 'records' ? fmt(r[k]) : pct(r[k]));
+          if (k !== 'records') { const c = d3.color(r[k] >= 0.8 ? ok : r[k] >= 0.5 ? warn : bad); if (c) { c.opacity = r[k] >= 0.8 ? 0.35 : r[k] >= 0.5 ? 0.6 : 0.35; td.style.background = c.formatRgb(); } }
+          tr.append(td);
+        }
+        tb.append(tr);
+      }
+      for (const e of document.querySelectorAll('[data-source="dac_profile"][data-where]')) {
+        const src = e.dataset.where.split('=')[1], f = e.dataset.field;
+        const r = prof.data.find(x => x.source === src);
+        e.classList.remove('dash-skeleton');
+        e.textContent = r ? (f === 'records' ? fmt(r[f]) : pct(r[f])) : '—';
+      }
+    }
+    const s = dash.data('summary'), lede = document.getElementById('report-lede');
+    if (s.status === 'ok' && s.data.length && prof.status === 'ok') {
+      const r = s.data[0];
+      const withTags = prof.data.filter(p => p.tagged_share > 0).map(p => p.source);
+      lede.textContent = `${fmt(r.tagged_unique)} of ${fmt(r.unique)} glider deployments (${pct1(r.share)}) carry the OceanGliders network tag, all from ${withTags.join(', ')}. Each data centre separates real-time from recovered data, states QC and records identifiers in its own way, so a federated catalogue cannot yet tell like from like without per-centre rules.`;
+    }
+    const n = dash.data('noc_overlap'), nl = document.getElementById('noc-line');
+    if (n.status === 'ok' && n.data.length) {
+      const r = n.data[0];
+      nl.textContent = `Example of duplication and drift: ${fmt(r.bodc_on_coriolis)} of the ${fmt(r.bodc)} National Oceanography Centre deployments on BODC are also on Coriolis (matched on WMO ID and start date); NOC's latest deployment on Coriolis starts in ${r.coriolis_latest}, while BODC holds ${fmt(r.bodc_after_coriolis)} NOC deployments that start later (up to ${r.bodc_latest}).`;
+    }
+    const sc = dash.data('spot_checks'), st = document.querySelector('#spot-checks tbody');
+    st.replaceChildren();
+    if (sc.status === 'ok') for (const r of sc.data) {
+      const tr = el('tr'); tr.dataset.key = r.id;
+      for (const k of ['check', 'where', 'result', 'date']) tr.append(el('td', '', r[k]));
+      st.append(tr);
+    }
+  }
+
+  // jump link to the findings, and arriving with #findings in the link
+  let jumped = false;
+  for (const [lid, target] of [['jump-findings', 'findings'], ['jump-limits', 'limitations'], ['jump-how', 'how-made']]) {
+    document.getElementById(lid).addEventListener('click', (ev) => {
+      ev.preventDefault();
+      const sec = document.getElementById(target);
+      if (target === 'how-made') document.getElementById('prompt-box').open = true;
+      sec.scrollIntoView(); dash.setLink(target);
+    });
+  }
+
+  dash.onData(() => {
+    drawReport();
+    const h = location.hash.slice(1);
+    if (!jumped && ['findings', 'limitations', 'how-made'].includes(h)) { jumped = true; document.getElementById(h).scrollIntoView(); }
+    const s = dash.data('summary');
+    const take = document.getElementById('takeaway');
+    if (s.status === 'ok' && s.data.length) {
+      const r = s.data[0];
+      take.classList.remove('dash-skeleton');
+      take.textContent = `${fmt(r.tagged_unique)} of ${fmt(r.unique)} unique glider deployments (${pct1(r.share)}) carry the OceanGliders network tag, held by ${r.sources_tagging} of ${r.sources} data centres and coming from ${r.tagging_institutions} of ${r.institutions} institutions.`;
+      for (const e of document.querySelectorAll('[data-source="summary"]')) {
+        e.classList.remove('dash-skeleton');
+        const f = e.dataset.field;
+        e.textContent = (f === 'share' || f === 'days_share') ? pct1(r[f])
+          : f === 'sources_tagging' ? `${r[f]} of ${r.sources}`
+          : f === 'tagging_institutions' ? `${r[f]} of ${fmt(r.institutions)}`
+          : fmt(r[f]);
+      }
+    } else {
+      take.textContent = '—';
+      for (const e of document.querySelectorAll('[data-source="summary"]')) e.textContent = '—';
+    }
+
+    const bs = dash.data('by_source'), sb = document.getElementById('by-source');
+    if (bs.status === 'ok') {
+      sb.classList.remove('dash-skeleton');
+      sourceLegend(document.getElementById('source-legend'), new Set(bs.data.map(r => r.source)));
+      stackRows(sb, bs.data.map(r => ({ label: r.source + (r.also_elsewhere ? ` (${fmt(r.also_elsewhere)} also elsewhere)` : ''), segments: [{ source: r.source, value: r.tagged }, { source: r.source, value: r.deployments - r.tagged, faded: true }] })), r => d3.sum(r.segments, s => s.value));
+    } else fail(sb, bs.status);
+
+    const yv = dash.data('by_year'), yb = document.getElementById('by-year');
+    if (yv.status === 'ok') { yb.classList.remove('dash-skeleton'); drawYears(yb, yv.data); } else fail(yb, yv.status);
+
+    const mi = dash.data('by_mission'), mb = document.getElementById('by-mission');
+    if (mi.status === 'ok') {
+      mb.classList.remove('dash-skeleton');
+      const g = d3.rollups(mi.data, v => v, r => r.group).map(([label, v]) => ({ label, segments: SRC.flatMap(s => v.filter(r => r.source === s).map(r => ({ source: s, value: r.deployments }))) }))
+        .sort((a, b) => d3.sum(b.segments, s => s.value) - d3.sum(a.segments, s => s.value));
+      stackRows(mb, g, r => d3.sum(r.segments, s => s.value));
+    } else fail(mb, mi.status);
+
+    const sd = dash.data('by_source_dims');
+    if (sd.status === 'ok') {
+      for (const [dim, b, l] of DIM_BOXES) { document.getElementById(b).classList.remove('dash-skeleton'); drawDim(dim, b, l, sd.data); }
+    } else for (const [, b] of DIM_BOXES) fail(document.getElementById(b), sd.status);
+
+    const bi = dash.data('by_institution'), ib = document.getElementById('by-inst');
+    if (bi.status === 'ok') {
+      ib.classList.remove('dash-skeleton');
+      instRows = bi.data;
+      const g = d3.rollups(bi.data, v => v, r => r.institution).map(([label, v]) => ({
+        label, segments: SRC.flatMap(s => v.filter(r => r.source === s).flatMap(r => [{ source: s, value: r.tagged }, { source: s, value: r.deployments - r.tagged, faded: true }]))
+      })).sort((a, b) => d3.sum(b.segments, s => s.value) - d3.sum(a.segments, s => s.value)).slice(0, 25);
+      stackRows(ib, g, r => d3.sum(r.segments, s => s.value));
+      drawTable(instRows);
+    } else { fail(ib, bi.status); instRows = []; document.querySelector('#matrix tbody').replaceChildren(); }
+  });
+})();
+</script>
+
+</div>
+</body>
+</html>
