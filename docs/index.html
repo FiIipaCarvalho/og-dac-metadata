@@ -364,7 +364,7 @@
         <ul><li>No <code>network</code> or <code>site</code> tags.</li>
 <li>Recovery data are not ERDDAP datasets: they sit in a file collection whose files can't be read by byte range, so their metadata can't be inspected without downloading whole files.</li>
 <li><code>_QC</code> variables have no <code>flag_values</code> or <code>flag_meanings</code>, so they are not CF-described and their scheme can't be read.</li>
-<li>The ERDDAP holds mostly recent deployments; older NOC deployments appear only on Coriolis, and recent ones (from 2025) don't reach Coriolis.</li></ul>
+<li>The ERDDAP holds mostly recent deployments; older NOC deployments appear only on Coriolis, and the most recent ones don't reach Coriolis (see the NOC example under the recommendations).</li></ul>
         <h5>Does differently</h5>
         <ul><li>Real-time OG1 datasets on ERDDAP, named <code>_R</code>, with <code>processing_level</code> "No quality control applied"; recovery files expected to move to <code>_P</code> under the proposed OG1 data modes.</li></ul>
       </div>
