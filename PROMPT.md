@@ -34,7 +34,7 @@ Gotchas to handle: some ERDDAPs publish a global attribute `id` that is not the 
 - Each data centre has its own colour throughout. Tagged records are drawn in that colour, untagged in grey; categories are told apart by **pattern** in the data centre's colour (solid for the target category, then stripes, dots, fine lines, faded, outline), never by shades of one colour.
 - **Tiles:** records, unique deployments, tagged (and share), data centres with tags "N of M", institutions tagging "N of M", glider-days and tagged share.
 - **Deployments by data centre** (tagged solid, untagged faded).
-- **By start year**, with a Records | Glider-days switch and three views: Tagged vs all (grey all, coloured tagged by data centre), All by data centre, Tagged only.
+- **By start year**, with a Highlight switch (Tagged | OG1.0), a Records | Glider-days switch and three views: highlighted vs all (grey all, highlighted part coloured by data centre), All by data centre, highlighted only.
 - **Where the tags point:** mission > region.
 - **Format**, **real-time and recovered data by QC level** (two rows per data centre), **QC flags** (present/CF and scheme) and **platforms**, all with the same three-way switch.
 - **Largest institutions** split by data centre.

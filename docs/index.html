@@ -187,6 +187,10 @@
         <button type="button" id="yr-all" aria-pressed="false">All by data centre</button>
         <button type="button" id="yr-tag" aria-pressed="false">Tagged only</button>
       </div>
+      <div class="og-seg" role="group" aria-label="Highlight">
+        <button type="button" id="yr-f-tag" aria-pressed="true">Tagged</button>
+        <button type="button" id="yr-f-og1" aria-pressed="false">OG1.0</button>
+      </div>
       <div class="og-seg" role="group" aria-label="Measure">
         <button type="button" id="yr-records" aria-pressed="true">Records</button>
         <button type="button" id="yr-days" aria-pressed="false">Glider-days</button>
@@ -469,7 +473,7 @@ Gotchas to handle: some ERDDAPs publish a global attribute `id` that is not the 
 - Each data centre has its own colour throughout. Tagged records are drawn in that colour, untagged in grey; categories are told apart by **pattern** in the data centre&#x27;s colour (solid for the target category, then stripes, dots, fine lines, faded, outline), never by shades of one colour.
 - **Tiles:** records, unique deployments, tagged (and share), data centres with tags &quot;N of M&quot;, institutions tagging &quot;N of M&quot;, glider-days and tagged share.
 - **Deployments by data centre** (tagged solid, untagged faded).
-- **By start year**, with a Records | Glider-days switch and three views: Tagged vs all (grey all, coloured tagged by data centre), All by data centre, Tagged only.
+- **By start year**, with a Highlight switch (Tagged | OG1.0), a Records | Glider-days switch and three views: highlighted vs all (grey all, highlighted part coloured by data centre), All by data centre, highlighted only.
 - **Where the tags point:** mission &gt; region.
 - **Format**, **real-time and recovered data by QC level** (two rows per data centre), **QC flags** (present/CF and scheme) and **platforms**, all with the same three-way switch.
 - **Largest institutions** split by data centre.
@@ -541,18 +545,19 @@ dash.calc('by_source', {
 
 dash.calc('by_year', {
   title: 'Records by start year and data centre',
-  description: 'Deployment records per start year and data centre, all and tagged.',
+  description: 'Deployment records and glider-days per start year and data centre: all, tagged, and with OG1.0 files.',
   inputs: ['deployments'],
   fn: (deployments) => {
     const m = new Map();
     for (const d of deployments) {
       if (!d.start_year) continue;
       const k = d.start_year + '|' + d.source;
-      const r = m.get(k) || { year: d.start_year, source: d.source, all: 0, tagged: 0, days_all: 0, days_tagged: 0 };
+      const r = m.get(k) || { year: d.start_year, source: d.source, all: 0, tagged: 0, og1: 0, days_all: 0, days_tagged: 0, days_og1: 0 };
       const v = Number(d.glider_days);
       const gd = d.glider_days !== '' && Number.isFinite(v) ? v : 0;
       r.all++; r.days_all += gd;
       if (d.tagged === '1') { r.tagged++; r.days_tagged += gd; }
+      if (d.og1_available === '1') { r.og1++; r.days_og1 += gd; }
       m.set(k, r);
     }
     return [...m.values()].sort((a, b) => a.year.localeCompare(b.year));
@@ -686,6 +691,7 @@ dash.calc('by_institution', {
   const SRC = window.OG_SOURCES;
   const color = (s) => dash.colors[Math.max(0, SRC.indexOf(s)) % dash.colors.length];
   let yearMetric = 'records';
+  let yearFocus = 'tagged';
   let catMode = 'mix';
   let shading = 'gradient';
   let yearMode = 'mix', sortKey = 'deployments', sortDir = -1, query = '', instRows = [];
@@ -738,9 +744,10 @@ dash.calc('by_institution', {
   function drawYears(box, rows) {
     box.replaceChildren();
     const days = yearMetric === 'days';
-    const key = yearMode === 'all' ? (days ? 'days_all' : 'all') : (days ? 'days_tagged' : 'tagged');
-    const allKey = days ? 'days_all' : 'all', tagKey = days ? 'days_tagged' : 'tagged';
-    const UNT = 'Not tagged';
+    const hl = yearFocus === 'og1' ? 'og1' : 'tagged', hlName = yearFocus === 'og1' ? 'OG1.0' : 'tagged';
+    const key = yearMode === 'all' ? (days ? 'days_all' : 'all') : (days ? 'days_' + hl : hl);
+    const allKey = days ? 'days_all' : 'all', tagKey = days ? 'days_' + hl : hl;
+    const UNT = yearFocus === 'og1' ? 'Not OG1.0' : 'Not tagged';
     const muted = getComputedStyle(box).getPropertyValue('--cds-chart-muted').trim() || '#bbb';
     const col = (k) => k === UNT ? muted : color(k);
     const years = [...new Set(rows.map(r => r.year))].sort();
@@ -756,7 +763,7 @@ dash.calc('by_institution', {
     const keys = yearMode === 'mix' ? [...present, UNT] : present;
     const legendBox = document.getElementById('year-legend');
     legendBox.replaceChildren();
-    for (const k of keys) { const sp = el('span'); const i = el('i'); i.style.background = col(k); sp.append(i, document.createTextNode(k === UNT ? 'Not tagged (all data centres)' : k + (yearMode === 'all' ? '' : ' (tagged)'))); legendBox.append(sp); }
+    for (const k of keys) { const sp = el('span'); const i = el('i'); i.style.background = col(k); sp.append(i, document.createTextNode(k === UNT ? UNT + ' (all data centres)' : k + (yearMode === 'all' ? '' : ` (${hlName})`))); legendBox.append(sp); }
     const stack = d3.stack().keys(keys)(table);
     const w = box.clientWidth || 400, h = 260, m = { t: 8, r: 8, b: 26, l: 40 };
     const x = d3.scaleBand(years, [m.l, w - m.r]).padding(0.2);
@@ -780,8 +787,8 @@ dash.calc('by_institution', {
       .on('mousemove', (ev, o) => {
         const tot = d3.sum(keys, s => o[s]), tg = d3.sum(present, s => o[s]);
         const unit = days ? 'glider-days' : 'records', f0 = d3.format(',.0f');
-        const head = yearMode === 'mix' ? `${o.year}: ${f0(tg)} of ${f0(tot)} ${unit} tagged (${pct(tot ? tg / tot : 0)})` : `${o.year}: ${f0(tot)} ${yearMode === 'all' ? unit : 'tagged ' + unit}`;
-        showTip(box, ev, head, keys.filter(s => o[s] > 0).reverse().map(s => [col(s), `${s === UNT ? 'Not tagged' : s}: ${f0(o[s])}`]));
+        const head = yearMode === 'mix' ? `${o.year}: ${f0(tg)} of ${f0(tot)} ${unit} ${hlName} (${pct(tot ? tg / tot : 0)})` : `${o.year}: ${f0(tot)} ${yearMode === 'all' ? unit : hlName + ' ' + unit}`;
+        showTip(box, ev, head, keys.filter(s => o[s] > 0).reverse().map(s => [col(s), `${s}: ${f0(o[s])}`]));
       })
       .on('mouseleave', () => hideTip(box));
   }
@@ -895,8 +902,12 @@ dash.calc('by_institution', {
     yearMode = mode;
     for (const [id, m] of [['yr-mix', 'mix'], ['yr-all', 'all'], ['yr-tag', 'tagged']]) document.getElementById(id).setAttribute('aria-pressed', String(mode === m));
     const unit = yearMetric === 'days' ? 'glider-days' : 'records';
-    document.getElementById('yr-note').textContent = mode === 'mix' ? `All ${unit} per start year in grey; the tagged part in the colour of the data centre holding it.`
-      : mode === 'all' ? `All ${unit} per start year, stacked by data centre.` : `Tagged ${unit} per start year, stacked by data centre.`;
+    const what = yearFocus === 'og1' ? 'part available as OG1.0' : 'tagged part';
+    const only = yearFocus === 'og1' ? `OG1.0 ${unit}` : `Tagged ${unit}`;
+    document.getElementById('yr-note').textContent = mode === 'mix' ? `All ${unit} per start year in grey; the ${what} in the colour of the data centre holding it.`
+      : mode === 'all' ? `All ${unit} per start year, stacked by data centre.` : `${only} per start year, stacked by data centre.`;
+    document.getElementById('yr-mix').textContent = yearFocus === 'og1' ? 'OG1.0 vs all' : 'Tagged vs all';
+    document.getElementById('yr-tag').textContent = yearFocus === 'og1' ? 'OG1.0 only' : 'Tagged only';
     const yv = dash.data('by_year'); if (yv.status === 'ok') drawYears(document.getElementById('by-year'), yv.data);
   };
   const setMetric = (m) => {
@@ -905,6 +916,14 @@ dash.calc('by_institution', {
     document.getElementById('yr-days').setAttribute('aria-pressed', String(m === 'days'));
     setYear(yearMode);
   };
+  const setFocus = (fc) => {
+    yearFocus = fc;
+    document.getElementById('yr-f-tag').setAttribute('aria-pressed', String(fc === 'tagged'));
+    document.getElementById('yr-f-og1').setAttribute('aria-pressed', String(fc === 'og1'));
+    setYear(yearMode);
+  };
+  document.getElementById('yr-f-tag').addEventListener('click', () => setFocus('tagged'));
+  document.getElementById('yr-f-og1').addEventListener('click', () => setFocus('og1'));
   document.getElementById('yr-records').addEventListener('click', () => setMetric('records'));
   document.getElementById('yr-days').addEventListener('click', () => setMetric('days'));
   document.getElementById('yr-mix').addEventListener('click', () => setYear('mix'));
