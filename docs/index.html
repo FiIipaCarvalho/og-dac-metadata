@@ -17,7 +17,7 @@
     --cds-text-secondary: #5c6670; --cds-surface-popover: #ffffff; --cds-border: #dde1e6;
     --cds-shadow-popover: 0 4px 16px rgba(0,0,0,.12);
     --cds-chart-grid: #eceff2; --cds-chart-axis: #b8bfc7; --cds-chart-muted: #c3c9d0; --cds-chart-reference: #8a939c;
-    --cds-font-size-caption: .8rem; --cds-font-size-body: .95rem; --cds-font-size-heading: 1.05rem; --cds-font-size-title: 1.6rem;
+    --cds-font-size-caption: 1rem; --cds-font-size-body: 1rem; --cds-font-size-heading: 1.15rem; --cds-font-size-title: 1.6rem;
     --cds-font-weight-medium: 600; --cds-radius: 8px;
     --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 12px; --cds-gap-lg: 20px; --cds-gap-xl: 32px;
     --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 16px;
@@ -405,6 +405,7 @@
     <h2>Findings for data management across data centres</h2>
     <p class="og-take" id="report-lede">—</p>
     <p>Written as a starting point for organising glider data management across data assembly centres, and for a federated OceanGliders ERDDAP. Every number below is computed from the same data as the charts above, so it follows each data refresh; the statements around them were reviewed against the 2026-10-27/28 snapshot (findings reviewed 2026-10-28), and the spot checks at the end record what was verified by opening files then.</p>
+    <p>For manual checks of this automatic audit, <a href="data/file_audit.csv">file_audit.csv</a> lists every file and ERDDAP dataset read (5,866): its URL, the stream (real time or recovered) and the rule that set it, the QC level with the rule and the attribute text it matched (<code>processing_level</code>, <code>data_mode</code>, <code>qc_manual</code>, <code>data_processing_chain_name</code>), format with <code>Conventions</code> and <code>format_version</code>, the <code>network</code> and <code>site</code> values, the QC flag scheme, and whether the file was used for the track map (status, decimation, points kept and dropped).</p>
 
     <h3>Data centre profiles</h3>
     <div class="og-tablebox">

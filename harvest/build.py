@@ -161,20 +161,60 @@ def stream_of(src, f):
     return 'NRT'
 
 
-def qc_level_of(f):
+STREAM_RULE = {'IOOS': 'Recovered if dataset id ends -delayed', 'VOTO': 'Recovered if dataset id starts delayed_ or OG_complete_',
+               'BODC': 'Recovered if Recovery collection, data mode P/D or id ends _P/_D', 'OTN': 'Recovered if dataset id ends _delayed',
+               'Coriolis': 'Recovered if data mode P or D (P checked as full resolution)', 'IMOS': 'NRT if path has REALTIME, else Recovered'}
+
+
+def qc_level_reason(f):
+    """(QC level, why): the first rule that matched and the text it matched."""
     if f.get('unread'):
-        return 'Not read'
+        return 'Not read', 'file contents not read (no byte-range access)'
     g = f.get('globals', {})
     pl = (g.get('processing_level') or '').lower()
     dm = (g.get('data_mode') or '').strip().lower()
     extra = ' '.join(str(g.get(k, '')) for k in ('qc_manual', 'data_processing_chain_name')).lower()
-    if 'manually' in pl or dm in ('d', 'delayed mode'):
-        return 'Delayed mode'
-    if any(k in pl for k in NO_QC) or dm == 'near real time mode':  # IMOS FV00 real-time files are raw
-        return 'No QC'
-    if any(k in pl + ' ' + extra for k in AUTO_QC) or dm == 'a':
-        return 'Automatic QC'
-    return 'Not stated'
+    if 'manually' in pl:
+        return 'Delayed mode', 'processing_level contains "manually"'
+    if dm in ('d', 'delayed mode'):
+        return 'Delayed mode', f'data_mode = "{g.get("data_mode")}"'
+    if any(k in pl for k in NO_QC):
+        return 'No QC', 'processing_level contains "' + next(k for k in NO_QC if k in pl) + '"'
+    if dm == 'near real time mode':  # IMOS FV00 real-time files are raw
+        return 'No QC', 'data_mode = "near real time mode"'
+    hit = next((k for k in AUTO_QC if k in pl + ' ' + extra), None)
+    if hit:
+        return 'Automatic QC', f'processing_level/qc_manual/data_processing_chain_name contains "{hit}"'
+    if dm == 'a':
+        return 'Automatic QC', 'data_mode = "A"'
+    return 'Not stated', 'no QC wording in processing_level, data_mode, qc_manual or data_processing_chain_name'
+
+
+def qc_level_of(f):
+    return qc_level_reason(f)[0]
+
+
+def audit_rows(source, key, files):
+    """One row per file/dataset: what each decision was based on, for manual checking later."""
+    out = []
+    for f in files:
+        g = f.get('globals', {})
+        lv, why = qc_level_reason(f)
+        q = qc_of(f.get('qc'), f.get('variables')) if not f.get('unread') else ('', '', 'Not read')
+        clip = lambda k: str(g.get(k) or '').replace('\n', ' ').strip()[:300]
+        out.append({'dep_id': f'{source}:{key}', 'source': source, 'deployment': key, 'file_or_dataset': f.get('dataset_id', ''),
+                    'url': f.get('url', ''), 'start': f.get('start_full', '') or ymd(f.get('start', '')), 'end': f.get('end', '')[:19],
+                    'read': 'no' if f.get('unread') else 'yes',
+                    'stream': stream_of(source, f), 'stream_rule': STREAM_RULE.get(source, ''), 'data_mode_used': f.get('mode', ''),
+                    'qc_level': lv, 'qc_level_why': why,
+                    'attr_processing_level': clip('processing_level'), 'attr_data_mode': clip('data_mode'),
+                    'attr_qc_manual': clip('qc_manual'), 'attr_data_processing_chain_name': clip('data_processing_chain_name'),
+                    'format': fmt_of(g), 'attr_Conventions': clip('Conventions'), 'attr_format_version': clip('format_version'),
+                    'tagged': '1' if tag(g.get('network')) else '0', 'attr_network': clip('network'),
+                    'attr_site': clip('site') or clip('oceanGliders_site'),
+                    'qc_flags_present': q[0], 'qc_flags_cf': q[1], 'qc_scheme': q[2],
+                    'n_variables': len(f.get('variables') or [])})
+    return out
 
 
 def platform_of(*texts):
@@ -249,6 +289,7 @@ def row_from_files(source, key, files, delayed_names, extra_platform=''):
         'platform': platform_of(first('platform_type', 'platform_long_name', 'glider_instrument_name', 'glider_model', 'platform_model', 'platform', 'instrument'),
                                 ' '.join(f.get('title', '') for f in files), first('summary'), first('source'), extra_platform),
         'datasets': str(len(files)),
+        '_audit': audit_rows(source, key, files),
         # where the data live, for fetch_tracks.py (written to deployment_refs.jsonl, not the CSV)
         '_refs': [{'id': f.get('dataset_id', ''), 'url': f.get('url', ''), 'stream': stream_of(source, f), 'mode': f.get('mode', ''),
                    'start': f.get('start_full', '') or ymd(f.get('start', '')), 'end': f.get('end', ''), 'variables': f.get('variables') or []}
@@ -434,6 +475,12 @@ def main():
         for r in rows:
             f.write(json.dumps({'dep_id': f"{r['source']}:{r['deployment']}", 'source': r['source'], 'deployment': r['deployment'],
                                 'refs': r['_refs']}) + '\n')
+
+    audit = [a for r in rows for a in r.get('_audit', [])]
+    with open(W('file_audit.csv'), 'w', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=list(audit[0]))
+        w.writeheader()
+        w.writerows(audit)
 
     print('rows', len(rows), 'unique', len(groups), 'dropped', dict(dropped))
     for s in ('IOOS', 'VOTO', 'BODC', 'OTN', 'Coriolis', 'IMOS'):

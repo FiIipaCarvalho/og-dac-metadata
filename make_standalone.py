@@ -12,7 +12,7 @@ import shutil
 ROOT = pathlib.Path(__file__).parent
 page = (ROOT / 'dashboard' / 'index.html').read_text()
 (ROOT / 'docs' / 'data').mkdir(parents=True, exist_ok=True)
-for f in ('glider_deployments.csv', 'spot_checks.json', 'tracks.json'):
+for f in ('glider_deployments.csv', 'spot_checks.json', 'tracks.json', 'file_audit.csv'):
     shutil.copy(ROOT / 'data' / f, ROOT / 'docs' / 'data' / f)
 
 SHIM = r"""<!doctype html>
@@ -34,7 +34,7 @@ SHIM = r"""<!doctype html>
     --cds-text-secondary: #5c6670; --cds-surface-popover: #ffffff; --cds-border: #dde1e6;
     --cds-shadow-popover: 0 4px 16px rgba(0,0,0,.12);
     --cds-chart-grid: #eceff2; --cds-chart-axis: #b8bfc7; --cds-chart-muted: #c3c9d0; --cds-chart-reference: #8a939c;
-    --cds-font-size-caption: .8rem; --cds-font-size-body: .95rem; --cds-font-size-heading: 1.05rem; --cds-font-size-title: 1.6rem;
+    --cds-font-size-caption: 1rem; --cds-font-size-body: 1rem; --cds-font-size-heading: 1.15rem; --cds-font-size-title: 1.6rem;
     --cds-font-weight-medium: 600; --cds-radius: 8px;
     --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 12px; --cds-gap-lg: 20px; --cds-gap-xl: 32px;
     --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 16px;

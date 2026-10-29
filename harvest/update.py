@@ -7,7 +7,7 @@
    deployments whose end date moved). About an hour, mostly IMOS and Coriolis.
 2. build.py there, then copy the run's files over work/ and the CSV to data/.
 3. fetch_tracks.py for all years (incremental: only new deployments, changed end dates, errors).
-4. analysis/export_tracks.py --until <today>, then make_standalone.py.
+4. analysis/export_tracks.py --until <today>, analysis/file_audit.py (per-file audit trail), make_standalone.py.
 5. Print what changed per data centre (records, tagged, OG1, recovered, DM) against the previous CSV and
    against data/findings_snapshot.csv, the figures as they were when the findings text was last reviewed
    (refresh that file with --mark-reviewed after re-reading the findings).
@@ -68,6 +68,7 @@ def main():
 
     run('fetch_tracks.py', '--work', work, '--store', ROOT / 'store', '--since', '1900-01-01', '--procs', '2')
     run('export_tracks.py', '--until', today, '--out', ROOT / 'data' / 'tracks.json', cwd=ROOT / 'analysis')
+    run('file_audit.py', '--out', ROOT / 'data' / 'file_audit.csv', cwd=ROOT / 'analysis')
     run('make_standalone.py', cwd=ROOT)
 
     new = summary(ROOT / 'data' / 'glider_deployments.csv')
