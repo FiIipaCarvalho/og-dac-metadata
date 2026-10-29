@@ -79,7 +79,7 @@ SHIM = r"""<!doctype html>
     calc: (id, spec) => { calcs[id] = spec; },
     loader: () => {},
     onData: (fn) => { listeners.push(fn); try { fn(); } catch (e) { console.error(e); } },
-    colors: ['#2f6fd0', '#e0752d', '#2a9d8f', '#c2410c', '#7c5cc4', '#b5447e', '#5b8c3a', '#d4a017'],
+    colors: ['#2f6fd0', '#e0752d', '#2a9d8f', '#5b8c3a', '#7c5cc4', '#b5447e', '#c2410c', '#d4a017'],
     refresh: () => {}, params: () => ({}), setParams: () => {}, resetParams: () => {},
     setLink: (name) => { try { history.replaceState(null, '', '#' + name); } catch (e) {} }
   };
