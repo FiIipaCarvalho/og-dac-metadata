@@ -35,6 +35,14 @@ cp $W/glider_deployments.csv ../data/ && cd .. && python3 make_standalone.py
 
 Needs Python 3.10+ with `netCDF4`, `h5py`, `numpy` and `cftime`. Harvesters are resumable (they skip what is already in their `.jsonl`). Runtime (October 2026): ERDDAPs 5 to 15 min each in parallel, IMOS about 45 min, Coriolis about 20 min with 4 processes (keep it gentle; more parallel requests slowed the server to timeouts).
 
+## Tracks, local store and updates
+
+- **Local store** (`store/`, gitignored): `tracks/source=<DAC>/<deployment>.parquet` (time, lat, lon, dive, decimation) for every deployment, `files/` (every Coriolis, IMOS and BODC file-collection NetCDF downloaded, kept for later analyses; tens of GB for the full history), `fetch_log.jsonl` (status per attempt) and `var_attrs.jsonl` (variable names, standard_name, long_name, units). Read it with `analysis/store.py` (`load_deployments()`, `load_tracks(since, until, sources)`).
+- **Decimation:** one point per dive where a dive or profile number exists (ERDDAP server side `orderByMean`), else hourly means; positions cleaned (fill values, out of range, (0,0), outside the deployment window, moves over 3 m/s). Files whose main time axis is empty fall back to the GPS fixes; files with no valid positions are logged `empty`.
+- **Which dataset:** recovered (full resolution) where the data centre has one, else real time; one track per deployment.
+- **Map:** `analysis/export_tracks.py` writes `data/tracks.json` (thinned to about 5 km, delta-encoded) for the dashboard's zoomable map; `analysis/map_tracks.py` makes static PNGs for figures.
+- **Update everything:** `cd harvest && python3.11 update.py [--push]`: full re-harvest into `work/runs/<date>/` (about an hour), build, incremental track fetch (only new deployments, changed end dates and previous errors), map data and page. It prints the change per data centre against the previous CSV and against `data/findings_snapshot.csv` (the figures when the findings text was last reviewed); after re-reading the findings, `python3.11 update.py --mark-reviewed`. `--skip-harvest` refreshes tracks and page only.
+
 ## How fields are derived (`harvest/build.py`)
 
 | Column | Rule |

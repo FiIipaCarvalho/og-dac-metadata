@@ -110,7 +110,19 @@ def erddap_var_attrs(ref):
 
 
 # ---------------- files ----------------
-TIME_VARS, LAT_VARS, LON_VARS = ('JULD', 'TIME', 'time'), ('LATITUDE', 'latitude', 'LATITUDE_GPS'), ('LONGITUDE', 'longitude', 'LONGITUDE_GPS')
+# (time, lat, lon) triples on one dimension, in order of preference; the GPS fixes are the fallback
+# for files whose main time axis is empty (e.g. some Coriolis EGO files hold only TIME_GPS fixes)
+TRIPLES = (('JULD', 'LATITUDE', 'LONGITUDE'), ('TIME', 'LATITUDE', 'LONGITUDE'),
+           ('time', 'latitude', 'longitude'), ('TIME_GPS', 'LATITUDE_GPS', 'LONGITUDE_GPS'))
+
+
+def pick_triple(shape, has_units):
+    """First triple whose three variables are 1-D, the same length (> 1), with time units."""
+    for tv, lav, lov in TRIPLES:
+        sh = [shape(v) for v in (tv, lav, lov)]
+        if all(x is not None and len(x) == 1 and x[0] > 1 for x in sh) and len(set(sh)) == 1 and has_units(tv):
+            return tv, lav, lov
+    raise ValueError('no 1-D time/lat/lon')
 
 
 def _decode_time(vals, units):
@@ -137,10 +149,8 @@ def read_h5(fobj):
     from common import _s
     with h5py.File(fobj, 'r') as h:
         attrs = {n: {a: _s(o.attrs[a])[:200] for a in VAR_ATTRS if a in o.attrs} for n, o in h.items() if isinstance(o, h5py.Dataset)}
-        get_ = lambda names: next((n for n in names if n in h and h[n].ndim == 1 and h[n].size > 1 and 'units' in h[n].attrs), None)
-        tv, lav, lov = get_(TIME_VARS), get_(LAT_VARS), get_(LON_VARS)
-        if not (tv and lav and lov):
-            raise ValueError('no 1-D time/lat/lon')
+        tv, lav, lov = pick_triple(lambda n: h[n].shape if n in h and isinstance(h[n], h5py.Dataset) else None,
+                                   lambda n: 'units' in h[n].attrs)
         t = _decode_time(_masked(h[tv][:], h[tv].attrs.get('_FillValue')), _s(h[tv].attrs['units']))
         la = _masked(h[lav][:], h[lav].attrs.get('_FillValue'))
         lo = _masked(h[lov][:], h[lov].attrs.get('_FillValue'))
@@ -153,12 +163,8 @@ def read_nc(path):
     try:
         ds.set_auto_mask(False)
         attrs = {n: {a: str(getattr(v, a))[:200] for a in VAR_ATTRS if hasattr(v, a)} for n, v in ds.variables.items()}
-        get_ = lambda names: next((n for n in names if n in ds.variables and ds.variables[n].ndim == 1
-                                   and ds.variables[n].size > 1 and hasattr(ds.variables[n], 'units')), None)
-        tv, lav, lov = get_(TIME_VARS), get_(LAT_VARS), get_(LON_VARS)
-        if not (tv and lav and lov):
-            raise ValueError('no 1-D time/lat/lon')
         V = ds.variables
+        tv, lav, lov = pick_triple(lambda n: V[n].shape if n in V else None, lambda n: hasattr(V[n], 'units'))
         t = _decode_time(_masked(V[tv][:], getattr(V[tv], '_FillValue', None)), V[tv].units)
         la = _masked(V[lav][:], getattr(V[lav], '_FillValue', None))
         lo = _masked(V[lov][:], getattr(V[lov], '_FillValue', None))
