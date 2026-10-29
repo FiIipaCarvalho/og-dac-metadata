@@ -24,8 +24,10 @@ from matplotlib.lines import Line2D
 from store import DAC_COLORS, load_deployments, load_tracks
 
 PC = ccrs.PlateCarree()
-REGIONS = {'North America': (-165, -50, 5, 66), 'Europe': (-35, 40, 28, 72),
-           'Baltic Sea': (9, 31, 53, 66.5), 'Australia': (105, 165, -50, -5)}
+# BOON published regions first (Northeast Pacific, Northwest Atlantic, Baltic Sea), then other areas
+REGIONS = {'BOON Northeast Pacific': (-160, -115, 28, 62), 'BOON Northwest Atlantic': (-82, -45, 24, 62),
+           'BOON Baltic Sea': (9, 31, 53, 66.5), 'Europe and Mediterranean': (-35, 40, 28, 72),
+           'Australia': (105, 165, -50, -5)}
 BY = {'tagged': ('tagged', 'OceanGliders tagged', 'not tagged'),
       'og1': ('og1', 'OG1.0 format', 'not OG1.0')}
 
@@ -79,7 +81,9 @@ def render(tr, by, label, n_missing, out):
     fig = plt.figure(figsize=(14, 15))
     draw(fig.add_axes([0.02, 0.50, 0.96, 0.44], projection=PC), lay)
     for i, (name, ext) in enumerate(REGIONS.items()):
-        ax = fig.add_axes([0.03 + (i % 2) * 0.49, 0.27 - (i // 2) * 0.23, 0.45, 0.20], projection=PC)
+        x = 0.02 + (i % 3) * 0.33 if i < 3 else 0.185 + (i - 3) * 0.33  # 3 on top, 2 centred below
+        ax = fig.add_axes([x, 0.27 - (i // 3) * 0.235, 0.30, 0.20], projection=PC)
+        ax.set_anchor('N')
         draw(ax, lay, ext)
         ax.set_title(name, fontsize=10)
 
