@@ -42,7 +42,7 @@ def windows(until):
             '12m': (str(u - timedelta(days=365)), 'last 12 months')}
 
 
-def pale(c, f=0.6):
+def pale(c, f=0.4):
     """Blend a colour towards white."""
     return tuple(1 - (1 - v) * (1 - f) for v in mc.to_rgb(c))
 
@@ -60,7 +60,7 @@ def layers(tr, key):
         for src, g in tr[tr[key] == on].groupby('source'):
             segs = [s for _, d in g.groupby('dep_id', sort=False) for s in segments(d.lon.values, d.lat.values)]
             c = DAC_COLORS[src]
-            out.append((segs, c if on else pale(c), 1.6 if on else 0.8, 3 if on else 2))
+            out.append((segs, c if on else pale(c), 1.6 if on else 1.0, 3 if on else 2))
     return out
 
 
@@ -94,7 +94,7 @@ def render(tr, by, label, n_missing, out):
                 label=f'{s}: {r.n} ({r.tag} tagged, {r.og1} OG1)')
          for s in DAC_COLORS if s in n.index for r in [n.loc[s]]]
     h += [Line2D([], [], color='#555', lw=1.6, label=f'{on_label} (full colour)'),
-          Line2D([], [], color=pale('#555'), lw=0.8, label=f'{off_label} (pale colour)')]
+          Line2D([], [], color=pale('#555'), lw=1.0, label=f'{off_label} (pale colour)')]
     fig.legend(handles=h, loc='upper center', ncol=4, fontsize=8.5, frameon=False,
                bbox_to_anchor=(0.5, 0.995))
     miss = f' {n_missing} more in the catalogue {"has" if n_missing == 1 else "have"} no track yet.' if n_missing else ''

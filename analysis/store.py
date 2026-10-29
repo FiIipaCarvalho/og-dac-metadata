@@ -8,7 +8,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent.parent
 WORK, STORE = ROOT / 'work', ROOT / 'store'
 DAC_COLORS = {'IOOS': '#2f6fd0', 'VOTO': '#e0752d', 'BODC': '#2a9d8f',
-              'OTN': '#c2410c', 'Coriolis': '#7c5cc4', 'IMOS': '#d4a017'}
+              'OTN': '#c2410c', 'Coriolis': '#7c5cc4', 'IMOS': '#b5447e'}
 
 
 def safe(dep):
