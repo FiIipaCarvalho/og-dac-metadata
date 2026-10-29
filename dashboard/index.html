@@ -113,12 +113,39 @@
   </section>
 
   <section class="og-card" id="tracks-card">
-    <h2>Glider tracks in the last 12 months</h2>
-    <p class="note">Deployments active from 28 October 2025 to 28 October 2026, one position per dive (or per hour where the data have no dive or profile number). Colour: data centre.</p>
-    <h3>Tagged OceanGliders (full colour) or not tagged (pale)</h3>
-    <img src="data/tracks_12m.png" alt="World map of glider tracks in the last 12 months coloured by data centre, OceanGliders-tagged deployments in full colour and untagged ones pale" style="width:100%;height:auto;">
-    <h3>Available in OG1.0 format (full colour) or not (pale)</h3>
-    <img src="data/tracks_12m_og1.png" alt="World map of glider tracks in the last 12 months coloured by data centre, deployments available in OG1.0 format in full colour and others pale" style="width:100%;height:auto;">
+    <h2>Glider tracks</h2>
+    <p class="note">One position per dive (or per hour where the data have no dive or profile number). Colour: data centre. Windows run to 28 October 2026 and include every deployment active in them.</p>
+    <div class="og-seg" role="group" aria-label="Time window">
+      <button type="button" data-win="all" aria-pressed="false">All</button>
+      <button type="button" data-win="2016" aria-pressed="false">Since 2016</button>
+      <button type="button" data-win="2021" aria-pressed="false">Since 2021</button>
+      <button type="button" data-win="2y" aria-pressed="false">Last 2 years</button>
+      <button type="button" data-win="12m" aria-pressed="true">Last 12 months</button>
+    </div>
+    <div class="og-seg" role="group" aria-label="Full colour shows">
+      <button type="button" data-by="tagged" aria-pressed="true">Tagged OceanGliders</button>
+      <button type="button" data-by="og1" aria-pressed="false">OG1.0 format</button>
+    </div>
+    <img id="tracks-img" src="data/tracks_12m_tagged.png" alt="World map of glider tracks coloured by data centre" style="width:100%;height:auto;">
+    <script>
+    (() => {
+      const card = document.getElementById('tracks-card'), img = document.getElementById('tracks-img');
+      const st = { win: '12m', by: 'tagged' };
+      const show = () => {
+        img.src = `data/tracks_${st.win}_${st.by}.png`;
+        img.alt = `World map of glider tracks (${st.win}) coloured by data centre; full colour: ${st.by === 'og1' ? 'OG1.0 format' : 'tagged OceanGliders'}, pale: others`;
+        card.querySelectorAll('button[data-win]').forEach(b => b.setAttribute('aria-pressed', b.dataset.win === st.win));
+        card.querySelectorAll('button[data-by]').forEach(b => b.setAttribute('aria-pressed', b.dataset.by === st.by));
+      };
+      card.addEventListener('click', e => {
+        const b = e.target.closest('button');
+        if (!b) return;
+        if (b.dataset.win) st.win = b.dataset.win;
+        if (b.dataset.by) st.by = b.dataset.by;
+        show();
+      });
+    })();
+    </script>
   </section>
 
   <section class="og-grid">
