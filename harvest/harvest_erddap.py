@@ -13,7 +13,7 @@ import json
 import os
 import re
 
-from common import ERDDAPS, FLAG_ATTRS, get
+from common import ERDDAPS, FLAG_ATTRS, VAR_ATTRS, get
 
 
 def keep(src, r):
@@ -36,7 +36,7 @@ def info(base, row):
         t = get(f'{base}/info/{i}/index.csv')
     except Exception as e:
         return {'dataset_id': i, 'error': str(e)[:100]}
-    g, names, qc = {}, [], {}
+    g, names, qc, va = {}, [], {}, {}
     for l in csv.reader(io.StringIO(t)):
         if len(l) < 5:
             continue
@@ -49,10 +49,12 @@ def info(base, row):
             g['platform_' + l[2]] = l[4][:300]
         elif l[0] == 'attribute' and l[2] in FLAG_ATTRS:
             qc.setdefault(l[1], {})[l[2]] = l[4][:300]
+        if l[0] == 'attribute' and l[1] != 'NC_GLOBAL' and l[2] in VAR_ATTRS:
+            va.setdefault(l[1], {})[l[2]] = l[4][:200]
     # the dataset id goes in its own key: some ERDDAPs publish a global attribute called "id"
     return {'dataset_id': i, 'title': row['title'], 'cdm_data_type': row['cdm_data_type'],
             'min_time': row.get('minTime', ''), 'max_time': row.get('maxTime', ''),
-            'globals': g, 'variables': names, 'qc': qc}
+            'globals': g, 'variables': names, 'qc': qc, 'var_attrs': va}
 
 
 def main():

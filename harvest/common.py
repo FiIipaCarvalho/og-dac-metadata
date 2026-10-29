@@ -14,6 +14,8 @@ IMOS_S3 = 'https://imos-data.s3-ap-southeast-2.amazonaws.com/'
 
 # attributes that describe a flag variable (CF)
 FLAG_ATTRS = ('flag_values', 'flag_meanings')
+# attributes kept per variable, for the parameter inventory (sensors.py)
+VAR_ATTRS = ('standard_name', 'long_name', 'units')
 
 
 def get(url, timeout=90, tries=5, text=True):

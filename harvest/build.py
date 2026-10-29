@@ -14,6 +14,8 @@ import json
 import os
 import re
 
+from common import CORIOLIS, ERDDAPS, IMOS_S3
+
 # ---------------- institution names ----------------
 WHOLE = [  # checked on the whole institution string first
     ('c-proof', 'C-PROOF'), ('ooi coastal & global', 'OOI Coastal & Global Scale Nodes'),
@@ -247,6 +249,10 @@ def row_from_files(source, key, files, delayed_names, extra_platform=''):
         'platform': platform_of(first('platform_type', 'platform_long_name', 'glider_instrument_name', 'glider_model', 'platform_model', 'platform', 'instrument'),
                                 ' '.join(f.get('title', '') for f in files), first('summary'), first('source'), extra_platform),
         'datasets': str(len(files)),
+        # where the data live, for fetch_tracks.py (written to deployment_refs.jsonl, not the CSV)
+        '_refs': [{'id': f.get('dataset_id', ''), 'url': f.get('url', ''), 'stream': stream_of(source, f), 'mode': f.get('mode', ''),
+                   'start': f.get('start_full', '') or ymd(f.get('start', '')), 'end': f.get('end', ''), 'variables': f.get('variables') or []}
+                  for f in files],
     }
 
 
@@ -292,6 +298,7 @@ def main():
                 'globals': {'institution': b.get('owner', ''), 'wmo_id': b.get('wmo', ''), 'Conventions': 'OG-1.0',
                             'platform_model': b.get('platform_model', '')},
                 'qc': {}, 'variables': [], 'unread': True, 'title': b.get('platform_model', ''), 'dataset_id': f"{b['collection']}/{b['folder']}",
+                'url': next((f"{ERDDAPS['BODC']}/files/{b['collection']}/{b['folder']}/{n}" for n in b.get('files', []) if n.endswith('.nc')), ''),
                 'start': b.get('start', ''), 'start_full': '', 'end': '', 'mode': b['mode']})
 
     for src, kf in keys.items():
@@ -306,6 +313,7 @@ def main():
             for m in ms:
                 g = m['globals']
                 files.append({'globals': g, 'qc': m['qc'], 'variables': m['variables'], 'title': m['title'], 'dataset_id': m['dataset_id'],
+                              'url': f"{ERDDAPS[src]}/tabledap/{m['dataset_id']}",
                               'start': m['min_time'] or g.get('time_coverage_start', ''), 'start_full': (m['min_time'] or g.get('time_coverage_start', ''))[:19],
                               'end': (m['max_time'] or g.get('time_coverage_end', ''))[:19], 'mode': erddap_mode(src, m['dataset_id'], g)})
             if src == 'BODC':
@@ -359,12 +367,13 @@ def main():
                     g['network'] = c['json_network']
                 s = h.get('t_first') or g.get('time_coverage_start', '')
                 e = h.get('t_last') or g.get('time_coverage_end', '')
-                files.append({'globals': g, 'qc': h.get('qc', {}), 'variables': [], 'title': '', 'dataset_id': n,
+                files.append({'globals': g, 'qc': h.get('qc', {}), 'variables': [], 'title': '', 'dataset_id': n, 'url': CORIOLIS + c['id'] + '/' + n,
                               'start': s or c.get('start', ''), 'start_full': s[:19], 'end': e[:19],
                               'mode': (g.get('data_mode') or ('D' if re.search(r'_D\.nc$', n) else 'R'))[:1].upper()})
             if not files:  # no readable file: JSON and index only
                 files = [{'globals': {'institution': c.get('owner', ''), 'wmo_platform_code': c.get('wmo', ''), 'network': c.get('json_network', '')},
                           'qc': {}, 'variables': [], 'title': '', 'dataset_id': c['id'], 'start': ix_start or c.get('start', ''),
+                          'url': next((CORIOLIS + c['id'] + '/' + n for n in c.get('files', []) if n.endswith('.nc')), ''),
                           'start_full': ix_start[:19], 'end': ix_end[:19], 'mode': ''}]
             plat = ' '.join([c.get('platform_model', '')] + [r['glider_model'] for r in ix] +
                             [h.get(k, '') for h in c.get('nc', {}).values() for k in ('PLATFORM_TYPE', 'PLATFORM_FAMILY', 'PLATFORM_MAKER')])
@@ -375,7 +384,7 @@ def main():
         for l in open(W('IMOS_meta.jsonl')):
             m = json.loads(l)
             g = m.get('globals', {})
-            files = [{'globals': g, 'qc': m.get('qc', {}), 'variables': [], 'title': g.get('title', ''), 'dataset_id': m['file'],
+            files = [{'globals': g, 'qc': m.get('qc', {}), 'variables': [], 'title': g.get('title', ''), 'dataset_id': m['file'], 'url': IMOS_S3 + m['file'],
                       'start': g.get('time_coverage_start', ''), 'start_full': g.get('time_coverage_start', '')[:19],
                       'end': g.get('time_coverage_end', '')[:19], 'mode': 'R' if '/REALTIME/' in m['id'] else 'D'}]
             rows.append(row_from_files('IMOS', m['id'].replace('IMOS/ANFOG/', ''), files, False,
@@ -418,9 +427,13 @@ def main():
             'tagged', 'mission', 'region', 'network', 'site', 'wmo', 'wmo_code', 'format', 'og1_available', 'data_mode', 'delayed',
             'qc_present', 'qc_cf', 'qc_scheme', 'nrt', 'recovered', 'nrt_qc', 'rec_qc', 'dm_any', 'platform', 'recent', 'datasets', 'group', 'also_in']
     with open(W('glider_deployments.csv'), 'w', newline='') as f:
-        w = csv.DictWriter(f, fieldnames=cols)
+        w = csv.DictWriter(f, fieldnames=cols, extrasaction='ignore')
         w.writeheader()
         w.writerows(rows)
+    with open(W('deployment_refs.jsonl'), 'w') as f:
+        for r in rows:
+            f.write(json.dumps({'dep_id': f"{r['source']}:{r['deployment']}", 'source': r['source'], 'deployment': r['deployment'],
+                                'refs': r['_refs']}) + '\n')
 
     print('rows', len(rows), 'unique', len(groups), 'dropped', dict(dropped))
     for s in ('IOOS', 'VOTO', 'BODC', 'OTN', 'Coriolis', 'IMOS'):
