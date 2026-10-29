@@ -80,7 +80,7 @@ SHIM = r"""<!doctype html>
     loader: () => {},
     onData: (fn) => { listeners.push(fn); try { fn(); } catch (e) { console.error(e); } },
     colors: ['#2f6fd0', '#e0752d', '#2a9d8f', '#5b8c3a', '#7c5cc4', '#b5447e', '#c2410c', '#d4a017'],
-    refresh: () => {}, params: () => ({}), setParams: () => {}, resetParams: () => {},
+    refresh: () => fire(), params: () => ({}), setParams: () => {}, resetParams: () => {},
     setLink: (name) => { try { history.replaceState(null, '', '#' + name); } catch (e) {} }
   };
   Promise.all(Object.entries(DATASETS).map(([id, load]) => load()

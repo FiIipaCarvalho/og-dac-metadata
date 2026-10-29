@@ -65,6 +65,11 @@
   .og-dac h5 { margin: var(--cds-gap-xs) 0 0; font-size: var(--cds-font-size-caption); text-transform: uppercase; letter-spacing: .04em; color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); }
   .og-diff td, .og-diff th { text-align: left !important; vertical-align: top; }
   .og-diff td:first-child { font-weight: var(--cds-font-weight-medium); white-space: nowrap; }
+  .og-tabs { position: sticky; top: 0; z-index: 1000; display: flex; flex-wrap: wrap; gap: 4px; padding: 6px 0; background: var(--color-bg); border-bottom: 1px solid var(--color-border-line); }
+  .og-tabs a { text-decoration: none; padding: 6px 12px; border-radius: var(--cds-radius); color: var(--color-fg-muted); }
+  .og-tabs a[aria-current="page"] { background: var(--color-panel); color: var(--color-fg); border: 1px solid var(--color-border-line); }
+  .og-page { display: flex; flex-direction: column; gap: inherit; }
+  .og-page[hidden] { display: none; }
   .og-jump { font-size: var(--cds-font-size-caption); display: flex; gap: var(--cds-gap-md); flex-wrap: wrap; }
   .og-prompt summary { cursor: pointer; font-weight: var(--cds-font-weight-medium); }
   .og-prompt pre { white-space: pre-wrap; word-break: break-word; font-size: var(--cds-font-size-caption); line-height: 1.5; background: var(--color-bg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md); max-height: 40rem; overflow: auto; margin: var(--cds-gap-sm) 0 0; }
@@ -78,10 +83,17 @@
   <header class="og-head">
     <h1 id="title">OceanGliders tag adoption across glider data centres</h1>
     <p class="og-take dash-skeleton" id="takeaway">—</p>
-    <p class="og-jump"><a href="#findings" id="jump-findings">Findings and guidance for data centres</a><a href="#limitations" id="jump-limits">Assumptions and limitations</a><a href="#how-made" id="jump-how">How this dashboard was made</a></p>
+    <nav class="og-tabs" aria-label="Pages">
+      <a href="#overview" data-tab="overview">Overview and map</a>
+      <a href="#formats" data-tab="formats">Formats and QC</a>
+      <a href="#institutions" data-tab="institutions">Institutions</a>
+      <a href="#findings" data-tab="findings">Findings and guidance</a>
+      <a href="#methods" data-tab="methods">Audit and methods</a>
+    </nav>
     <p>Every glider deployment found on six data centres: the IOOS Glider DAC, VOTO, BODC, OTN, Coriolis (the OceanGliders GDAC) and IMOS/ANFOG. A deployment record is tagged when its <code>network</code> global attribute starts with "OceanGliders". The same deployment can be held by more than one data centre; unique deployments are matched on WMO ID and start date. The tag became an OG1.0 requirement only in October 2026, so this shows readiness, not compliance.</p>
   </header>
 
+  <div class="og-page" data-page="overview">
   <p class="og-tilehead">Deployments</p>
   <section class="og-tiles" aria-label="Deployments">
     <div class="og-tile"><span class="lab">Deployment records</span><span class="num dash-skeleton" data-source="summary" data-field="records" data-row="0">—</span></div>
@@ -161,6 +173,7 @@
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
           attribution: 'Tiles &copy; <a href="https://www.esri.com">Esri</a>, Esri, DeLorme, NAVTEQ', maxZoom: 13 }).addTo(map);
         map.fitBounds(REG.world);
+        window.ogTracksResize = () => { map.invalidateSize(); };
         const group = L.layerGroup().addTo(map);
         const deps = data.deps.map(([dep, s, inst, t0, t1, tag, og1, fmt, segs]) => {
           const src = data.sources[s];
@@ -235,6 +248,9 @@
     </div>
   </section>
 
+  </div>
+
+  <div class="og-page" data-page="formats">
   <div class="og-catbar" id="cat-controls">
     <span class="note">Format, data mode, QC and platform cards show:</span>
     <div class="og-seg" role="group" aria-label="Which records in the category cards">
@@ -268,6 +284,9 @@
     </div>
   </section>
 
+  </div>
+
+  <div class="og-page" data-page="institutions">
   <section class="og-card" id="by-inst-card">
     <h2>Contributions by institution</h2>
     <p class="note">The 25 largest contributors by records, split by data centre. Solid: tagged. Faded: not tagged.</p>
@@ -322,70 +341,13 @@
     </ul>
   </section>
 
+  </div>
+
+  <div class="og-page" data-page="findings">
   <section class="og-report og-card" id="findings">
     <h2>Findings for data management across data centres</h2>
     <p class="og-take" id="report-lede">—</p>
     <p>Written as a starting point for organising glider data management across data assembly centres, and for a federated OceanGliders ERDDAP. Every number below is computed from the same data as the charts above, so it follows each data refresh; the statements around them were reviewed against the 2026-10-27/28 snapshot (findings reviewed 2026-10-28), and the spot checks at the end record what was verified by opening files then.</p>
-    <p>For manual checks of this automatic audit, the file audit (<a href="data/file_audit.csv">CSV</a>, or open the table below) lists every file and ERDDAP dataset read: its URL, the stream (real time or recovered) and the rule that set it, the QC level with the rule and the attribute text it matched (<code>processing_level</code>, <code>data_mode</code>, <code>qc_manual</code>, <code>data_processing_chain_name</code>), format with <code>Conventions</code> and <code>format_version</code>, the <code>network</code> and <code>site</code> values, the QC flag scheme, and whether the file was used for the track map (status, decimation, points kept and dropped).</p>
-    <details id="audit-details">
-      <summary style="cursor:pointer;">Show the file audit table</summary>
-      <p>Filter with the menus or search any text; click a column heading to sort (click again to reverse).</p>
-      <details style="margin:4px 0 8px;">
-        <summary style="cursor:pointer;">Column definitions</summary>
-        <table class="og-table"><thead><tr><th>Column</th><th>Meaning</th></tr></thead><tbody><tr><td><code>dep_id</code></td><td>Deployment key, &lt;data centre&gt;:&lt;deployment&gt; (one deployment can have several files or datasets).</td></tr><tr><td><code>source</code></td><td>Data centre the file was harvested from.</td></tr><tr><td><code>deployment</code></td><td>Deployment as grouped by that data centre (IOOS dataset without -delayed, VOTO glider and mission, BODC/OTN deployment number, Coriolis/IMOS folder).</td></tr><tr><td><code>file_or_dataset</code></td><td>ERDDAP dataset ID, or file path/name for Coriolis, IMOS and BODC file collections.</td></tr><tr><td><code>url</code></td><td>Link to the ERDDAP dataset or the file.</td></tr><tr><td><code>start, end</code></td><td>Time coverage stated by the catalogue or file.</td></tr><tr><td><code>read</code></td><td>yes if the file metadata were read; no for BODC file-collection files (no byte-range access), so their QC level is "Not read".</td></tr><tr><td><code>stream</code></td><td>NRT (real time) or Recovered (full resolution), from the data centre's naming, folder or data-mode letter.</td></tr><tr><td><code>stream_rule</code></td><td>The rule used for this data centre to decide the stream.</td></tr><tr><td><code>data_mode_used</code></td><td>Data-mode letter used (R real time, A adjusted, P full resolution, D delayed mode), from the file or its name.</td></tr><tr><td><code>qc_level</code></td><td>Highest QC level the metadata state: Delayed mode, Automatic QC, No QC, Not stated, Not read.</td></tr><tr><td><code>qc_level_why</code></td><td>The rule that matched and the text it matched; check this against the attr_ columns.</td></tr><tr><td><code>attr_processing_level, attr_data_mode, attr_qc_manual, attr_data_processing_chain_name</code></td><td>Raw global attribute values the QC level was read from (first 300 characters).</td></tr><tr><td><code>format</code></td><td>OG1.0, EGO, IOOS DAC, IMOS or Other, from Conventions and format_version.</td></tr><tr><td><code>attr_Conventions, attr_format_version</code></td><td>Raw global attributes the format was read from.</td></tr><tr><td><code>tagged</code></td><td>1 if the network attribute starts with "OceanGliders" (BOON guideline format).</td></tr><tr><td><code>attr_network, attr_site</code></td><td>Raw network and site (or oceanGliders_site) attributes.</td></tr><tr><td><code>qc_flags_present</code></td><td>1 if QC flag variables exist (described with flag_values/flag_meanings, or named *_qc).</td></tr><tr><td><code>qc_flags_cf</code></td><td>1 if every described flag variable has matching flag_values and flag_meanings (CF).</td></tr><tr><td><code>qc_scheme</code></td><td>Flag scheme from the flag values: IOC/QARTOD 1-4,9, Argo-style 0-9, SeaDataNet L20, Other, Not described, None.</td></tr><tr><td><code>n_variables</code></td><td>Number of variables in the file or dataset; blank when unknown.</td></tr><tr><td><code>n_variables_from</code></td><td>harvest (ERDDAP variable list) or track fetch (variables found when the file was opened for the track); blank when the file was never opened (headers only, or not used for the track).</td></tr><tr><td><code>used_for_track</code></td><td>yes for the one file or dataset per deployment the map track was taken from (recovered preferred over real time).</td></tr><tr><td><code>track_status</code></td><td>Track fetch result for the deployment: ok, empty (no valid positions), error.</td></tr><tr><td><code>track_decimation</code></td><td>dive (one mean position per dive or profile) or hour (hourly means where there is no dive number).</td></tr><tr><td><code>track_points, track_points_dropped</code></td><td>Positions kept, and dropped by cleaning (fill values, out of range, (0,0), outside the deployment window, moves over 3 m/s).</td></tr><tr><td><code>track_message</code></td><td>Error or empty-file message from the fetch, if any.</td></tr></tbody></table>
-      </details>
-      <div id="audit-filters" style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:8px 0;"></div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:8px 0;">
-        <label>Search <input id="audit-q" type="search" placeholder="deployment, file, text in any column" style="min-width:16rem;"></label>
-        <button type="button" id="audit-reset">Clear filters</button>
-        <span id="audit-count"></span>
-        <span><button type="button" id="audit-prev">Previous</button> <button type="button" id="audit-next">Next</button></span>
-      </div>
-      <div style="overflow:auto;max-height:640px;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);">
-        <table class="og-table" id="audit-table" style="white-space:nowrap;"></table>
-      </div>
-    </details>
-    <script>
-    (() => {
-      const det = document.getElementById('audit-details'), PAGE = 100;
-      const FILTERS = [['source', 'Data centre'], ['stream', 'Stream'], ['qc_level', 'QC level'], ['qc_level_why', 'QC rule matched'],
-                       ['format', 'Format'], ['tagged', 'Tagged'], ['qc_scheme', 'QC flag scheme'], ['qc_flags_cf', 'Flags CF-compliant'],
-                       ['read', 'Contents read'], ['used_for_track', 'Used for track'], ['track_status', 'Track status'], ['track_decimation', 'Decimation']];
-      let rows = null, view = [], page = 0, sortCol = null, sortDir = 1;
-      const $ = id => document.getElementById(id), esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-      const cmp = (x, y) => { const a = parseFloat(x), b = parseFloat(y); return (!isNaN(a) && !isNaN(b) && /^-?[\d.]+$/.test(x) && /^-?[\d.]+$/.test(y)) ? a - b : x.localeCompare(y); };
-      const show = () => {
-        const q = $('audit-q').value.trim().toLowerCase();
-        const want = FILTERS.map(([c]) => [c, $('audit-f-' + c).value]).filter(([, v]) => v !== '__all__');
-        view = rows.filter(r => want.every(([c, v]) => r[c] === v) && (!q || Object.values(r).some(v => v.toLowerCase().includes(q))));
-        if (sortCol) view.sort((x, y) => sortDir * cmp(x[sortCol], y[sortCol]));
-        page = Math.min(page, Math.max(0, Math.ceil(view.length / PAGE) - 1));
-        const cols = rows.columns, part = view.slice(page * PAGE, page * PAGE + PAGE);
-        $('audit-table').innerHTML = '<thead><tr>' + cols.map(c => `<th><button type="button" data-sort="${esc(c)}">${esc(c)}${c === sortCol ? (sortDir > 0 ? ' ▲' : ' ▼') : ''}</button></th>`).join('') + '</tr></thead><tbody>' +
-          part.map(r => '<tr>' + cols.map(c => c === 'url' ? `<td>${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">link</a>` : ''}</td>` : `<td>${esc(r[c])}</td>`).join('') + '</tr>').join('') + '</tbody>';
-        $('audit-count').textContent = view.length ? `rows ${page * PAGE + 1} to ${Math.min(view.length, (page + 1) * PAGE)} of ${view.length}` : 'no rows';
-      };
-      det.addEventListener('toggle', () => {
-        if (!det.open || rows) return;
-        $('audit-count').textContent = 'loading...';
-        fetch('data/file_audit.csv').then(r => r.text()).then(t => {
-          rows = d3.csvParse(t);
-          $('audit-filters').innerHTML = FILTERS.map(([c, label]) => {
-            const n = d3.rollup(rows, v => v.length, r => r[c]);
-            const opts = [...n.keys()].sort(cmp).map(v => `<option value="${esc(v)}">${esc(v === '' ? '(blank)' : v)} (${n.get(v)})</option>`).join('');
-            return `<label>${label} <select id="audit-f-${c}" style="max-width:18rem;"><option value="__all__">all</option>${opts}</select></label>`;
-          }).join('');
-          show();
-        });
-      });
-      det.addEventListener('change', e => { if (e.target.id && e.target.id.startsWith('audit-f-')) { page = 0; show(); } });
-      $('audit-q').addEventListener('input', () => { page = 0; show(); });
-      $('audit-reset').addEventListener('click', () => { if (!rows) return; FILTERS.forEach(([c]) => { $('audit-f-' + c).value = '__all__'; }); $('audit-q').value = ''; sortCol = null; page = 0; show(); });
-      $('audit-table').addEventListener('click', e => { const b = e.target.closest('button[data-sort]'); if (!b) return; const c = b.dataset.sort; sortDir = c === sortCol ? -sortDir : 1; sortCol = c; show(); });
-      $('audit-prev').addEventListener('click', () => { if (page > 0) { page--; show(); } });
-      $('audit-next').addEventListener('click', () => { if ((page + 1) * PAGE < view.length) { page++; show(); } });
-    })();
-    </script>
 
     <h3>Data centre profiles</h3>
     <div class="og-tablebox">
@@ -506,6 +468,72 @@
     <p id="noc-line">—</p>
 
 
+  </section>
+  </div>
+
+  <div class="og-page" data-page="methods">
+  <section class="og-report og-card" id="methods">
+    <h2>Audit and methods</h2>
+    <p>For manual checks of this automatic audit, the file audit (<a href="data/file_audit.csv">CSV</a>, or open the table below) lists every file and ERDDAP dataset read: its URL, the stream (real time or recovered) and the rule that set it, the QC level with the rule and the attribute text it matched (<code>processing_level</code>, <code>data_mode</code>, <code>qc_manual</code>, <code>data_processing_chain_name</code>), format with <code>Conventions</code> and <code>format_version</code>, the <code>network</code> and <code>site</code> values, the QC flag scheme, and whether the file was used for the track map (status, decimation, points kept and dropped).</p>
+    <details id="audit-details">
+      <summary style="cursor:pointer;">Show the file audit table</summary>
+      <p>Filter with the menus or search any text; click a column heading to sort (click again to reverse).</p>
+      <details style="margin:4px 0 8px;">
+        <summary style="cursor:pointer;">Column definitions</summary>
+        <table class="og-table"><thead><tr><th>Column</th><th>Meaning</th></tr></thead><tbody><tr><td><code>dep_id</code></td><td>Deployment key, &lt;data centre&gt;:&lt;deployment&gt; (one deployment can have several files or datasets).</td></tr><tr><td><code>source</code></td><td>Data centre the file was harvested from.</td></tr><tr><td><code>deployment</code></td><td>Deployment as grouped by that data centre (IOOS dataset without -delayed, VOTO glider and mission, BODC/OTN deployment number, Coriolis/IMOS folder).</td></tr><tr><td><code>file_or_dataset</code></td><td>ERDDAP dataset ID, or file path/name for Coriolis, IMOS and BODC file collections.</td></tr><tr><td><code>url</code></td><td>Link to the ERDDAP dataset or the file.</td></tr><tr><td><code>start, end</code></td><td>Time coverage stated by the catalogue or file.</td></tr><tr><td><code>read</code></td><td>yes if the file metadata were read; no for BODC file-collection files (no byte-range access), so their QC level is "Not read".</td></tr><tr><td><code>stream</code></td><td>NRT (real time) or Recovered (full resolution), from the data centre's naming, folder or data-mode letter.</td></tr><tr><td><code>stream_rule</code></td><td>The rule used for this data centre to decide the stream.</td></tr><tr><td><code>data_mode_used</code></td><td>Data-mode letter used (R real time, A adjusted, P full resolution, D delayed mode), from the file or its name.</td></tr><tr><td><code>qc_level</code></td><td>Highest QC level the metadata state: Delayed mode, Automatic QC, No QC, Not stated, Not read.</td></tr><tr><td><code>qc_level_why</code></td><td>The rule that matched and the text it matched; check this against the attr_ columns.</td></tr><tr><td><code>attr_processing_level, attr_data_mode, attr_qc_manual, attr_data_processing_chain_name</code></td><td>Raw global attribute values the QC level was read from (first 300 characters).</td></tr><tr><td><code>format</code></td><td>OG1.0, EGO, IOOS DAC, IMOS or Other, from Conventions and format_version.</td></tr><tr><td><code>attr_Conventions, attr_format_version</code></td><td>Raw global attributes the format was read from.</td></tr><tr><td><code>tagged</code></td><td>1 if the network attribute starts with "OceanGliders" (BOON guideline format).</td></tr><tr><td><code>attr_network, attr_site</code></td><td>Raw network and site (or oceanGliders_site) attributes.</td></tr><tr><td><code>qc_flags_present</code></td><td>1 if QC flag variables exist (described with flag_values/flag_meanings, or named *_qc).</td></tr><tr><td><code>qc_flags_cf</code></td><td>1 if every described flag variable has matching flag_values and flag_meanings (CF).</td></tr><tr><td><code>qc_scheme</code></td><td>Flag scheme from the flag values: IOC/QARTOD 1-4,9, Argo-style 0-9, SeaDataNet L20, Other, Not described, None.</td></tr><tr><td><code>n_variables</code></td><td>Number of variables in the file or dataset; blank when unknown.</td></tr><tr><td><code>n_variables_from</code></td><td>harvest (ERDDAP variable list) or track fetch (variables found when the file was opened for the track); blank when the file was never opened (headers only, or not used for the track).</td></tr><tr><td><code>used_for_track</code></td><td>yes for the one file or dataset per deployment the map track was taken from (recovered preferred over real time).</td></tr><tr><td><code>track_status</code></td><td>Track fetch result for the deployment: ok, empty (no valid positions), error.</td></tr><tr><td><code>track_decimation</code></td><td>dive (one mean position per dive or profile) or hour (hourly means where there is no dive number).</td></tr><tr><td><code>track_points, track_points_dropped</code></td><td>Positions kept, and dropped by cleaning (fill values, out of range, (0,0), outside the deployment window, moves over 3 m/s).</td></tr><tr><td><code>track_message</code></td><td>Error or empty-file message from the fetch, if any.</td></tr></tbody></table>
+      </details>
+      <div id="audit-filters" style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:8px 0;"></div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:8px 0;">
+        <label>Search <input id="audit-q" type="search" placeholder="deployment, file, text in any column" style="min-width:16rem;"></label>
+        <button type="button" id="audit-reset">Clear filters</button>
+        <span id="audit-count"></span>
+        <span><button type="button" id="audit-prev">Previous</button> <button type="button" id="audit-next">Next</button></span>
+      </div>
+      <div style="overflow:auto;max-height:640px;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);">
+        <table class="og-table" id="audit-table" style="white-space:nowrap;"></table>
+      </div>
+    </details>
+    <script>
+    (() => {
+      const det = document.getElementById('audit-details'), PAGE = 100;
+      const FILTERS = [['source', 'Data centre'], ['stream', 'Stream'], ['qc_level', 'QC level'], ['qc_level_why', 'QC rule matched'],
+                       ['format', 'Format'], ['tagged', 'Tagged'], ['qc_scheme', 'QC flag scheme'], ['qc_flags_cf', 'Flags CF-compliant'],
+                       ['read', 'Contents read'], ['used_for_track', 'Used for track'], ['track_status', 'Track status'], ['track_decimation', 'Decimation']];
+      let rows = null, view = [], page = 0, sortCol = null, sortDir = 1;
+      const $ = id => document.getElementById(id), esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      const cmp = (x, y) => { const a = parseFloat(x), b = parseFloat(y); return (!isNaN(a) && !isNaN(b) && /^-?[\d.]+$/.test(x) && /^-?[\d.]+$/.test(y)) ? a - b : x.localeCompare(y); };
+      const show = () => {
+        const q = $('audit-q').value.trim().toLowerCase();
+        const want = FILTERS.map(([c]) => [c, $('audit-f-' + c).value]).filter(([, v]) => v !== '__all__');
+        view = rows.filter(r => want.every(([c, v]) => r[c] === v) && (!q || Object.values(r).some(v => v.toLowerCase().includes(q))));
+        if (sortCol) view.sort((x, y) => sortDir * cmp(x[sortCol], y[sortCol]));
+        page = Math.min(page, Math.max(0, Math.ceil(view.length / PAGE) - 1));
+        const cols = rows.columns, part = view.slice(page * PAGE, page * PAGE + PAGE);
+        $('audit-table').innerHTML = '<thead><tr>' + cols.map(c => `<th><button type="button" data-sort="${esc(c)}">${esc(c)}${c === sortCol ? (sortDir > 0 ? ' ▲' : ' ▼') : ''}</button></th>`).join('') + '</tr></thead><tbody>' +
+          part.map(r => '<tr>' + cols.map(c => c === 'url' ? `<td>${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">link</a>` : ''}</td>` : `<td>${esc(r[c])}</td>`).join('') + '</tr>').join('') + '</tbody>';
+        $('audit-count').textContent = view.length ? `rows ${page * PAGE + 1} to ${Math.min(view.length, (page + 1) * PAGE)} of ${view.length}` : 'no rows';
+      };
+      det.addEventListener('toggle', () => {
+        if (!det.open || rows) return;
+        $('audit-count').textContent = 'loading...';
+        fetch('data/file_audit.csv').then(r => r.text()).then(t => {
+          rows = d3.csvParse(t);
+          $('audit-filters').innerHTML = FILTERS.map(([c, label]) => {
+            const n = d3.rollup(rows, v => v.length, r => r[c]);
+            const opts = [...n.keys()].sort(cmp).map(v => `<option value="${esc(v)}">${esc(v === '' ? '(blank)' : v)} (${n.get(v)})</option>`).join('');
+            return `<label>${label} <select id="audit-f-${c}" style="max-width:18rem;"><option value="__all__">all</option>${opts}</select></label>`;
+          }).join('');
+          show();
+        });
+      });
+      det.addEventListener('change', e => { if (e.target.id && e.target.id.startsWith('audit-f-')) { page = 0; show(); } });
+      $('audit-q').addEventListener('input', () => { page = 0; show(); });
+      $('audit-reset').addEventListener('click', () => { if (!rows) return; FILTERS.forEach(([c]) => { $('audit-f-' + c).value = '__all__'; }); $('audit-q').value = ''; sortCol = null; page = 0; show(); });
+      $('audit-table').addEventListener('click', e => { const b = e.target.closest('button[data-sort]'); if (!b) return; const c = b.dataset.sort; sortDir = c === sortCol ? -sortDir : 1; sortCol = c; show(); });
+      $('audit-prev').addEventListener('click', () => { if (page > 0) { page--; show(); } });
+      $('audit-next').addEventListener('click', () => { if ((page + 1) * PAGE < view.length) { page++; show(); } });
+    })();
+    </script>
     <h3 id="limitations">Assumptions and limitations</h3>
     <ul>
       <li><b>A snapshot of six data centres.</b> Read on 2026-10-27/28 from IOOS, VOTO, BODC, OTN, Coriolis and IMOS. Glider data held only elsewhere (other national or institutional servers, EMODnet) are not counted, so totals describe these six, not the global fleet.</li>
@@ -576,6 +604,8 @@ Gotchas to handle: some ERDDAPs publish a global attribute `id` that is not the 
 
 Spot-check at least one deployment per data centre against its raw metadata; check every claim in the guidance against the data (counts, shares, who holds the tags); state what was checked by opening files; and keep every number on the page computed from the data.</pre></details>
   </section>
+  </div>
+
 </div>
 
 <script>
@@ -1093,21 +1123,8 @@ dash.calc('by_institution', {
     }
   }
 
-  // jump link to the findings, and arriving with #findings in the link
-  let jumped = false;
-  for (const [lid, target] of [['jump-findings', 'findings'], ['jump-limits', 'limitations'], ['jump-how', 'how-made']]) {
-    document.getElementById(lid).addEventListener('click', (ev) => {
-      ev.preventDefault();
-      const sec = document.getElementById(target);
-      if (target === 'how-made') document.getElementById('prompt-box').open = true;
-      sec.scrollIntoView(); dash.setLink(target);
-    });
-  }
-
   dash.onData(() => {
     drawReport();
-    const h = location.hash.slice(1);
-    if (!jumped && ['findings', 'limitations', 'how-made'].includes(h)) { jumped = true; document.getElementById(h).scrollIntoView(); }
     const s = dash.data('summary');
     const take = document.getElementById('takeaway');
     if (s.status === 'ok' && s.data.length) {
@@ -1161,5 +1178,28 @@ dash.calc('by_institution', {
       drawTable(instRows);
     } else { fail(ib, bi.status); instRows = []; document.querySelector('#matrix tbody').replaceChildren(); }
   });
+})();
+</script>
+<script>
+/* pages: one tab visible at a time, address in the hash; old anchors open their page and scroll */
+(() => {
+  const pages = [...document.querySelectorAll('.og-page')], names = pages.map(p => p.dataset.page);
+  const pageOf = id => { const el = document.getElementById(id); const p = el && el.closest('.og-page'); return p ? p.dataset.page : null; };
+  const route = () => {
+    const h = decodeURIComponent(location.hash.slice(1));
+    const name = names.includes(h) ? h : (h && pageOf(h)) || 'overview';
+    pages.forEach(p => { p.hidden = p.dataset.page !== name; });
+    document.querySelectorAll('.og-tabs a').forEach(a => { if (a.dataset.tab === name) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    if (h === 'how-made') { const b = document.getElementById('prompt-box'); if (b) b.open = true; }
+    if (h === 'audit-details') { const b = document.getElementById('audit-details'); if (b && !b.open) b.open = true; }
+    requestAnimationFrame(() => {
+      try { window.dash && dash.refresh && dash.refresh(); } catch (e) {}
+      if (window.ogTracksResize) window.ogTracksResize();
+      if (h && !names.includes(h) && document.getElementById(h)) document.getElementById(h).scrollIntoView();
+      else window.scrollTo(0, 0);
+    });
+  };
+  window.addEventListener('hashchange', route);
+  route();
 })();
 </script>
