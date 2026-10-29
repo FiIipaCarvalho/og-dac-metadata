@@ -20,6 +20,8 @@ import json
 import os
 import re
 import tempfile
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -78,7 +80,7 @@ def pick(names, *cands):
     return next((low[c.lower()] for c in cands if c.lower() in low), None)
 
 
-def erddap_track(ref):
+def erddap_track(ref, tries=3, timeout=600):
     names = ref['variables']
     t, la, lo = pick(names, 'time'), pick(names, 'latitude'), pick(names, 'longitude')
     if not (t and la and lo):
@@ -87,7 +89,7 @@ def erddap_track(ref):
     cols = f'{t},{la},{lo}' + (f',{d}' if d else '')
     q = f'{cols}&{la}!=NaN&orderByMean("{d or t + "/1hour"}")'
     url = ref['url'] + '.csv?' + urllib.parse.quote(q, safe='&=,')
-    txt = get(url, timeout=600, tries=3)
+    txt = get(url, timeout=timeout, tries=tries)
     import io
     df = pd.read_csv(io.StringIO(txt), skiprows=[1])
     df = df.rename(columns={t: 'time', la: 'lat', lo: 'lon', **({d: 'dive'} if d else {})})
@@ -95,6 +97,53 @@ def erddap_track(ref):
     if 'dive' not in df:
         df['dive'] = np.nan
     return df[['time', 'lat', 'lon', 'dive']], ('dive' if d else 'hour')
+
+
+def otn_files_track(ref, cache, threads=2):
+    """OTN fallback: its ERDDAP datasets aggregate one small IOOS-format file per profile, and older
+    ones time out (90 s gateway) even for trivial queries. Download the per-profile files from
+    ERDDAP's /files/ service (kept in cache/<dataset_id>/) and take each profile's time and position."""
+    import html
+    import netCDF4
+    from concurrent.futures import ThreadPoolExecutor
+    base, did = ref['url'].rsplit('/tabledap/', 1)
+    listing = html.unescape(get(f'{base}/files/{did}/', timeout=300, tries=3))
+    names = sorted(set(re.findall(r'href="([^"/?]+\.nc)"', listing)))
+    if not names:
+        raise ValueError('no files listed under /files/')
+    d = os.path.join(cache, did)
+    os.makedirs(d, exist_ok=True)
+    def one(n):
+        p = os.path.join(d, n)
+        if not os.path.exists(p):  # OTN resets connections now and then: retry with back-off
+            for k in range(6):
+                try:
+                    with urllib.request.urlopen(f'{base}/files/{did}/{n}', timeout=300) as r, open(p + '.part', 'wb') as f:
+                        f.write(r.read())
+                    os.replace(p + '.part', p)
+                    break
+                except (OSError, urllib.error.URLError):
+                    if k == 5:
+                        raise
+                    time.sleep(5 * 2 ** k)
+        with netCDF4.Dataset(p) as ds:
+            V = ds.variables
+            if all(k in V for k in ('profile_time', 'profile_lat', 'profile_lon')):
+                t, la, lo = (float(np.ma.filled(V[k][:], np.nan).ravel()[0]) for k in ('profile_time', 'profile_lat', 'profile_lon'))
+                u = V['profile_time'].units
+            else:
+                t, la, lo = (float(np.nanmean(np.ma.filled(V[k][:], np.nan))) for k in ('time', 'lat', 'lon'))
+                u = V['time'].units
+            pid = float(np.ma.filled(V['profile_id'][:], np.nan).ravel()[0]) if 'profile_id' in V else np.nan
+            return t, u, la, lo, pid
+    with ThreadPoolExecutor(threads) as ex:
+        rows = list(ex.map(one, names))
+    df = pd.DataFrame(rows, columns=['t', 'u', 'lat', 'lon', 'dive'])
+    df['time'] = pd.concat([_decode_time(g['t'].to_numpy(), u).to_series(index=g.index) for u, g in df.groupby('u')]).sort_index()
+    attrs = {}
+    with netCDF4.Dataset(os.path.join(d, names[0])) as ds:
+        attrs = {n: {a: str(getattr(v, a))[:200] for a in VAR_ATTRS if hasattr(v, a)} for n, v in ds.variables.items()}
+    return df[['time', 'lat', 'lon', 'dive']], attrs, len(names)
 
 
 def erddap_var_attrs(ref):
@@ -117,10 +166,12 @@ TRIPLES = (('JULD', 'LATITUDE', 'LONGITUDE'), ('TIME', 'LATITUDE', 'LONGITUDE'),
 
 
 def pick_triple(shape, has_units):
-    """First triple whose three variables are 1-D, the same length (> 1), with time units."""
+    """First triple whose three variables are 1-D (> 1 value) with time units. Lengths may differ a little
+    (netCDF4/HDF5 stores unwritten trailing records of an unlimited dimension as missing); readers truncate
+    to the shortest."""
     for tv, lav, lov in TRIPLES:
         sh = [shape(v) for v in (tv, lav, lov)]
-        if all(x is not None and len(x) == 1 and x[0] > 1 for x in sh) and len(set(sh)) == 1 and has_units(tv):
+        if all(x is not None and len(x) == 1 and x[0] > 1 for x in sh) and has_units(tv):
             return tv, lav, lov
     raise ValueError('no 1-D time/lat/lon')
 
@@ -151,9 +202,10 @@ def read_h5(fobj):
         attrs = {n: {a: _s(o.attrs[a])[:200] for a in VAR_ATTRS if a in o.attrs} for n, o in h.items() if isinstance(o, h5py.Dataset)}
         tv, lav, lov = pick_triple(lambda n: h[n].shape if n in h and isinstance(h[n], h5py.Dataset) else None,
                                    lambda n: 'units' in h[n].attrs)
-        t = _decode_time(_masked(h[tv][:], h[tv].attrs.get('_FillValue')), _s(h[tv].attrs['units']))
-        la = _masked(h[lav][:], h[lav].attrs.get('_FillValue'))
-        lo = _masked(h[lov][:], h[lov].attrs.get('_FillValue'))
+        n = min(h[v].shape[0] for v in (tv, lav, lov))
+        t = _decode_time(_masked(h[tv][:n], h[tv].attrs.get('_FillValue')), _s(h[tv].attrs['units']))
+        la = _masked(h[lav][:n], h[lav].attrs.get('_FillValue'))
+        lo = _masked(h[lov][:n], h[lov].attrs.get('_FillValue'))
     return pd.DataFrame({'time': t, 'lat': la, 'lon': lo}), attrs
 
 
@@ -165,9 +217,10 @@ def read_nc(path):
         attrs = {n: {a: str(getattr(v, a))[:200] for a in VAR_ATTRS if hasattr(v, a)} for n, v in ds.variables.items()}
         V = ds.variables
         tv, lav, lov = pick_triple(lambda n: V[n].shape if n in V else None, lambda n: hasattr(V[n], 'units'))
-        t = _decode_time(_masked(V[tv][:], getattr(V[tv], '_FillValue', None)), V[tv].units)
-        la = _masked(V[lav][:], getattr(V[lav], '_FillValue', None))
-        lo = _masked(V[lov][:], getattr(V[lov], '_FillValue', None))
+        n = min(V[v].shape[0] for v in (tv, lav, lov))
+        t = _decode_time(_masked(V[tv][:n], getattr(V[tv], '_FillValue', None)), V[tv].units)
+        la = _masked(V[lav][:n], getattr(V[lav], '_FillValue', None))
+        lo = _masked(V[lov][:n], getattr(V[lov], '_FillValue', None))
     finally:
         ds.close()
     return pd.DataFrame({'time': t, 'lat': la, 'lon': lo}), attrs
@@ -217,7 +270,16 @@ def fetch_one(job):
     var_attrs, errs = {}, []
     for ref in order_refs(source, refs):
         try:
-            if source in ERDDAP_SOURCES and '/tabledap/' in ref['url']:
+            if source == 'OTN' and '/tabledap/' in ref['url']:  # one quick ERDDAP try, then its per-profile files
+                try:
+                    df, dec = erddap_track(ref, tries=1, timeout=150)
+                except Exception as e:
+                    errs.append(f"{ref['id']}: ERDDAP {type(e).__name__}: {str(e)[:80]}; used /files/")
+                    df, attrs, nf = otn_files_track(ref, os.path.join(store, 'files', 'source=OTN'))
+                    var_attrs[ref['id']] = attrs
+                    dec = 'dive'
+                    errs.append(f'{nf} per-profile files')
+            elif source in ERDDAP_SOURCES and '/tabledap/' in ref['url']:
                 df, dec = erddap_track(ref)
             else:
                 raw, attrs = file_track(ref, os.path.join(store, 'files', f'source={source}'))

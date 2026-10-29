@@ -70,6 +70,7 @@
   .og-tabs a:hover { border-color: var(--color-fg-muted); }
   .og-tabs a:focus-visible { outline: 2px solid var(--cds-chart-axis); outline-offset: 2px; }
   .og-tabs a[aria-current="page"] { background: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
+  #federation-card th, #federation-card td { text-align: left; vertical-align: top; }
   .og-page { display: flex; flex-direction: column; gap: inherit; }
   .og-page[hidden] { display: none; }
   .og-jump { font-size: var(--cds-font-size-caption); display: flex; gap: var(--cds-gap-md); flex-wrap: wrap; }
@@ -90,6 +91,7 @@
       <a href="#formats" data-tab="formats">Formats and QC</a>
       <a href="#institutions" data-tab="institutions">Institutions</a>
       <a href="#findings" data-tab="findings">Findings and guidance</a>
+      <a href="#federation" data-tab="federation">Federated ERDDAP</a>
       <a href="#methods" data-tab="methods">Audit and methods</a>
     </nav>
     <p>Every glider deployment found on six data centres: the IOOS Glider DAC, VOTO, BODC, OTN, Coriolis (the OceanGliders GDAC) and IMOS/ANFOG. A deployment record is tagged when its <code>network</code> global attribute starts with "OceanGliders". The same deployment can be held by more than one data centre; unique deployments are matched on WMO ID and start date. The tag became an OG1.0 requirement only in October 2026, so this shows readiness, not compliance.</p>
@@ -457,7 +459,45 @@
       </div>
     </div>
 
-    <h3>Towards a federated OceanGliders ERDDAP</h3>
+    <p>Recommendations for a federated OceanGliders ERDDAP, and what stands in its way today, are on the <a href="#federation">Federated ERDDAP</a> tab.</p>
+    <p id="noc-line">—</p>
+
+
+  </section>
+  </div>
+
+  <div class="og-page" data-page="federation">
+  <section class="og-report og-card" id="federation-card">
+    <h2>A federated OceanGliders ERDDAP</h2>
+    <p><b>The idea.</b> Each data centre runs its own ERDDAP serving glider data in OG1.0 format. A federating ERDDAP lists all of them as one catalogue: it holds no data itself, and each of its datasets points to the data centre's ERDDAP (ERDDAP's <code>EDDTableFromErddap</code>), so a user query is passed on to the data centre and answered there. Users get one place to search and download all OceanGliders data; data stay with, and are maintained by, the data centres that hold them.</p>
+    <p><b>The demo.</b> The OceanGliders data management team has explored the feasibility with a quick demo by Callum Rollo (VOTO): <a href="https://github.com/voto-ocean-knowledge/OG-GDAC-demo">github.com/voto-ocean-knowledge/OG-GDAC-demo</a>. It runs ERDDAP in docker, searches the VOTO and BODC ERDDAPs for OG1.0 datasets and adds each one as a pass-through dataset. Its own checklist: done: docker setup, federating from one and from several servers, search; not yet: checking datasets with the IOOS compliance checker, distinguishing real-time and delayed-mode datasets consistently, queries across all datasets, and a persistent server. The demo includes only VOTO and BODC because they are the only data centres serving OG1.0 today, not because the others failed a test.</p>
+
+    <h3>What each data centre offers today</h3>
+    <p>Measured while building this dashboard (checked 28 to 29 October 2026).</p>
+    <div style="overflow:auto;"><table class="og-table">
+      <thead><tr><th>Data centre</th><th>ERDDAP query service for glider data</th><th>OG1.0</th><th>Source files downloadable</th><th>How a deployment is stored</th><th>Notes from fetching tracks</th></tr></thead>
+      <tbody>
+        <tr><td>IOOS</td><td>yes</td><td>no (IOOS Glider DAC format)</td><td>no: ERDDAP <code>/files/</code> returns 403 Forbidden</td><td>not visible; datasets carry <code>profile_id</code>, and many a <code>source_file</code> variable (66 source files behind 394 profiles in the one checked)</td><td>all 2,262 deployments answered per-profile queries</td></tr>
+        <tr><td>VOTO</td><td>yes</td><td>yes (<code>OG_nrt_</code>, <code>OG_complete_</code>)</td><td>yes</td><td>one file per dataset (whole mission)</td><td>all deployments answered</td></tr>
+        <tr><td>BODC</td><td>yes, for real-time datasets</td><td>yes</td><td>yes, but without byte-range access (HTTP 416); recovery files are a file collection, not query datasets</td><td>one file per dataset or deployment</td><td>recovery-only deployments read by downloading whole files</td></tr>
+        <tr><td>OTN</td><td>yes</td><td>no (IOOS Glider DAC format, v3.0-noqartod)</td><td>yes</td><td>one file per profile: 1,805 to 5,014 files per deployment in the datasets checked, about 140 KB each</td><td>many older datasets time out at the server's 90-second gateway even for the smallest query; tracks then rebuilt from the per-profile files (the server resets connections during long downloads)</td></tr>
+        <tr><td>Coriolis</td><td>no for the GDAC files (an Ifremer ERDDAP trajectory dataset covered 40 of the 66 Coriolis deployments active in the last 12 months, with some positions dated outside the deployment)</td><td>no (EGO)</td><td>yes (HTTP file tree)</td><td>one EGO file per deployment and mode (<code>_R</code>, <code>_P</code>)</td><td>read file by file; a few files hold no valid positions</td></tr>
+        <tr><td>IMOS</td><td>not tested (files read from AWS S3)</td><td>no (IMOS format)</td><td>yes (S3)</td><td>one file per deployment (FV00 real time, FV01 delayed mode)</td><td>read file by file</td></tr>
+      </tbody></table></div>
+
+    <h3>Current bottlenecks</h3>
+    <ol>
+      <li><b>Format.</b> A federation of OG1.0 data can include only the data centres that serve OG1.0: today VOTO and BODC. IOOS and OTN serve the IOOS Glider DAC format, Coriolis EGO and IMOS its own format.</li>
+      <li><b>No query service.</b> Coriolis and IMOS publish files rather than ERDDAP datasets, so there is nothing for a pass-through federation to point to; they would need an ERDDAP over their files, or the federating ERDDAP would have to hold copies.</li>
+      <li><b>Speed is inherited.</b> A pass-through dataset is as fast as its source. Where a data centre's ERDDAP assembles each query from thousands of per-profile files (OTN), older datasets time out at the source, and would time out in the federation too. Combining profile files into one file per deployment, or caching, fixes this at the source.</li>
+      <li><b>Real time vs recovered vs delayed mode.</b> Data centres label products differently ("delayed" means recovered data at IOOS, VOTO and OTN, and delayed-mode QC at IMOS), so a federated catalogue cannot yet tell users which product they are getting. The proposed OG1 data modes (R, P, D) would solve this if every data centre applies them the same way.</li>
+      <li><b>File access.</b> Federation needs queries, but a full copy or a check of the files needs file access: IOOS blocks it, BODC's file collection has no byte-range access, OTN allows it.</li>
+      <li><b>The same deployment in several places.</b> Some deployments are held by more than one data centre (for example NOC deployments at BODC and Coriolis, sometimes with different content); without a shared deployment identifier a federated catalogue would list them twice.</li>
+      <li><b>Metadata quality.</b> Placeholder dates (1970, catalogue end dates years ahead), missing tags and free-text QC statements carry straight through a pass-through federation; checks at the data centre, or in the federation layer, are needed.</li>
+    </ol>
+
+    <h3>What would make it work</h3>
+    <p>Recommendations for data centres, from the findings of this audit.</p>
     <ol>
       <li><b>One dataset per deployment and stream, with a mandatory data mode.</b> Publish real-time, recovered and delayed-mode products as separate datasets with a consistent name and a <code>data_mode</code> attribute that every data centre fills the same way (R real time, P recovered, D delayed-mode QC, as proposed for OG1). Stop using "delayed" for recovered data.</li>
       <li><b>A controlled QC level.</b> Replace free-text <code>processing_level</code> with a short controlled list (raw; automatic QC; delayed-mode QC), plus a citation of the QC procedure and the processing software and version.</li>
@@ -467,9 +507,6 @@
       <li><b>A shared deployment identifier.</b> The same deployment appears at more than one data centre (e.g. NOC on BODC and Coriolis); a persistent deployment ID (OceanOPS ID, or WMO ID plus start date) avoids double counting and lets a federated catalogue link the copies.</li>
       <li><b>Validation at ingestion.</b> Check attributes, vocabulary values and time coverage when files arrive, and report back to the provider; most issues above would be caught automatically.</li>
     </ol>
-    <p id="noc-line">—</p>
-
-
   </section>
   </div>
 
