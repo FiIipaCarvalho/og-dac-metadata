@@ -80,14 +80,15 @@ def pick(names, *cands):
     return next((low[c.lower()] for c in cands if c.lower() in low), None)
 
 
-def erddap_track(ref, tries=3, timeout=600):
+def erddap_track(ref, tries=3, timeout=600, window=None):
     names = ref['variables']
     t, la, lo = pick(names, 'time'), pick(names, 'latitude'), pick(names, 'longitude')
     if not (t and la and lo):
         raise ValueError('no time/latitude/longitude variables')
     d = pick(names, *DIVE_VARS)
     cols = f'{t},{la},{lo}' + (f',{d}' if d else '')
-    q = f'{cols}&{la}!=NaN&orderByMean("{d or t + "/1hour"}")'
+    tw = f'&{t}>={window[0]}&{t}<{window[1]}' if window else ''
+    q = f'{cols}{tw}&{la}!=NaN&orderByMean("{d or t + "/1hour"}")'
     url = ref['url'] + '.csv?' + urllib.parse.quote(q, safe='&=,')
     txt = get(url, timeout=timeout, tries=tries)
     import io
@@ -97,6 +98,25 @@ def erddap_track(ref, tries=3, timeout=600):
     if 'dive' not in df:
         df['dive'] = np.nan
     return df[['time', 'lat', 'lon', 'dive']], ('dive' if d else 'hour')
+
+
+def erddap_track_weekly(ref, start, end):
+    """Week-by-week queries: ERDDAP opens only the files in each time window, so datasets that time out
+    as a whole (OTN, one file per profile) answer in seconds per week."""
+    parts, dec, t = [], 'dive', start.floor('D')
+    while t <= end:
+        w = (t.strftime('%Y-%m-%dT%H:%M:%SZ'), (t + pd.Timedelta(days=7)).strftime('%Y-%m-%dT%H:%M:%SZ'))
+        try:
+            df, dec = erddap_track(ref, tries=2, timeout=150, window=w)
+            parts.append(df)
+        except urllib.error.HTTPError as e:
+            if e.code != 404:  # 404 = no data in that week
+                raise
+        t += pd.Timedelta(days=7)
+    if not parts:
+        raise ValueError('no data in any week')
+    df = pd.concat(parts, ignore_index=True)
+    return df.drop_duplicates(subset=['dive'] if df['dive'].notna().any() else None), dec
 
 
 def otn_files_track(ref, cache, threads=2):
@@ -270,15 +290,23 @@ def fetch_one(job):
     var_attrs, errs = {}, []
     for ref in order_refs(source, refs):
         try:
-            if source == 'OTN' and '/tabledap/' in ref['url']:  # one quick ERDDAP try, then its per-profile files
+            if source == 'OTN' and '/tabledap/' in ref['url']:  # whole query, then week by week, then per-profile files
                 try:
                     df, dec = erddap_track(ref, tries=1, timeout=150)
                 except Exception as e:
-                    errs.append(f"{ref['id']}: ERDDAP {type(e).__name__}: {str(e)[:80]}; used /files/")
-                    df, attrs, nf = otn_files_track(ref, os.path.join(store, 'files', 'source=OTN'))
-                    var_attrs[ref['id']] = attrs
-                    dec = 'dive'
-                    errs.append(f'{nf} per-profile files')
+                    s0 = pd.Timestamp(ref.get('start') or row['start_date'], tz='UTC') if (ref.get('start') or row['start_date']) else None
+                    s1 = pd.Timestamp((ref.get('end') or row['end_date'] or '')[:19] or None, tz='UTC') if (ref.get('end') or row['end_date']) else None
+                    try:
+                        if s0 is None or s1 is None:
+                            raise ValueError('no time range for weekly queries')
+                        df, dec = erddap_track_weekly(ref, s0, s1)
+                        errs.append(f"{ref['id']}: whole-dataset query {type(e).__name__}; used weekly queries")
+                    except Exception as e2:
+                        errs.append(f"{ref['id']}: ERDDAP {type(e2).__name__}: {str(e2)[:80]}; used /files/")
+                        df, attrs, nf = otn_files_track(ref, os.path.join(store, 'files', 'source=OTN'))
+                        var_attrs[ref['id']] = attrs
+                        dec = 'dive'
+                        errs.append(f'{nf} per-profile files')
             elif source in ERDDAP_SOURCES and '/tabledap/' in ref['url']:
                 df, dec = erddap_track(ref)
             else:
