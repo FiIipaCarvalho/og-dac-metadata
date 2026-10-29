@@ -4,9 +4,10 @@ For each window, two maps:
   by tagged: OceanGliders-tagged deployments in full DAC colour, untagged pale.
   by og1:    deployments available in OG1.0 format in full DAC colour, others pale.
 
-    python3.11 map_tracks.py [--until 2026-10-28] [--windows all 2016 2021 2y 12m] [--outdir ../data]
+    python3.11 map_tracks.py [--until 2026-10-28] [--windows all 2016 2021 2y 12m years] [--outdir ../data]
 
-writes <outdir>/tracks_<window>_<by>.png.
+writes <outdir>/tracks_<window>_<by>.png; 'years' adds one map per calendar year
+(deployments active at any time in that year), tracks_y<YYYY>_<by>.png.
 """
 import argparse
 from datetime import date, timedelta
@@ -18,6 +19,7 @@ matplotlib.use('Agg')
 import matplotlib.colors as mc
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from matplotlib.collections import LineCollection
 from matplotlib.lines import Line2D
 
@@ -108,21 +110,27 @@ def render(tr, by, label, n_missing, out):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--until', default=str(date.today()))
-    ap.add_argument('--windows', nargs='+', default=['all', '2016', '2021', '2y', '12m'])
+    ap.add_argument('--windows', nargs='+', default=['all', '2016', '2021', '2y', '12m', 'years'])
     ap.add_argument('--by', nargs='+', default=list(BY), choices=BY)
     ap.add_argument('--outdir', default='.')
     a = ap.parse_args()
     d = load_deployments()
     act = d['end_date'].fillna(d['start_date'])
-    for w in a.windows:
-        since, label = windows(a.until)[w]
-        tr = load_tracks(since, a.until)
-        cand = d[(act >= since) if since else act.notna()]
+    win = windows(a.until)
+    years = range(int(d.loc[d['start_year'] >= 1990, 'start_year'].min()), int(a.until[:4]) + 1)
+    for y in years:
+        win[f'y{y}'] = (f'{y}-01-01', f'{y}', f'{y}-12-31' if y < int(a.until[:4]) else a.until)
+    keys = [k for w in a.windows for k in ([f'y{y}' for y in years] if w == 'years' else [w])]
+    for w in keys:
+        since, label, until = (win[w] + (a.until,))[:3]
+        tr = load_tracks(since, until)
+        if tr.empty:
+            tr = pd.DataFrame(columns=['dep_id', 'source', 'time', 'lat', 'lon', 'tagged', 'og1'])
+        cand = d[((act >= since) if since else act.notna()) & (d['start_date'] <= until)]
         n_missing = int((cand['track_status'] != 'ok').sum())
-        label = f'{label} ({since} to {a.until})' if since else f'{label} (to {a.until})'
+        label = f'{label} ({since} to {until})' if since else f'{label} (to {until})'
         for by in a.by:
             render(tr, by, label, n_missing, f'{a.outdir}/tracks_{w}_{by}.png')
-
 
 if __name__ == '__main__':
     main()
