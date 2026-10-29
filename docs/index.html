@@ -214,7 +214,8 @@
       <button type="button" data-reg="eur">Europe and Mediterranean</button>
       <button type="button" data-reg="aus">Australia</button>
     </div>
-    <div id="tracks-legend" class="note" style="display:flex;flex-wrap:wrap;gap:4px 16px;"></div>
+    <div id="tracks-legend" class="note" style="display:flex;flex-direction:column;gap:2px;"></div>
+    <p class="note">Counts for the selected window, from the deployment catalogue (mapped or not). NRT, Recovered and DM overlap: a deployment with both a real-time and a recovered dataset counts in both, so they need not add up to the total. Recovered: recovered (full-resolution) datasets, including those named "delayed" at IOOS, VOTO and OTN. DM: the metadata state delayed-mode QC. Untick a data centre to hide its tracks.</p>
     <div id="tracks-map" style="height:560px;border-radius:var(--cds-radius);" aria-label="Zoomable map of glider tracks"></div>
     <p class="note" id="tracks-caption"></p>
     <script>
@@ -259,11 +260,14 @@
             d.line.setStyle({ color: on ? c : pale(c), weight: on ? 2.2 : 1.2 });
             group.addLayer(d.line);
           }
-          const n = {}; for (const d of inWin) { const r = n[d.src] ??= { n: 0, tag: 0, og1: 0, all: 0 }; r.n++; r.tag += d.tag; r.og1 += d.og1; }
-          for (const [s, c0, c1] of data.catalogue) if (c0 <= b && c1 >= a) (n[data.sources[s]] ??= { n: 0, tag: 0, og1: 0, all: 0 }).all++;
-          legend.innerHTML = data.sources.filter(s => n[s]).map(s => `<label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" data-src="${s}" ${st.hide.has(s) ? '' : 'checked'}><span style="display:inline-block;width:18px;height:4px;border-radius:2px;background:${data.colors[s]}"></span>${s}: ${n[s].n} (${n[s].tag} tagged, ${n[s].og1} OG1, ${n[s].all} total)</label>`).join('');
+          const z = () => ({ map: 0, all: 0, nrt: 0, rec: 0, dm: 0, tag: 0, og1: 0 }), n = {};
+          for (const d of inWin) (n[d.src] ??= z()).map++;
+          for (const [s, c0, c1, nrt, rec, dm, tag, og1] of data.catalogue) if (c0 <= b && c1 >= a) {
+            const r = n[data.sources[s]] ??= z(); r.all++; r.nrt += nrt; r.rec += rec; r.dm += dm; r.tag += tag; r.og1 += og1;
+          }
+          legend.innerHTML = data.sources.filter(s => n[s]).map(s => `<label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" data-src="${s}" ${st.hide.has(s) ? '' : 'checked'}><span style="display:inline-block;width:18px;height:4px;border-radius:2px;background:${data.colors[s]}"></span><b>${s}:</b>&nbsp;${n[s].all} total (${n[s].nrt} NRT | ${n[s].rec} Recovered | ${n[s].dm} DM) | ${n[s].tag} tagged | ${n[s].og1} OG1 | ${n[s].map} on map</label>`).join('');
           const tot = inWin.length, tg = inWin.reduce((x, d) => x + d.tag, 0), o1 = inWin.reduce((x, d) => x + d.og1, 0);
-          document.getElementById('tracks-caption').textContent = `${label} (${a === '0000' ? 'to ' + b : a + ' to ' + b}): ${tot} deployments with tracks, ${tg} tagged, ${o1} OG1.0. Full colour: ${st.by === 'og1' ? 'OG1.0 format' : 'tagged OceanGliders'}; pale: the rest. Legend: deployments on the map (tagged, OG1.0 among them; total = all deployments in the catalogue for this window, mapped or not).`;
+          document.getElementById('tracks-caption').textContent = `${label} (${a === '0000' ? 'to ' + b : a + ' to ' + b}): ${tot} deployments on the map, ${tg} of them tagged, ${o1} OG1.0. Full colour: ${st.by === 'og1' ? 'OG1.0 format' : 'tagged OceanGliders'}; pale: the rest.`;
           card.querySelectorAll('button[data-win]').forEach(x => x.setAttribute('aria-pressed', x.dataset.win === st.win));
           card.querySelectorAll('button[data-by]').forEach(x => x.setAttribute('aria-pressed', x.dataset.by === st.by));
           sel.value = st.win.startsWith('y') ? st.win : '';
