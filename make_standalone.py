@@ -12,7 +12,7 @@ import shutil
 ROOT = pathlib.Path(__file__).parent
 page = (ROOT / 'dashboard' / 'index.html').read_text()
 (ROOT / 'docs' / 'data').mkdir(parents=True, exist_ok=True)
-for f in ['glider_deployments.csv', 'spot_checks.json'] + sorted(p.name for p in (ROOT / 'data').glob('tracks_*_*.png')):
+for f in ('glider_deployments.csv', 'spot_checks.json', 'tracks.json'):
     shutil.copy(ROOT / 'data' / f, ROOT / 'docs' / 'data' / f)
 
 SHIM = r"""<!doctype html>
