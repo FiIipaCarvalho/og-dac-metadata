@@ -326,7 +326,62 @@
     <h2>Findings for data management across data centres</h2>
     <p class="og-take" id="report-lede">—</p>
     <p>Written as a starting point for organising glider data management across data assembly centres, and for a federated OceanGliders ERDDAP. Every number below is computed from the same data as the charts above, so it follows each data refresh; the statements around them were reviewed against the 2026-10-27/28 snapshot (findings reviewed 2026-10-28), and the spot checks at the end record what was verified by opening files then.</p>
-    <p>For manual checks of this automatic audit, <a href="data/file_audit.csv">file_audit.csv</a> lists every file and ERDDAP dataset read: its URL, the stream (real time or recovered) and the rule that set it, the QC level with the rule and the attribute text it matched (<code>processing_level</code>, <code>data_mode</code>, <code>qc_manual</code>, <code>data_processing_chain_name</code>), format with <code>Conventions</code> and <code>format_version</code>, the <code>network</code> and <code>site</code> values, the QC flag scheme, and whether the file was used for the track map (status, decimation, points kept and dropped).</p>
+    <p>For manual checks of this automatic audit, the file audit (<a href="data/file_audit.csv">CSV</a>, or open the table below) lists every file and ERDDAP dataset read: its URL, the stream (real time or recovered) and the rule that set it, the QC level with the rule and the attribute text it matched (<code>processing_level</code>, <code>data_mode</code>, <code>qc_manual</code>, <code>data_processing_chain_name</code>), format with <code>Conventions</code> and <code>format_version</code>, the <code>network</code> and <code>site</code> values, the QC flag scheme, and whether the file was used for the track map (status, decimation, points kept and dropped).</p>
+    <details id="audit-details">
+      <summary style="cursor:pointer;">Show the file audit table</summary>
+      <p>Filter with the menus or search any text; click a column heading to sort (click again to reverse).</p>
+      <div id="audit-filters" style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:8px 0;"></div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:8px 0;">
+        <label>Search <input id="audit-q" type="search" placeholder="deployment, file, text in any column" style="min-width:16rem;"></label>
+        <button type="button" id="audit-reset">Clear filters</button>
+        <span id="audit-count"></span>
+        <span><button type="button" id="audit-prev">Previous</button> <button type="button" id="audit-next">Next</button></span>
+      </div>
+      <div style="overflow:auto;max-height:640px;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);">
+        <table class="og-table" id="audit-table" style="white-space:nowrap;"></table>
+      </div>
+    </details>
+    <script>
+    (() => {
+      const det = document.getElementById('audit-details'), PAGE = 100;
+      const FILTERS = [['source', 'Data centre'], ['stream', 'Stream'], ['qc_level', 'QC level'], ['qc_level_why', 'QC rule matched'],
+                       ['format', 'Format'], ['tagged', 'Tagged'], ['qc_scheme', 'QC flag scheme'], ['qc_flags_cf', 'Flags CF-compliant'],
+                       ['read', 'Contents read'], ['used_for_track', 'Used for track'], ['track_status', 'Track status'], ['track_decimation', 'Decimation']];
+      let rows = null, view = [], page = 0, sortCol = null, sortDir = 1;
+      const $ = id => document.getElementById(id), esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      const cmp = (x, y) => { const a = parseFloat(x), b = parseFloat(y); return (!isNaN(a) && !isNaN(b) && /^-?[\d.]+$/.test(x) && /^-?[\d.]+$/.test(y)) ? a - b : x.localeCompare(y); };
+      const show = () => {
+        const q = $('audit-q').value.trim().toLowerCase();
+        const want = FILTERS.map(([c]) => [c, $('audit-f-' + c).value]).filter(([, v]) => v !== '__all__');
+        view = rows.filter(r => want.every(([c, v]) => r[c] === v) && (!q || Object.values(r).some(v => v.toLowerCase().includes(q))));
+        if (sortCol) view.sort((x, y) => sortDir * cmp(x[sortCol], y[sortCol]));
+        page = Math.min(page, Math.max(0, Math.ceil(view.length / PAGE) - 1));
+        const cols = rows.columns, part = view.slice(page * PAGE, page * PAGE + PAGE);
+        $('audit-table').innerHTML = '<thead><tr>' + cols.map(c => `<th><button type="button" data-sort="${esc(c)}">${esc(c)}${c === sortCol ? (sortDir > 0 ? ' ▲' : ' ▼') : ''}</button></th>`).join('') + '</tr></thead><tbody>' +
+          part.map(r => '<tr>' + cols.map(c => c === 'url' ? `<td>${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">link</a>` : ''}</td>` : `<td>${esc(r[c])}</td>`).join('') + '</tr>').join('') + '</tbody>';
+        $('audit-count').textContent = view.length ? `rows ${page * PAGE + 1} to ${Math.min(view.length, (page + 1) * PAGE)} of ${view.length}` : 'no rows';
+      };
+      det.addEventListener('toggle', () => {
+        if (!det.open || rows) return;
+        $('audit-count').textContent = 'loading...';
+        fetch('data/file_audit.csv').then(r => r.text()).then(t => {
+          rows = d3.csvParse(t);
+          $('audit-filters').innerHTML = FILTERS.map(([c, label]) => {
+            const n = d3.rollup(rows, v => v.length, r => r[c]);
+            const opts = [...n.keys()].sort(cmp).map(v => `<option value="${esc(v)}">${esc(v === '' ? '(blank)' : v)} (${n.get(v)})</option>`).join('');
+            return `<label>${label} <select id="audit-f-${c}" style="max-width:18rem;"><option value="__all__">all</option>${opts}</select></label>`;
+          }).join('');
+          show();
+        });
+      });
+      det.addEventListener('change', e => { if (e.target.id && e.target.id.startsWith('audit-f-')) { page = 0; show(); } });
+      $('audit-q').addEventListener('input', () => { page = 0; show(); });
+      $('audit-reset').addEventListener('click', () => { if (!rows) return; FILTERS.forEach(([c]) => { $('audit-f-' + c).value = '__all__'; }); $('audit-q').value = ''; sortCol = null; page = 0; show(); });
+      $('audit-table').addEventListener('click', e => { const b = e.target.closest('button[data-sort]'); if (!b) return; const c = b.dataset.sort; sortDir = c === sortCol ? -sortDir : 1; sortCol = c; show(); });
+      $('audit-prev').addEventListener('click', () => { if (page > 0) { page--; show(); } });
+      $('audit-next').addEventListener('click', () => { if ((page + 1) * PAGE < view.length) { page++; show(); } });
+    })();
+    </script>
 
     <h3>Data centre profiles</h3>
     <div class="og-tablebox">
