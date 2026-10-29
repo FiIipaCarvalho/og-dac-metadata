@@ -10,6 +10,8 @@ adds the differences back up and divides by 100.
 Output: {"until", "sources": [...], "fields": [...], "deps": [[...], ...]} with one row per deployment:
 dep (deployment name), src (index into sources), inst, t0, t1 (first/last track date),
 tag, og1 (0/1), fmt, segs (list of delta-encoded integer arrays, see above).
+"catalogue": [src, start, end] for every catalogue deployment (end = start when missing),
+so the page can show how many deployments in a window are not mapped.
 """
 import argparse
 import json
@@ -65,7 +67,10 @@ def main():
         rows.append([m['deployment'], src.index(m['source']), inst,
                      str(g['time'].iat[0])[:10], str(g['time'].iat[-1])[:10],
                      int(m['tagged']), int(m['og1_available']), m['format'], segs(lat[k], lon[k])])
-    out = {'until': a.until, 'sources': src, 'colors': DAC_COLORS, 'fields': FIELDS, 'deps': rows}
+    cat = meta[meta['start_date'].notna() & meta['source'].isin(src)]
+    catalogue = [[src.index(r.source), r.start_date[:10], (r.end_date if isinstance(r.end_date, str) else r.start_date)[:10]]
+                 for r in cat.itertuples()]
+    out = {'until': a.until, 'catalogue': catalogue, 'sources': src, 'colors': DAC_COLORS, 'fields': FIELDS, 'deps': rows}
     with open(a.out, 'w') as f:
         json.dump(out, f, separators=(',', ':'))
     print(a.out, len(rows), 'deployments,', npts, 'points')

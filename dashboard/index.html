@@ -180,10 +180,11 @@
             d.line.setStyle({ color: on ? c : pale(c), weight: on ? 2.2 : 1.2 });
             group.addLayer(d.line);
           }
-          const n = {}; for (const d of inWin) { const r = n[d.src] ??= { n: 0, tag: 0, og1: 0 }; r.n++; r.tag += d.tag; r.og1 += d.og1; }
-          legend.innerHTML = data.sources.filter(s => n[s]).map(s => `<label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" data-src="${s}" ${st.hide.has(s) ? '' : 'checked'}><span style="display:inline-block;width:18px;height:4px;border-radius:2px;background:${data.colors[s]}"></span>${s}: ${n[s].n} (${n[s].tag} tagged, ${n[s].og1} OG1)</label>`).join('');
+          const n = {}; for (const d of inWin) { const r = n[d.src] ??= { n: 0, tag: 0, og1: 0, all: 0 }; r.n++; r.tag += d.tag; r.og1 += d.og1; }
+          for (const [s, c0, c1] of data.catalogue) if (c0 <= b && c1 >= a) (n[data.sources[s]] ??= { n: 0, tag: 0, og1: 0, all: 0 }).all++;
+          legend.innerHTML = data.sources.filter(s => n[s]).map(s => `<label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" data-src="${s}" ${st.hide.has(s) ? '' : 'checked'}><span style="display:inline-block;width:18px;height:4px;border-radius:2px;background:${data.colors[s]}"></span>${s}: ${n[s].n} (${n[s].tag} tagged, ${n[s].og1} OG1, ${n[s].all} total)</label>`).join('');
           const tot = inWin.length, tg = inWin.reduce((x, d) => x + d.tag, 0), o1 = inWin.reduce((x, d) => x + d.og1, 0);
-          document.getElementById('tracks-caption').textContent = `${label} (${a === '0000' ? 'to ' + b : a + ' to ' + b}): ${tot} deployments with tracks, ${tg} tagged, ${o1} OG1.0. Full colour: ${st.by === 'og1' ? 'OG1.0 format' : 'tagged OceanGliders'}; pale: the rest.`;
+          document.getElementById('tracks-caption').textContent = `${label} (${a === '0000' ? 'to ' + b : a + ' to ' + b}): ${tot} deployments with tracks, ${tg} tagged, ${o1} OG1.0. Full colour: ${st.by === 'og1' ? 'OG1.0 format' : 'tagged OceanGliders'}; pale: the rest. Legend: deployments on the map (tagged, OG1.0 among them; total = all deployments in the catalogue for this window, mapped or not).`;
           card.querySelectorAll('button[data-win]').forEach(x => x.setAttribute('aria-pressed', x.dataset.win === st.win));
           card.querySelectorAll('button[data-by]').forEach(x => x.setAttribute('aria-pressed', x.dataset.by === st.by));
           sel.value = st.win.startsWith('y') ? st.win : '';
