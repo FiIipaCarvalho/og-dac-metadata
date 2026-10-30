@@ -146,6 +146,8 @@ def otn_files_track(ref, cache, threads=2):
                     if k == 5:
                         raise
                     time.sleep(5 * 2 ** k)
+        return p
+    def read(p):  # netCDF4 is not thread-safe: read one file at a time
         with netCDF4.Dataset(p) as ds:
             V = ds.variables
             if all(k in V for k in ('profile_time', 'profile_lat', 'profile_lon')):
@@ -157,7 +159,8 @@ def otn_files_track(ref, cache, threads=2):
             pid = float(np.ma.filled(V['profile_id'][:], np.nan).ravel()[0]) if 'profile_id' in V else np.nan
             return t, u, la, lo, pid
     with ThreadPoolExecutor(threads) as ex:
-        rows = list(ex.map(one, names))
+        paths = list(ex.map(one, names))
+    rows = [read(p) for p in paths]
     df = pd.DataFrame(rows, columns=['t', 'u', 'lat', 'lon', 'dive'])
     df['time'] = pd.concat([_decode_time(g['t'].to_numpy(), u).to_series(index=g.index) for u, g in df.groupby('u')]).sort_index()
     attrs = {}
@@ -262,8 +265,65 @@ def download(url, cache):
     return path
 
 
+def imos_current(url):
+    """IMOS renames a real-time file each time it updates (END-<date> in the name): find the current one."""
+    from common import IMOS_S3
+    folder = url[len(IMOS_S3):].rsplit('/', 1)[0] + '/'
+    keys = re.findall(r'<Key>([^<]+\.nc)</Key>', get(f'{IMOS_S3}?list-type=2&prefix={folder}', timeout=120, tries=3))
+    if not keys:
+        raise ValueError('no .nc file in the IMOS folder now')
+    return IMOS_S3 + sorted(keys)[-1]
+
+
+def coriolis_profiles_track(dep_path, cache, threads=2):
+    """Coriolis deployments held only as Argo-style per-profile files (<dep>/profiles/R<wmo>_<date>_<n>.nc):
+    download them (kept in cache/<dep>/profiles/) and take each profile's JULD, LATITUDE, LONGITUDE."""
+    import netCDF4
+    from concurrent.futures import ThreadPoolExecutor
+    from common import CORIOLIS
+    base = f'{CORIOLIS}{dep_path}/profiles/'
+    names = sorted(set(re.findall(r'href="([^"?/]+\.nc)"', get(base, timeout=300, tries=3))))
+    if not names:
+        raise ValueError('no trajectory file and no profile files')
+    d = os.path.join(cache, dep_path, 'profiles')
+    os.makedirs(d, exist_ok=True)
+    def one(n):
+        p = os.path.join(d, n)
+        for k in range(6):  # retry: DNS lookups and connections fail now and then under sustained load
+            if os.path.exists(p):
+                break
+            try:
+                with urllib.request.urlopen(base + n, timeout=300) as r, open(p + '.part', 'wb') as f:
+                    f.write(r.read())
+                os.replace(p + '.part', p)
+            except (OSError, urllib.error.URLError):
+                if k == 5:
+                    raise
+                time.sleep(5 * 2 ** k)
+        return p
+    def read(p):  # netCDF4 is not thread-safe: read one file at a time
+        with netCDF4.Dataset(p) as ds:
+            ds.set_auto_mask(False)
+            V = ds.variables
+            t = _decode_time(_masked(V['JULD'][:1], getattr(V['JULD'], '_FillValue', None)), V['JULD'].units)[0]
+            return t, float(_masked(V['LATITUDE'][:1], getattr(V['LATITUDE'], '_FillValue', None))[0]), \
+                float(_masked(V['LONGITUDE'][:1], getattr(V['LONGITUDE'], '_FillValue', None))[0]), os.path.basename(p)
+    with ThreadPoolExecutor(threads) as ex:
+        paths = list(ex.map(one, names))
+    rows = [read(p) for p in paths]
+    df = pd.DataFrame(rows, columns=['time', 'lat', 'lon', 'file'])
+    df['dive'] = np.arange(len(df), dtype=float)
+    return df[['time', 'lat', 'lon', 'dive']], len(names)
+
+
 def file_track(ref, cache):
-    path = download(ref['url'], cache)
+    try:
+        path = download(ref['url'], cache)
+    except urllib.error.HTTPError as e:
+        from common import IMOS_S3
+        if e.code not in (403, 404) or not ref['url'].startswith(IMOS_S3):
+            raise
+        path = download(imos_current(ref['url']), cache)
     with open(path, 'rb') as f:
         hdf5 = f.read(4) == b'\x89HDF'
     return read_h5(path) if hdf5 else read_nc(path)
@@ -288,6 +348,21 @@ def fetch_one(job):
     log = {'dep_id': dep_id, 'source': source, 'deployment': dep, 'end_date': row['end_date'],
            'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds')}
     var_attrs, errs = {}, []
+    if source == 'Coriolis' and refs and not any(r.get('url') for r in refs):  # no trajectory file: try per-profile files
+        try:
+            df, nf = coriolis_profiles_track(dep, os.path.join(store, 'files', 'source=Coriolis'))
+            n_raw = len(df)
+            df = clean(df, start, end)
+            if not df.empty:
+                p = track_path(store, source, dep)
+                os.makedirs(os.path.dirname(p), exist_ok=True)
+                df.assign(decimation='dive').to_parquet(p, index=False)
+                log.update(status='ok', ref=f'{dep}/profiles', stream='NRT', decimation='dive', n_points=len(df), n_dropped=n_raw - len(df),
+                           t_first=str(df.time.iloc[0])[:19], t_last=str(df.time.iloc[-1])[:19], message=f'{nf} per-profile files (no trajectory file)')
+                return log, []
+            errs.append(f'{dep}/profiles: empty ({n_raw} before cleaning)')
+        except Exception as e:
+            errs.append(f'{dep}/profiles: {type(e).__name__}: {str(e)[:120]}')
     for ref in order_refs(source, refs):
         try:
             if source == 'OTN' and '/tabledap/' in ref['url']:  # whole query, then week by week, then per-profile files
@@ -368,7 +443,8 @@ def main():
     todo = []
     for r in rows:
         dep_id = f"{r['source']}:{r['deployment']}"
-        if (r['end_date'] or r['start_date']) < a.since or (a.sources and r['source'] not in a.sources):
+        d = r['end_date'] or r['start_date']  # undated deployments are included only when fetching everything
+        if (d < a.since if d else a.since > '1900-01-01') or (a.sources and r['source'] not in a.sources):
             continue
         prev = done.get(dep_id)
         if a.force or not prev or prev['status'] == 'error' or prev.get('end_date') != r['end_date']:

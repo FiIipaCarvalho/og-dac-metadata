@@ -325,7 +325,8 @@ def main():
     keys = {
         'IOOS': lambda m: m['dataset_id'][:-8] if m['dataset_id'].endswith('-delayed') else m['dataset_id'],
         'VOTO': lambda m: (re.search(r'(SEA\d+_M\d+)', m['dataset_id'], re.I) or [None, None])[1],
-        'BODC': lambda m: (re.search(r'deployment (\d+)', m['title'], re.I) or [None, m['dataset_id']])[1],
+        # BODC: deployment number from the title; Public_* datasets are the file-collection catalogues, not deployments
+        'BODC': lambda m: None if m['dataset_id'].startswith('Public_') else (re.search(r'deployment (\d+)', m['title'], re.I) or [None, m['dataset_id']])[1],
         'OTN': lambda m: (re.search(r'deployment #(\d+)', m['title'], re.I) or [None, re.sub(r'_(realtime|delayed)$', '', m['dataset_id'])])[1],
     }
     # BODC's OG1 file collections (real time and recovery), keyed by deployment ID; contents unread
