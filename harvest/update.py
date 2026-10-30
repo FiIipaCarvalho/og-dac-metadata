@@ -70,6 +70,10 @@ def main():
     run('export_tracks.py', '--until', today, '--out', ROOT / 'data' / 'tracks.json', cwd=ROOT / 'analysis')
     run('file_audit.py', '--out', ROOT / 'data' / 'file_audit.csv', cwd=ROOT / 'analysis')
     run('make_standalone.py', cwd=ROOT)
+    if not a.skip_harvest:  # README states the snapshot date
+        import re
+        rp = ROOT / 'README.md'
+        rp.write_text(re.sub(r'\(snapshot [^)]*\)', f'(snapshot {today})', rp.read_text(), count=1))
 
     new = summary(ROOT / 'data' / 'glider_deployments.csv')
     diff = new.sub(old, fill_value=0).astype(int)
@@ -82,7 +86,7 @@ def main():
         print('Re-read the findings these numbers support, then run update.py --mark-reviewed.')
 
     if a.push:
-        subprocess.run(['git', 'add', 'data', 'docs', 'dashboard'], cwd=ROOT, check=True)
+        subprocess.run(['git', 'add', 'data', 'docs', 'dashboard', 'README.md'], cwd=ROOT, check=True)
         subprocess.run(['git', 'commit', '-m', f'Data refresh {today}'], cwd=ROOT, check=True)
         subprocess.run(['git', 'push'], cwd=ROOT, check=True)
 
